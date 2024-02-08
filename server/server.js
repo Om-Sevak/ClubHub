@@ -1,24 +1,15 @@
-const express = require('express');
-const dotenv = require('dotenv');
+const app = require("./app");
 const mongoose = require("mongoose");
+const dotenv = require('dotenv');
+
+// Loading in environment variables
 dotenv.config({path:'./config/.env'})
 
-const app = express();
+const PORT = process.env.PORT || 5000;
+const MONGODB_URI = process.env.MONGO_URI;
 
-//Middleware
-app.use(express.json());
-
-const clubRouter = require("./routes/clubRoutes");
-
-app.use('/club', clubRouter);
-
-app.get("/", (req, res) => {
-    res.send("App is up");
-});
-
-const PORT = 5000;
 mongoose
-  .connect(process.env.MONGO_URI)
+  .connect(MONGODB_URI)
   .then(() => {
     console.log('App connected to database');
     app.listen(PORT, () => {
