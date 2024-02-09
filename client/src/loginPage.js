@@ -2,16 +2,16 @@ import React, {useState} from 'react';
 import axios from 'axios';
 import {useNavigate} from 'react-router-dom';
 
-const loginPage = () => {
-    const [username, setUsername] = useState('');
+const LoginPage = () => {
+    const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
-    const navigate = useNavigate();
+    //const navigate = useNavigate();
 
     const handleLogin = async () => {
         try{
-            const response = await axios.post('/login', {username, password});
-            navigate('/homePage');
+            const response = await axios.post('/login', {email, password});
+            //navigate('/homePage');
         } catch (error){
             console.error('login failed: ', error);
             setErrorMessage('Invalid email or password');
@@ -19,11 +19,11 @@ const loginPage = () => {
     };
 
     const handleGuest = () => {
-        navigate('/homePage');
+        //navigate('/homePage');
     };
 
     const handleRegister = () => {
-        navigate('/registerPage');
+        //navigate('/registerPage');
     };
 
     return (
@@ -47,8 +47,10 @@ const loginPage = () => {
                 <button type="submit">Login</button>
             </form>
             {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
-            <button onClick={handleSignInAsGuest}>Sign in as Guest</button>
+            <button onClick={handleGuest}>Sign in as Guest</button>
             <button onClick={handleRegister}>Register</button>
         </div>
     );
 };
+
+export default LoginPage;
