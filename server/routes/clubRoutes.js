@@ -14,6 +14,10 @@ router.get("/", (req,res) => {
 // Example: create a new club by calling the controller method
 router.route("/").post(clubController.createClub);
 
+router.route("/:name").put(clubController.editClub);
+
+router.route("/:name").delete(clubController.deleteClub);
+
 // Example: get a specific club based on club name
 router.route("/:name").get(clubController.getClub);
 

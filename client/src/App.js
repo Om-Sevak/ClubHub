@@ -1,4 +1,5 @@
 import './App.css';
+import ApiRequestBoxes from './components/ApiStatusTestBoxes';
 
 function App() {
   return (
@@ -8,7 +9,7 @@ function App() {
         <p>
           Lets code ClubHub
         </p>
-        
+        <ApiRequestBoxes />
         
       </header>
     </div>
