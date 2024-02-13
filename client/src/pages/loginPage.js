@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import './loginPage.css'; // Import CSS file for styling
+import './registerPage.css'; // Import CSS file for styling
 import logo from '../assets/logoIMG.jpeg'; // Import your logo image
 import authAPI from '../api/auth.js'; // Import your API file
 
@@ -31,7 +31,7 @@ const LoginPage = () => {
     };
 
     const handleRegister = () => {
-        navigate('/registerPage');
+        navigate('/register');
     };
 
     return (
