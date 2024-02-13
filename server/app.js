@@ -1,8 +1,10 @@
 const express = require("express");
 const app = express();
 const clubRouter = require("./routes/clubRoutes");
+const authRouter = require("./routes/authRoutes");
 
 // Middleware
+
 app.use(express.json());
 
 app.use((req, res, next) => {
@@ -14,6 +16,8 @@ app.use((req, res, next) => {
 
 // defining routes
 app.use('/club', clubRouter);
+
+app.use('/login', authRouter);
 
 app.get("/", (req, res) => {
     res.send("App is up");
