@@ -12,7 +12,7 @@ root.render(
   <React.StrictMode>
     <Router>
       <Routes>
-        <Route path="/" element={<LoginPage />} />
+        <Route path="/login" element={<LoginPage />} />
         <Route path='/register' element={<RegisterPage />} />
         <Route path="/App" element={<App />} />
       </Routes>

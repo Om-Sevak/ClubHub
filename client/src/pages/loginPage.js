@@ -16,7 +16,7 @@ const LoginPage = () => {
 
             const response = await authAPI.login({ email, password });
             if(response.status === 200){
-                navigate('/homePage');
+                navigate('/');
             } else if(response.status === 401){
                 setErrorMessage('Invalid email or password');
             }
