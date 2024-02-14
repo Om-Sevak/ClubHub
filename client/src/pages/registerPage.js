@@ -24,6 +24,7 @@ const RegisterPage = () => {
 
             // Make API request to register user
             const response = await authAPI.register({ firstName, lastName, email, password });
+            console.log(response);
 
             // Check response status and navigate accordingly
             if (response.status === 200) {
