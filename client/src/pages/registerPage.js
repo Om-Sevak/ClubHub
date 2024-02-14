@@ -24,15 +24,15 @@ const RegisterPage = () => {
 
             // Make API request to register user
             const response = await authAPI.register({ firstName, lastName, email, password });
-            console.log(response);
+            //console.log(response);
 
             // Check response status and navigate accordingly
             if (response.status === 200) {
                 navigate('/');
             } else if (response.status === 400) {
                 // Handle validation errors from the server
-                const { message } = await response.json();
-                setErrorMessage(message);
+                console.log(response)
+                setErrorMessage(response.error);
             } else {
                 setErrorMessage('An error occurred during registration');
             }
