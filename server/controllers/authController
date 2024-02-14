@@ -60,7 +60,6 @@ exports.register = async (req, res) => {
         const passwordHash = await bcrypt.hash(password, 12);
 
         // Create a new user
-        console.log('Creating new user:', firstName, lastName, email, passwordHash, interests);
         const newUser = await User.create({
             firstName,
             lastName,
