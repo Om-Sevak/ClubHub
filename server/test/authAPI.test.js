@@ -1,24 +1,23 @@
-const mongoose = require("mongoose");
 const request = require("supertest");
 const app = require('../app');
-const dotenv = require('dotenv');
+const { MongoMemoryServer } = require('mongodb-memory-server');
+const mongoose = require('mongoose');
 const User = require('../models/userModel');
 const bcrypt = require('bcryptjs');
 
-// Loading in environment variables
-dotenv.config({path:'./config/.env'})
+let mongoServer;
 
-// Connecting to the database before each test
-beforeEach(async () => {
-  await mongoose.connect(process.env.MONGO_URI_TEST);
+beforeAll(async () => {
+  mongoServer = await MongoMemoryServer.create();
+  const mongoUri = mongoServer.getUri();
+  await mongoose.connect(mongoUri);
 });
 
-// Closing database connection after each test
-afterEach(async () => {
-  await mongoose.connection.close();
+afterAll(async () => {
+    await mongoose.disconnect();
+    await mongoServer.stop();
 });
 
-// Example testc
 describe('Authentication Endpoints', () => {
 
   describe('POST /login', () => {
