@@ -27,6 +27,7 @@ api.interceptors.response.use(
 );
 
 // Generic request function
+// Generic request function
 const sendRequest = async (method, endpoint, data = null) => {
   try {
     const response = await api({
@@ -42,13 +43,17 @@ const sendRequest = async (method, endpoint, data = null) => {
       error: null,
     };
   } catch (error) {
-    // Return the error message
+    // Extract error message from the server response
+    const errorMessage = error.response ? error.response.data.message : error.message;
+    
+    // Return the error message along with status
     return {
       data: null,
       status: error.response ? error.response.status : null,
-      error: error.message,
+      error: errorMessage,
     };
   }
 };
+
 
 export default sendRequest;

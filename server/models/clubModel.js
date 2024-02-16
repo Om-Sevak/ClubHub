@@ -1,18 +1,22 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 
-// Boilerplate code
-const clubSchema = mongoose.Schema(
-  {
+const clubSchema = new mongoose.Schema({
     name: {
-      type: String,
-      required: true,
+        type: String,
+        required: true
     },
-    owner: {
-      type: String,
-      required: true,
-    }
-  }
-);
+    description: {
+        type: String
+    },
+    createdBy: {
+        type: mongoose.Schema.Types.ObjectId, // Reference to the user who created the club
+        ref: 'User'
+    },
+    executives: [{
+        type: mongoose.Schema.Types.ObjectId, // Reference to users who are executives
+        ref: 'User'
+    }]
+});
 
 const Club = mongoose.model('Club', clubSchema);
 
