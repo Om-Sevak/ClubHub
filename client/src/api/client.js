@@ -10,6 +10,7 @@ const api = axios.create({
 api.interceptors.request.use(
   (config) => {
     // Token will go here
+    config.withCredentials = true;
     return config;
   },
   (error) => {
