@@ -6,6 +6,7 @@ import App from './App';
 import LoginPage from './pages/loginPage';
 import RegisterPage from './pages/registerPage';
 import reportWebVitals from './reportWebVitals';
+import ClubCreatePage from './pages/createClubPage';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
@@ -15,6 +16,7 @@ root.render(
         <Route path="/login" element={<LoginPage />} />
         <Route path='/register' element={<RegisterPage />} />
         <Route path="/App" element={<App />} />
+        <Route path="/createClub" element={<ClubCreatePage />} />
       </Routes>
     </Router>
   </React.StrictMode>
