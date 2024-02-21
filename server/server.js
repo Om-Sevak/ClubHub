@@ -3,9 +3,7 @@ const mongoose = require("mongoose");
 const dotenv = require('dotenv');
 
 // Loading in environment variables
-if(!process.env.PRODUCTION) {
-  dotenv.config({path:'./config/.env'})
-}
+// dotenv.config({path:'./config/.env'})
 
 const PORT = process.env.PORT || 5000;
 const MONGODB_URI = process.env.MONGO_URI;
