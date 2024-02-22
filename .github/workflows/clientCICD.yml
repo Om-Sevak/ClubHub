@@ -10,6 +10,7 @@ on:
       - Dev
 env:
   CI: false
+  REACT_APP_API_BASE_URL: ${{ secrets.REACT_APP_API_BASE_URL }}
   
 jobs:
   build_and_deploy_job:
