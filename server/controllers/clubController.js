@@ -1,26 +1,30 @@
 const Club = require("../models/clubModel");
 
-// Boilerplate code
-
-// Example: function to create a new CLub in the DB
 exports.createClub = async(req, res) => {
     try {
-        console.log(req.body);
-        let newClub = await Club.create(req.body);
+
+        const { name, description, email } = req.body;
+        //const executives = [];
+
+        // Validate email format
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(email)) {
+            return res.status(400).json({ 
+                message: "Invalid email format",
+            });;
+        }
+
+        const newClub = await Club.create({
+            name: name,
+            description: description,
+            email: email
+        });
+
+        res.status(200).json({ message: 'Club created successfully' });
         
-        res.status(201).json({
-            status: "success",
-            message: "new club created",
-            data: {
-                newClub,
-            },
-        });
     } catch (err) {
-        res.status(400).json({
-            status: "fail",
-            message: err.message,
-            description: "Fail to create new club",
-        });
+        console.error('Club creation failed:', err);
+        res.status(500).json({ message: 'An error occurred while processing your request' });
     }
 };
 
