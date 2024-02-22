@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 import './createClubPage.css'; // Import CSS file for styling
 import logo from '../assets/logoIMG.jpeg'; // Import your logo image
+import clubApi from '../api/clubs';
 
 
 const ClubCreatePage = () => {
@@ -10,15 +12,20 @@ const ClubCreatePage = () => {
     const [clubinterest, setClubInterest] = useState('');
     const [clubemail, setClubEmail] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
+    const navigate = useNavigate();
     
-
     const handleclubcreate = async (e) => {
         e.preventDefault(); // Prevent default form submission behavior
         try {
-
+            const response = await clubApi.createClub({ name: clubname, description: clubdescription, email: clubemail});
+            if(response.status === 200){
+                navigate('/');
+            } else if(response.status === 400){
+                setErrorMessage('Invalid email');
+            }
         } catch (error) {
-            console.error('login failed: ', error);
-            setErrorMessage('Invalid email or password');
+            console.error('club creation failed: ', error);
+            
         }
     };
     return (

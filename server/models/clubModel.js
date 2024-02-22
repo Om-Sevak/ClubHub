@@ -8,6 +8,10 @@ const clubSchema = new mongoose.Schema({
     description: {
         type: String
     },
+    email: {
+        type: String,
+        required: true
+    },
     createdBy: {
         type: mongoose.Schema.Types.ObjectId, // Reference to the user who created the club
         ref: 'User'
