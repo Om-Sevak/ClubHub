@@ -12,13 +12,18 @@ exports.createClub = async(req, res) => {
             throw new Error('Unauthorized: Must sign in to create a club');
         }
 
+        // Validate that a club with the provided name doesn't already exist
+        const club = await Club.findOne({ name: name });
+        if (club) {
+            throw new Error(`Bad Request: Club called ${name} already exists`);
+        }
         // Validate email format
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (!emailRegex.test(email)) {
             throw new Error('Bad Request: Invalid email format');
         }
 
-        const userEmail = req.session.username
+        const userEmail = req.session.email
         const user = await User.findOne({ email: userEmail });
         const userObjectId = user._id;
 
