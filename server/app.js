@@ -12,7 +12,9 @@ const clubroleRouter = require("./routes/clubroleRoutes");
 // Middleware
 
 // Loading in environment variables
-dotenv.config({path:'./config/.env'})
+if(!process.env.ORIGIN) {
+    dotenv.config({path:'./config/.env'})
+}
 
 const app = express();
 
