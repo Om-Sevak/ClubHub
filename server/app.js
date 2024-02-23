@@ -7,6 +7,7 @@ const cors = require('cors');
 // Routing Endpoints
 const clubRouter = require("./routes/clubRoutes");
 const authRouter = require("./routes/authRoutes");
+const clubroleRouter = require("./routes/clubroleRoutes");
 
 // Middleware
 
@@ -43,6 +44,8 @@ app.use('/club', clubRouter);
 app.use('/login', authRouter);
 
 app.use('/register', authRouter);
+
+app.use('/role', clubroleRouter);
 
 app.get("/", (req, res) => {
     res.send("App is up");
