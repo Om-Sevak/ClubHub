@@ -22,6 +22,11 @@ exports.login = async (req, res) => {
         if (!isPasswordValid) {
             return res.status(401).json({ message: 'Invalid email or password' });
         }
+        
+        // If successful login, add userid to session
+        req.session.isLoggedIn = true;
+        req.session.username = email;
+        req.session.save();
 
         // If password is valid, login successful
         res.status(200).json({ message: 'Login successful' });
