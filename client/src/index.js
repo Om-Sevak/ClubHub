@@ -18,7 +18,7 @@ root.render(
         <Route path='/register' element={<RegisterPage />} />
         <Route path="/App" element={<App />} />
         <Route path="/createClub" element={<ClubCreatePage />} />
-        <Route path="/club" element={<ClubPage />} />
+        <Route path="/club/:clubName" element={<ClubPage />} />
       </Routes>
     </Router>
   </React.StrictMode>

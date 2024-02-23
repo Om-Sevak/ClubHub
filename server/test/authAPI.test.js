@@ -54,7 +54,7 @@ describe('Authentication Endpoints', () => {
               });
 
           expect(response.status).toBe(401);
-          expect(response.body.message).toBe('Invalid email or password');
+          expect(response.body.message).toBe('Unauthorized: Invalid email or password');
       });
 
       test('Should return 401 for incorrect password', async () => {
@@ -67,7 +67,7 @@ describe('Authentication Endpoints', () => {
               });
 
           expect(response.status).toBe(401);
-          expect(response.body.message).toBe('Invalid email or password');
+          expect(response.body.message).toBe('Unauthorized: Invalid email or password');
       });
   });
 
@@ -101,7 +101,7 @@ describe('Authentication Endpoints', () => {
               });
 
           expect(response.status).toBe(400);
-          expect(response.body.message).toBe('User already exists');
+          expect(response.body.message).toBe('Bad Request: User already exists');
       });
 
       test('Should return 400 for invalid email format', async () => {
@@ -116,7 +116,7 @@ describe('Authentication Endpoints', () => {
               });
 
           expect(response.status).toBe(400);
-          expect(response.body.message).toBe('Invalid email format');
+          expect(response.body.message).toBe('Bad Request: Invalid email format');
       });
 
       test('Should return 400 for short password', async () => {
@@ -131,7 +131,7 @@ describe('Authentication Endpoints', () => {
               });
 
           expect(response.status).toBe(400);
-          expect(response.body.message).toBe('Password must be at least 8 characters long');
+          expect(response.body.message).toBe('Bad Request: Password must be at least 8 characters long');
       });
   });
 });

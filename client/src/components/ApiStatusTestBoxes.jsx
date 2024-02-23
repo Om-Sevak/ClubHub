@@ -18,10 +18,11 @@ const ApiRequestBoxes = () => {
         const { status: deleteStatus} = await clubApi.deleteClub('New Club')
         const { status: postStatus } = await clubApi.createClub({
           name: 'New Club',
-          owner: 'Jimmy John Jenkins',
+          description: 'Test Club For Front to Back end testing',
+          email: 'test@test.com'
         });
         const { status: putStatus } = await clubApi.updateClub('New Club',{
-          owner: 'Henry Hank Henderson'
+          email: 'newtest@test.com'
         })
         
         
