@@ -1,0 +1,64 @@
+/* Global styles */
+body {
+    margin: 0;
+    display: flex;
+    justify-content: center;
+
+    height: 100vh;
+    background-color: #f5f5f5;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+  
+.logo {
+    display: block;
+    max-width: 80%;
+    margin-bottom: 20px;
+    border-radius: 10%;
+    width: 100vh ;
+    height: 40vh;
+    padding-top: 2em;
+    
+}
+
+header {
+
+    background-color: #F2EAD0;
+    border-radius: 20px;
+
+}
+
+header h1{
+    font-size: xx-large;
+    text-align: center;
+    padding: 20px;
+}
+
+.banner {   
+    padding: auto;
+}
+
+.banner h2{
+    text-align: left;
+    color: black;
+    text-shadow: black 1px 1px 1px;
+}
+
+.about {
+    background-color: #F2EAD0;
+    border-radius: 20px;
+}
+
+.about h2 {
+    text-align: center;
+    color: black;
+    text-shadow: black 1px 1px 1px;
+}
+
+.events {
+    background-color: #F26A4B;
+    border-radius: 20px;
+}
+
+
+  
