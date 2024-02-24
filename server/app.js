@@ -28,7 +28,7 @@ app.use(session({
     secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: true,
-    cookie: {}
+    cookie: { secure: true, sameSite: "none" }
 }));
 
 // Credentials not included on default
