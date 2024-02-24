@@ -8,6 +8,7 @@ import RegisterPage from './pages/registerPage';
 import reportWebVitals from './reportWebVitals';
 import ClubCreatePage from './pages/createClubPage';
 import ClubPage from './pages/clubPage';
+import EventCreatePage from './pages/createEventPage';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
@@ -19,6 +20,7 @@ root.render(
         <Route path="/App" element={<App />} />
         <Route path="/createClub" element={<ClubCreatePage />} />
         <Route path="/club/:clubName" element={<ClubPage />} />
+        <Route path="/createEvent" element={<EventCreatePage />} />
       </Routes>
     </Router>
   </React.StrictMode>

@@ -16,7 +16,7 @@ const clubEventSchema = new mongoose.Schema({
         type: String
     },
     club: {
-        type: mongoose.Schema.Types.ObjectId, // Reference to the club
+        type: mongoose.Schema.Types.ObjectId, 
         ref: 'Club'
     }
 });
