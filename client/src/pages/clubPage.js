@@ -80,7 +80,7 @@ function Events() {
 
   return (
     <div>
-        <img src={logo} alt="Logo" className="logo" />
+        <img src={logo} alt="Logo" className="clubLogo" />
         {errorMessage ? null : <Header /> }
       <main>
         {errorMessage ? null : <Banner /> }

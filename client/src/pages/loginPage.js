@@ -26,10 +26,6 @@ const LoginPage = () => {
         }
     };
 
-    const handleGuest = () => {
-        navigate('/homePage');
-    };
-
     const handleRegister = () => {
         navigate('/register');
     };
@@ -55,7 +51,6 @@ const LoginPage = () => {
                     <button type="submit">Login</button>
                 </form>
                 {errorMessage && <p className="error-message">{errorMessage}</p>}
-                <button onClick={handleGuest}>Sign in as Guest</button>
                 <button onClick={handleRegister}>Register</button>
             </div>
         </div>
