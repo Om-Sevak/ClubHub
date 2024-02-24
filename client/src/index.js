@@ -7,6 +7,7 @@ import LoginPage from './pages/loginPage';
 import RegisterPage from './pages/registerPage';
 import reportWebVitals from './reportWebVitals';
 import ClubCreatePage from './pages/createClubPage';
+import EventCreatePage from './pages/createEventPage';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
@@ -17,6 +18,7 @@ root.render(
         <Route path='/register' element={<RegisterPage />} />
         <Route path="/App" element={<App />} />
         <Route path="/createClub" element={<ClubCreatePage />} />
+        <Route path="/createEvent" element={<EventCreatePage />} />
       </Routes>
     </Router>
   </React.StrictMode>

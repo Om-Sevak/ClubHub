@@ -1,5 +1,6 @@
 const express = require("express");
 const clubController = require("../controllers/clubController");
+const eventController = require("../controllers/eventController");
 
 const router = express.Router();
 
@@ -20,6 +21,9 @@ router.route("/:name").delete(clubController.deleteClub);
 
 // Example: get a specific club based on club name
 router.route("/:name").get(clubController.getClub);
+
+// Create a new club event
+router.post("/:name/event", eventController.createEvent);
 
 // Note: always put static routes (ex: /new) before dynamic routes (ex: /:id)
 
