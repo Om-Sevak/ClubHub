@@ -9,7 +9,7 @@ exports.createEvent = async (req, res) => {
 
         const club = await Club.findOne({ name: clubName });
         if (!club) {
-            throw new Error('Club Not Found: Fail to create event as DNE');
+            throw new Error('Not Found: Fail to create event as club DNE');
         }
 
         if (!req.session.isLoggedIn) {
