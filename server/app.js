@@ -1,6 +1,7 @@
 // Packages
 const express = require("express");
 const session = require("express-session");
+const crypto = require('crypto');
 const dotenv = require('dotenv');
 const cors = require('cors');
 
@@ -12,7 +13,7 @@ const clubroleRouter = require("./routes/clubroleRoutes");
 // Middleware
 
 // Loading in environment variables
-if(!process.env.ORIGIN) {
+if(!process.env.ENVIRONMENT) {
     dotenv.config({path:'./config/.env'})
 }
 
@@ -21,13 +22,15 @@ const app = express();
 app.use(express.json());
 
 // Session handled soley by server. 
-// Client cannot edit cookies. 
 // When client clears cookie data, server clears session data (on page close)
+// Only https on prod. Requires sameSite flag as 'none' due to static page proxy nature
+const cookieSetting = (process.env.ENVIRONMENT == "PRODUCTION") ? { secure: true, sameSite: "none" } : {}; 
+app.set('trust proxy', 1)
 app.use(session({
-    secret: process.env.SESSION_SECRET,
+    secret: process.env.SESSION_SECRET || crypto.randomBytes(16).toString('hex'),
     resave: false,
     saveUninitialized: true,
-    cookie: {}
+    cookie: cookieSetting
 }));
 
 // Credentials not included on default

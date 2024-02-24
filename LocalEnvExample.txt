@@ -1,0 +1,11 @@
+Server:
+For .env file in server/config:
+
+MONGO_URI=mongodb+srv://... (this is a secret!)
+ORIGIN=http://localhost:3000
+ENVIRONMENT=LOCAL
+
+Client:
+For .env file in client/:
+
+REACT_APP_API_BASE_URL=http://localhost:5000
