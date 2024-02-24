@@ -12,7 +12,9 @@ const clubroleRouter = require("./routes/clubroleRoutes");
 // Middleware
 
 // Loading in environment variables
-dotenv.config({path:'./config/.env'})
+if(!process.env.ORIGIN) {
+    dotenv.config({path:'./config/.env'})
+}
 
 const app = express();
 
@@ -25,7 +27,7 @@ app.use(session({
     secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: true,
-    cookie: { httpOnly: true }
+    cookie: {}
 }));
 
 // Credentials not included on default
