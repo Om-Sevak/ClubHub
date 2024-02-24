@@ -22,7 +22,7 @@ app.use(express.json());
 
 // Session handled soley by server. 
 // Client cannot edit cookies. 
-// When client clears cookie data, server clears session data (on page close)
+// When client clears cookie data, server clears session data (on page close) 
 app.set('trust proxy', 1)
 app.use(session({
     secret: process.env.SESSION_SECRET,
