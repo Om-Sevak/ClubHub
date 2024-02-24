@@ -1,4 +1,5 @@
 const Club = require("../models/clubModel");
+const User = require("../models/userModel")
 const clubRole = require("./clubroleController");
 
 exports.createClub = async(req, res) => {
@@ -11,16 +12,26 @@ exports.createClub = async(req, res) => {
             throw new Error('Unauthorized: Must sign in to create a club');
         }
 
+        // Validate that a club with the provided name doesn't already exist
+        const club = await Club.findOne({ name: name });
+        if (club) {
+            throw new Error(`Bad Request: Club called ${name} already exists`);
+        }
         // Validate email format
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (!emailRegex.test(email)) {
             throw new Error('Bad Request: Invalid email format');
         }
 
+        const userEmail = req.session.email
+        const user = await User.findOne({ email: userEmail });
+        const userObjectId = user._id;
+
         const newClub = await Club.create({
             name: name,
             description: description,
-            email: email
+            email: email,
+            createdBy: userObjectId
         });
 
         res.status(200).json({ message: 'Club created successfully' });
@@ -60,12 +71,11 @@ exports.getClub = async(req, res) => {
             throw new Error('Not Found: Fail to edit club as DNE');
         }
         res.status(200).json({
-            status: "success",
-            message: "Found club",
-            data: {
-                club: club,
-            },
+            description: club.description,
+            executives: club.executives,
+            message: "Club Found Succesfully"
         });
+        
         console.log(`${req.sessionID} - Request Success: ${req.method}  ${req.originalUrl}`);
 
     } catch (err) {

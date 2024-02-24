@@ -21,7 +21,10 @@ const ClubCreatePage = () => {
             if(response.status === 200){
                 navigate('/');
             } else if(response.status === 400){
-                setErrorMessage('Invalid email');
+                setErrorMessage(response.error);
+            }
+            else if(response.status === 403){
+                setErrorMessage('You must be signed in to create a club');
             }
         } catch (error) {
             console.error('club creation failed: ', error);
