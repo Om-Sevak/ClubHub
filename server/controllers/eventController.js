@@ -1,5 +1,5 @@
 const Club = require("../models/clubModel");
-const Event = require("../models/eventModel");
+const Event = require("../models/clubEventModel");
 const clubRole = require("./clubroleController");
 
 exports.createEvent = async (req, res) => {
