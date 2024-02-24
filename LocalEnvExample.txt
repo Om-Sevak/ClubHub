@@ -2,7 +2,6 @@ Server:
 For .env file in server/config:
 
 MONGO_URI=mongodb+srv://... (this is a secret!)
-SESSION_SECRET=dK2pOeNpswGHxGPD9PMa25dFez3Xz0DU
 ORIGIN=http://localhost:3000
 ENVIRONMENT=LOCAL
 

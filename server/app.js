@@ -1,6 +1,7 @@
 // Packages
 const express = require("express");
 const session = require("express-session");
+const crypto = require('crypto');
 const dotenv = require('dotenv');
 const cors = require('cors');
 
@@ -26,7 +27,7 @@ app.use(express.json());
 const cookieSetting = (process.env.ENVIRONMENT == "PRODUCTION") ? { secure: true, sameSite: "none" } : {}; 
 app.set('trust proxy', 1)
 app.use(session({
-    secret: process.env.SESSION_SECRET,
+    secret: process.env.SESSION_SECRET || crypto.randomBytes(16).toString('hex'),
     resave: false,
     saveUninitialized: true,
     cookie: cookieSetting
