@@ -41,7 +41,7 @@ exports.createEvent = async (req, res) => {
                 message: err.message,
                 description: `Unauthorized: ${req.session.email} is not and admin of club ${req.params.name}`,
             });
-        } else if (error.message === 'Not Found') {
+        } else if (error.message.includes('Not Found')) {
             res.status(404).json({
                 status: 'fail',
                 message: err.message,
