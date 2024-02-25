@@ -157,3 +157,62 @@ exports.createRole = async (req,res) => {
         console.log(`${req.sessionID} - Request Failed: ${err.message}`);
     }
 }
+
+exports.deleteRole = async(req, res) => {
+    try {
+        console.log(`${req.sessionID} - ${req.session.email} is requesting to leave club ${ req.params.name}`);
+
+        if (!req.session.isLoggedIn) {
+            throw new Error('Unauthorized: Must sign in to delete a club');
+        }
+
+        const userEmail = req.session.email;
+        const clubName = req.params.name;
+        const club = await Club.findOne({ name: clubName});
+        const user = await User.findOne({ email: userEmail }); 
+
+        const member = await this.getRoleMiddleware(userEmail, clubName);
+        // Validating that this user is a member of this club
+        if (!member) {
+            throw new Error(`Bad Request: You are are not a member of club ${clubName}.`);
+        }
+
+        // Validating that this user is not an Admin
+        const isAdmin = await this.isClubAdminMiddleware(userEmail, clubName);
+        if (isAdmin) {
+            throw new Error('Bad Request: Admin can not leave the club.');
+        }
+
+        // Delete the ClubMembership record for this user
+        const deleteStatus = await ClubMemberships.deleteOne({ club: club.id, user: user.id });
+        if (!deleteStatus.acknowledged) {
+            throw err;
+        }
+
+        res.status(200).json({message: "Left Club Succesfully"});
+        console.log(`${req.sessionID} - Request Success: ${req.method}  ${req.originalUrl}`);
+
+    } catch (err) {
+        if (err.message.includes('Unauthorized')) {
+            res.status(403).json({
+                status: "fail",
+                message: err.message,
+                description: `Unauthorized: Must sign in to leave club`,
+            });
+        } else if (err.message.includes('Bad Request')) {
+            res.status(400).json({
+                status: "fail",
+                message: err.message,
+                description: `Bad Request: Failed to leave the club`
+            });
+        } else {
+            res.status(500).json({
+                status: "fail",
+                message: err.message,
+                description: `Bad Request: Server Error`,
+            });
+            console.log(`${req.sessionID} - Server Error: ${err}`)
+        }
+        console.log(`${req.sessionID} - Request Failed: ${err.message}`);
+    }
+}

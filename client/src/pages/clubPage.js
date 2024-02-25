@@ -105,7 +105,20 @@ const ClubPage = () => {
 
   //TODO
   const handleLeave = async () => {
-
+    try {
+      const response = await clubRoleApi.deleteClubRole(clubName);
+      if(response.status === 200){
+          window.location.reload();
+      } else if(response.status === 400){
+          setErrorMessage(response.error);
+      }
+      else if(response.status === 403){
+          setErrorMessage('You must be signed in to leave a club');
+      }
+    } catch (error) {
+        console.error('failed to leave the club ', error);
+        
+    }
   }
 
   //TODO
