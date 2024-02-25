@@ -5,4 +5,6 @@ const clubroleController = require('../controllers/clubroleController');
 
 router.route("/:name").get(clubroleController.getRole);
 
+router.route("/:name").post(clubroleController.createRole);
+
 module.exports = router;

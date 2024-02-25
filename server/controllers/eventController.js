@@ -58,3 +58,41 @@ exports.createEvent = async (req, res) => {
         console.log(`${req.sessionID} - Request Failed: ${error.message}`);
     }
 };
+
+exports.getEventsForClub = async (req, res) => {
+    try {
+        // Find all events for the given clubId
+        console.log(`${req.sessionID} - ${req.session.email} requesting GET on ${req.params.name}`);
+        
+        console.log(req.params.name)
+        const club = await Club.findOne({ name: req.params.name});
+        if (!club) {
+            throw new Error('Not Found: Fail to get events as club DNE');
+        }
+        const clubObjectId = club._id;
+        const events = await Event.find({ club: clubObjectId });
+
+        res.status(200).json({
+            events: events,
+            message: "Events found successfully"
+        });
+
+        console.log(`${req.sessionID} - Request Success: ${req.method}  ${req.originalUrl}`);
+    } catch (err) {
+        if (err.message.includes('Not Found')) {
+            res.status(404).json({
+                status: "fail",
+                message: err.message,
+                description: `Not Found: Fail to get events as ${req.params.name} DNE`,
+            });
+        } else {
+            res.status(500).json({
+                status: "fail",
+                message: err.message,
+                description: `Bad Request: Server Error`,
+            });
+            console.log(`${req.sessionID} - Server Error: ${err}`)
+        }
+        console.log(`${req.sessionID} - Request Failed: ${err.message}`);
+    }
+};
