@@ -34,7 +34,7 @@ exports.createClub = async(req, res) => {
             createdBy: userObjectId
         });
 
-        const adminRole = await clubRole.createAdminRole(userEmail, name);
+        const adminRole = await clubRole.createAdminRoleMiddleware(userEmail, name);
 
         res.status(200).json({ message: 'Club created successfully' });
         console.log(`${req.sessionID} - Request Success: ${req.method}  ${req.originalUrl}`);
