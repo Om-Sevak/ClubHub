@@ -3,13 +3,17 @@ import logo from '../assets/logoIMG.jpeg'; // Import your logo image
 import './clubPage.css';
 import { useParams } from 'react-router-dom';
 import clubApi from '../api/clubs';
+import eventApi from '../api/events';
+import { useNavigate } from 'react-router-dom';
 
 // Header component
 const ClubPage = () => {
   const { clubName } = useParams();
   const [clubDescription, setClubDescription] = useState('');
   const [clubExecutives, setClubExecutives] = useState('');
+  const [clubEvents, setClubEvents] = useState('')
   const [errorMessage, setErrorMessage] = useState('');
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -26,6 +30,21 @@ const ClubPage = () => {
       }
       catch (error) {
         console.error('unable to get club ', error);
+        setErrorMessage('Club does not exist');
+      }
+
+      try {
+        const { status: reqStatus, data: eventData } = await eventApi.getEventsForClub(clubName);
+
+        if (reqStatus === 200) {
+          setClubEvents(eventData.events);
+        }
+        else if (reqStatus === 404) {
+          setErrorMessage("Club does not exist")
+        }
+      }
+      catch (error) {
+        console.error('unable to get events ', error);
         setErrorMessage('Club does not exist');
       }
     };
@@ -63,15 +82,24 @@ function About() {
   );
 }
 
+const handleCreateEventClick = () => {
+  navigate(`/club/createEvent/${clubName}`);
+};
+
 // Events section component
 function Events() {
   return (
-    <section className="events" >
+    <section className="events">
       <h2>Upcoming Events</h2>
       <ul>
-        <li>Event 1 - Date</li>
-        <li>Event 2 - Date</li>
-        {/* Add more events as needed */}
+        {clubEvents.map(event => (
+          <li key={event._id}>
+            <h3>{event.title}</h3>
+            <p>Description: {event.description}</p>
+            <p>Date: {event.date}</p>
+            <p>Location: {event.location}</p>
+          </li>
+        ))}
       </ul>
     </section>
   );
@@ -86,6 +114,7 @@ function Events() {
         {errorMessage ? null : <Banner /> }
         {errorMessage ? null : <About /> }
         {errorMessage ? null : <Events /> }
+        <button onClick={handleCreateEventClick}>Create Event</button>{/* need to hide if non-admin*/}
         {errorMessage && <p className="error-message">{errorMessage}</p>}
       </main>
     </div>

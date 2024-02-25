@@ -2,10 +2,10 @@ import sendRequest from "./client";
 
 const eventApi = {
   getAllEvents: async () => sendRequest('GET', 'event'),
-  getEventsForClub: async (clubId) => sendRequest('GET', `event?club=${clubId}`),
-  createEvent: async (eventData) => sendRequest('POST', 'event', eventData),
-  updateEvent: async (eventId, eventData) => sendRequest('PUT', `event/${eventId}`, eventData),
-  deleteEvent: async (eventId) => sendRequest('DELETE', `event/${eventId}`),
+  getEventsForClub: async (clubName) => sendRequest('GET', `club/club=${clubName}/event`),
+  createEvent: async (eventData, clubName) => sendRequest('POST', `club/club=${clubName}/event`, eventData),
+  updateEvent: async (eventId, clubName, eventData) => sendRequest('PUT', `club/club=${clubName}/event/event=${eventId}`, eventData),
+  deleteEvent: async (eventId, clubName) => sendRequest('DELETE', `club/club=${clubName}/event/event=${eventId}`),
 };
 
 export default eventApi;
