@@ -25,7 +25,7 @@ exports.getRoleMiddleware = async (email,clubName) => {
     }
 }
 
-exports.createAdminRole = async (email, clubName) => {
+exports.createAdminRoleMiddleware = async (email, clubName) => {
     try {
         // Find the user by email (in the session)
         const user = await User.findOne({ email: email });
