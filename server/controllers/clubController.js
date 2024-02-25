@@ -1,4 +1,3 @@
-const ClubMembership = require("../models/clubMembershipsModel");
 const Club = require("../models/clubModel");
 const User = require("../models/userModel")
 const clubRole = require("./clubroleController");
