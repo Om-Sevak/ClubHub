@@ -62,8 +62,27 @@ const ClubPage = () => {
       }
     };
 
+    const fetchClubEvents = async () => {
+      
+      try {
+        console.log(clubName)
+        const { status: reqStatus, data: eventData } = await eventApi.getEventsForClub(clubName);
+        if (reqStatus === 200) {
+          setClubEvents(eventData.events);
+        }
+        else if (reqStatus === 404) {
+          setErrorMessage("Club does not exist")
+        }
+      }
+      catch (error) {
+        console.error('unable to get events ', error);
+        setErrorMessage('Club does not exist');
+      }
+    };
+
     fetchClubData();
     fetchUserRoleData();
+    fetchClubEvents();
 
   }, [])
 
@@ -160,8 +179,8 @@ function Events() {
         <Banner />
         <About />
         <Events />
+        {isAdmin &&<button onClick={handleCreateEventClick}>Create Event</button>}
         {isAdmin ? <button onClick={handleDelete}>Delete Club</button> : <button onClick={isMember ? handleLeave : handleJoin}>{isMember ? 'Leave Club' : 'Join Club'}</button>}
-        <button onClick={handleCreateEventClick}>Create Event</button>{/* need to hide if non-admin*/}
         {errorMessage && <p className="error-message">{errorMessage}</p>}
       </main>
     </div>
