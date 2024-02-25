@@ -150,6 +150,12 @@ const handleCreateEventClick = () => {
 
 // Events section component
 function Events() {
+
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    return date.toDateString(); 
+  };
+
   return (
     <section className="events">
       <h2>Upcoming Events</h2>
@@ -158,7 +164,7 @@ function Events() {
           <li key={event._id}>
             <h3>{event.title}</h3>
             <p>Description: {event.description}</p>
-            <p>Date: {event.date}</p>
+            <p>Date: {formatDate(event.date)}</p>
             <p>Location: {event.location}</p>
           </li>
         ))}

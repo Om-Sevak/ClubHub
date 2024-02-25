@@ -23,7 +23,7 @@ const EventCreatePage = () => {
         try {
             const response = await eventApi.createEvent({ title: eventTitle, description: eventDescription, date: eventDate, location: eventLocation, club: clubName}, clubName);
             if(response.status === 200){
-                navigate('/');
+                navigate(`/club/${clubName}`);
             } else if(response.status === 400){
                 setErrorMessage('Invalid email');
             }
@@ -32,6 +32,11 @@ const EventCreatePage = () => {
             
         }
     };
+
+    const handleBack = () => {
+        navigate(`/club/${clubName}`);
+      };
+
     return (
         <div className="create-event-page">
             <div className="login-container">
@@ -63,6 +68,7 @@ const EventCreatePage = () => {
                     />
                     <button type="submit">Create</button>
                 </form>
+                <button onClick={handleBack}>Back</button>
                 {errorMessage && <p className="error-message">{errorMessage}</p>}
             </div>
         </div>
