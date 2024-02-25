@@ -171,11 +171,6 @@ exports.deleteRole = async(req, res) => {
         const club = await Club.findOne({ name: clubName});
         const user = await User.findOne({ email: userEmail }); 
 
-        // Checking if club exists first as we need a valid club to get possible role
-         if (!club) {
-            throw new Error('Not Found: Can not leave a club that does not exist');
-        }
-
         const member = await this.getRoleMiddleware(userEmail, clubName);
         // Validating that this user is a member of this club
         if (!member) {
@@ -209,12 +204,6 @@ exports.deleteRole = async(req, res) => {
                 status: "fail",
                 message: err.message,
                 description: `Bad Request: Failed to leave the club`
-            });
-        } else if (err.message.includes('Not Found')) {
-            res.status(404).json({
-                status: "fail",
-                message: err.message,
-                description: `Not Found: Fail to leave club as ${req.params.name} DNE`,
             });
         } else {
             res.status(500).json({
