@@ -65,6 +65,7 @@ exports.createClub = async(req, res) => {
 exports.getClub = async(req, res) => {
     try {
         console.log(`${req.sessionID} - Request Get on ${ req.params.name}`);
+        
         const club = await Club.findOne({ name: req.params.name });
 
         if (!club) {

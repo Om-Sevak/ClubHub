@@ -11,7 +11,7 @@ const ClubPage = () => {
   const { clubName } = useParams();
   const [clubDescription, setClubDescription] = useState('');
   const [clubExecutives, setClubExecutives] = useState('');
-  const [clubEvents, setClubEvents] = useState('')
+  const [clubEvents, setClubEvents] = useState([])
   const [errorMessage, setErrorMessage] = useState('');
   const navigate = useNavigate();
 
@@ -33,20 +33,6 @@ const ClubPage = () => {
         setErrorMessage('Club does not exist');
       }
 
-      try {
-        const { status: reqStatus, data: eventData } = await eventApi.getEventsForClub(clubName);
-
-        if (reqStatus === 200) {
-          setClubEvents(eventData.events);
-        }
-        else if (reqStatus === 404) {
-          setErrorMessage("Club does not exist")
-        }
-      }
-      catch (error) {
-        console.error('unable to get events ', error);
-        setErrorMessage('Club does not exist');
-      }
     };
 
     fetchData();

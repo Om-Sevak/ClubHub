@@ -59,12 +59,13 @@ exports.createEvent = async (req, res) => {
     }
 };
 
-exports.getEventsForClub = async (clubName) => {
+exports.getEventsForClub = async (req, res) => {
     try {
         // Find all events for the given clubId
         console.log(`${req.sessionID} - ${req.session.email} requesting GET on ${req.params.name}`);
         
-        const club = await Club.findOne({ name: clubName });
+        console.log(req.params.name)
+        const club = await Club.findOne({ name: req.params.name});
         if (!club) {
             throw new Error('Not Found: Fail to get events as club DNE');
         }
