@@ -3,16 +3,20 @@ import logo from '../assets/logoIMG.jpeg'; // Import your logo image
 import './clubPage.css';
 import { useParams } from 'react-router-dom';
 import clubApi from '../api/clubs';
+import clubRoleApi from '../api/clubRole';
+import NotFound from '../components/NotFound';
 
 // Header component
 const ClubPage = () => {
   const { clubName } = useParams();
   const [clubDescription, setClubDescription] = useState('');
   const [clubExecutives, setClubExecutives] = useState('');
+  const [isMember, setIsMember] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
 
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchClubData = async () => {
       try {
         const { status: reqStatus, data: clubData } = await clubApi.getClub(clubName);
 
@@ -30,8 +34,62 @@ const ClubPage = () => {
       }
     };
 
-    fetchData();
+    const fetchUserRoleData = async () => {
+      try {
+        const { status: reqStatus, data: roleData } = await clubRoleApi.getClubRole(clubName);
+
+        // TODO: handle the case where data.role is admin
+        if (reqStatus === 200) {
+          setIsMember(true);
+          if (roleData.data.role === "admin") {
+            setIsAdmin(true);
+          }
+          else {
+            setIsAdmin(false);
+          }
+        }
+        else if (reqStatus === 404) {
+          setIsMember(false);
+          setIsAdmin(false);
+        }
+      }
+      catch (error) {
+        console.error('there was an error getting the role ', error);
+      }
+    };
+
+    fetchClubData();
+    fetchUserRoleData();
+
   }, [])
+
+  const handleJoin = async () => {
+    try {
+      const response = await clubRoleApi.createClubRole(clubName, {role: "member"});
+      if(response.status === 200){
+          window.location.reload();
+      } else if(response.status === 400){
+          setErrorMessage(response.error);
+      }
+      else if(response.status === 403){
+          setErrorMessage('You must be signed in to join a club');
+      }
+    } catch (error) {
+        console.error('failed to join club ', error);
+        
+    }
+  }
+
+  //TODO
+  const handleLeave = async () => {
+
+  }
+
+  //TODO
+  const handleDelete = async () => {
+
+  }
+
 
 
 function Header() {
@@ -77,15 +135,19 @@ function Events() {
   );
 }
 
+  if (errorMessage === 'Club does not exist') {
+    return <NotFound />;
+  }
 
   return (
     <div>
         <img src={logo} alt="Logo" className="clubLogo" />
-        {errorMessage ? null : <Header /> }
+        <Header />
       <main>
-        {errorMessage ? null : <Banner /> }
-        {errorMessage ? null : <About /> }
-        {errorMessage ? null : <Events /> }
+        <Banner />
+        <About />
+        <Events />
+        {isAdmin ? <button onClick={handleDelete}>Delete Club</button> : <button onClick={isMember ? handleLeave : handleJoin}>{isMember ? 'Leave Club' : 'Join Club'}</button>}
         {errorMessage && <p className="error-message">{errorMessage}</p>}
       </main>
     </div>

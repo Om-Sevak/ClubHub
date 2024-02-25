@@ -1,3 +1,4 @@
+const ClubMembership = require("../models/clubMembershipsModel");
 const Club = require("../models/clubModel");
 const User = require("../models/userModel")
 const clubRole = require("./clubroleController");
@@ -33,6 +34,8 @@ exports.createClub = async(req, res) => {
             email: email,
             createdBy: userObjectId
         });
+
+        const adminRole = await clubRole.createAdminRole(userEmail, name);
 
         res.status(200).json({ message: 'Club created successfully' });
         console.log(`${req.sessionID} - Request Success: ${req.method}  ${req.originalUrl}`);
