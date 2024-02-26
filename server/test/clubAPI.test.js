@@ -33,20 +33,18 @@ describe('Club Endpoints', () => {
     });
 
     describe('POST /club', () => {
-        test('Should create a new club succesfully', function (done) {
+        test('Should create a new club succesfully', async () => {
 
             testSession = session(app);
 
-            testSession.post('/login')
+            const res = await testSession.post('/login')
                 .send({ email: 'john@example.com', password: 'password' })
-                .expect(200)
-                .end(done)
+                .expect(200);
 
             // This returns a 403, the session does not persist
-            testSession.post('/club')
+            const resone = await testSession.post('/club')
                 .send({name: 'test club', descirption: 'Test description', email: 'johnny@example.com'})
-                .expect(200)
-                .end(done)
+                .expect(200);
         });
     })
 })
