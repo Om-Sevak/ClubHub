@@ -8,8 +8,6 @@ const ApiRequestBoxes = () => {
   const [postRequest, setPostStatus] = useState([]);
   const [putRequest, setPutStatus] = useState([]);
   const [deleteRequest, setDeleteStatus] = useState([]);
-  const [error, setError] = useState(null);
-  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -32,9 +30,7 @@ const ApiRequestBoxes = () => {
         setDeleteStatus(deleteStatus);
 
       } catch (error) {
-        setError(error.message);
-      } finally {
-        setLoading(false);
+        console.log(error)
       }
     };
 
@@ -43,20 +39,26 @@ const ApiRequestBoxes = () => {
 
 
   return (
-    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
-      <div style={{ border: '1px solid #ccc', padding: '20px', margin: '10px' }}>
+    <div style={{ 
+      display: 'grid',
+      gridTemplateColumns: 'repeat(2, 1fr)',
+      gap: '10px',
+      alignItems: 'normal',
+      justifyContent: 'center'
+    }}>
+      <div style={{ border: '1px solid #ccc', padding: '20px', alignSelf: 'flex-end', textAlign: 'center' }}>
         <h3>GET Request Status</h3>
         <p>Status: {getRequest}</p>
       </div>
-      <div style={{ border: '1px solid #ccc', padding: '20px', margin: '10px' }}>
+      <div style={{ border: '1px solid #ccc', padding: '20px', alignSelf: 'flex-end', textAlign: 'center' }}>
         <h3>POST Request Status</h3>
         <p>Status: {postRequest}</p>
       </div>
-      <div style={{ border: '1px solid #ccc', padding: '20px', margin: '10px' }}>
+      <div style={{ border: '1px solid #ccc', padding: '20px', alignSelf: 'flex-start', textAlign: 'center' }}>
         <h3>PUT Request Status</h3>
         <p>Status: {putRequest}</p>
       </div>
-      <div style={{ border: '1px solid #ccc', padding: '20px', margin: '10px' }}>
+      <div style={{ border: '1px solid #ccc', padding: '20px', alignSelf: 'flex-start', textAlign: 'center' }}>
         <h3>DELETE Request Status</h3>
         <p>Status: {deleteRequest}</p>
       </div>
