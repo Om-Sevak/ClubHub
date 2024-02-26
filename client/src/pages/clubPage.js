@@ -130,7 +130,7 @@ const ClubPage = () => {
 
 function Header() {
   return (
-    <header>
+    <header className='club-page-header'>
       
       <h1>{clubName}</h1>
     </header>
@@ -191,7 +191,7 @@ function Events() {
   }
 
   return (
-    <div>
+    <div className='club-page'>
         <img src={logo} alt="Logo" className="clubLogo" />
         <Header />
       <main>

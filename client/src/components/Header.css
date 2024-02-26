@@ -1,0 +1,105 @@
+.header {
+  display: flex;
+  height: 50px;
+  margin-top: 0;
+  padding: 0;
+  justify-content: start;
+  /* optional; just for demo */
+  background: white;
+}
+
+.header-left-section {
+  flex: 1;
+  /* shorthand for: flex-grow: 1, flex-shrink: 1, flex-basis: 0 */
+  display: flex;
+  justify-content: flex-start;
+  align-items: stretch;
+}
+
+.header-right-section {
+  flex: 1;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.header-login-button {
+  margin-right: 10px;
+  padding: 10px 10px;
+  background-color: #fff;
+  width: 25%;
+  color: #F2EAD0;
+  cursor: pointer;
+  border: none;
+  position: relative;
+  bottom: -20%;
+}
+
+.header-logo {
+  padding:1px;
+  margin-left: 10px;
+}
+
+.header-middle-section {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.header-icon {
+  position: relative;
+  padding-left: 20px;
+  font-size: 30px;
+  cursor: pointer;
+  bottom: -4px;
+  color:#062b54;
+  cursor: default;
+}
+
+.search {
+  width: 90%;
+  justify-content: center;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  box-sizing: border-box;
+  transition: border-color 0.3s ease;
+  align-items: center;
+  overflow: hidden;
+  font-size: 1rem;
+  display: flex;
+  flex-flow: row nowrap;
+}
+
+.search__input {
+  justify-content: center;
+  margin-bottom: 0 !important;
+  padding: 5px !important;
+  align-items: center;
+  background-color: #fff;
+  font-size: x-large;
+  border: none !important;
+  outline: none;
+}
+
+.header-search-icon {
+  padding-left: 10px;
+}
+
+.header-nav-button {
+  height: 40px;
+  width: 40px;
+  padding: 1px;
+  background: transparent;
+  font-size: 28px;
+  margin-bottom: 0;
+  color:#062b54
+}
+
+.header-tooltip-style {
+  color: #F2EAD0 !important;
+  background-color: #062b54 !important;
+  font-size: small !important;
+  font-family: "Arial", sans-serif !important;
+  font-weight: 750;
+}
