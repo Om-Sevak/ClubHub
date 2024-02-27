@@ -14,16 +14,16 @@ const EventCreatePage = () => {
     const [eventDescription, setEventDescription] = useState('');
     const [eventDate, setEventDate] = useState('');
     const [eventLocation, setEventLocation] = useState('');
-    const {name} = useParams();
+    const {clubName} = useParams();
     const [errorMessage, setErrorMessage] = useState('');
     const navigate = useNavigate();
     
     const handleeventcreate = async (e) => {
         e.preventDefault(); // Prevent default form submission behavior
         try {
-            const response = await eventApi.createEvent({ title: eventTitle, description: eventDescription, date: eventDate, location: eventLocation, club: name});
+            const response = await eventApi.createEvent({ title: eventTitle, description: eventDescription, date: eventDate, location: eventLocation, club: clubName}, clubName);
             if(response.status === 200){
-                navigate('/');
+                navigate(`/club/${clubName}`);
             } else if(response.status === 400){
                 setErrorMessage('Invalid email');
             }
@@ -32,11 +32,16 @@ const EventCreatePage = () => {
             
         }
     };
+
+    const handleBack = () => {
+        navigate(`/club/${clubName}`);
+      };
+
     return (
         <div className="create-event-page">
             <div className="login-container">
             <img src={logo} alt="Logo" className="logo" />
-                <h2>Create Event for {name}</h2>
+                <h2>Create Event</h2>
                 <form onSubmit={handleeventcreate}>
                     <input
                         type="text"
@@ -63,6 +68,7 @@ const EventCreatePage = () => {
                     />
                     <button type="submit">Create</button>
                 </form>
+                <button onClick={handleBack}>Back</button>
                 {errorMessage && <p className="error-message">{errorMessage}</p>}
             </div>
         </div>
