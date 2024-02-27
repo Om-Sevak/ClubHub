@@ -16,13 +16,7 @@ const ClubCreatePage = () => {
     const handleclubcreate = async (e) => {
         e.preventDefault(); // Prevent default form submission behavior
         try {
-            // Create form data to include the uploaded logo file
-            const formData = new FormData();
-            formData.append('name', clubname);
-            formData.append('description', clubdescription);
-            formData.append('email', clubemail);
-            
-            const response = await clubApi.createClub(formData);
+            const response = await clubApi.createClub({ name: clubname, description: clubdescription, email: clubemail});
             if(response.status === 200){
                 navigate('/');
             } else if(response.status === 400){
