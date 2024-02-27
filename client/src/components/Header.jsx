@@ -1,6 +1,6 @@
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { faMagnifyingGlass, faHouse, faPeopleGroup, faCalendarDays, faUsersViewfinder } from "@fortawesome/free-solid-svg-icons"
+import { faPlus, faHouse, faPeopleGroup, faCalendarDays, faUsersViewfinder } from "@fortawesome/free-solid-svg-icons"
 import { Tooltip } from 'react-tooltip';
 import { useEffect, useState, useRef } from "react";
 import logoSmall from '../assets/logoSmall.jpeg'
@@ -8,6 +8,7 @@ import './Header.css'
 import SearchBar from './SearchBar';
 import { SearchResultsList } from "./SearchResultList";
 import { useNavigate } from 'react-router-dom';
+import authApi from "../api/auth";
 
 const Header = () => {
 
@@ -18,6 +19,16 @@ const Header = () => {
 
   const wrapperRef = useRef(null);
   useEffect(() => {
+    const fetchClubData = async () => {
+      try {
+        setLoggedIn(authApi.loginStatus());
+      }
+      catch (error) {
+        console.error('Auth Error', error);
+      }
+    };
+   
+
     function handleClickOutside(event) {
       if (wrapperRef.current && !wrapperRef.current.contains(event.target)) {
         setViewResults(false);
@@ -27,11 +38,14 @@ const Header = () => {
       }
     }
     document.addEventListener("mousedown", handleClickOutside);
+    
+    fetchClubData();
+    
     return () => {
       // Unbind the event listener on clean up
       document.removeEventListener("mousedown", handleClickOutside);
     };
-  });
+  }, []);
 
   const handleHomeClick = () => {
     navigate(`/`);
@@ -49,9 +63,23 @@ const Header = () => {
     navigate(`/findClub`);
   };
 
-  const handleLoginClick = () => {
-    navigate(`/login`);
+  const createClubClick = () => {
+    navigate(`/createClub`);
   };
+
+  const handleLoginLogoutClick = async () => {
+    const { data: loginData } = await authApi.loginStatus();
+    if(loginData.loggedInStatus) {
+      const { status: reqStatus } = await authApi.logout();
+      if (reqStatus === 200) {
+        setLoggedIn(false);
+      }
+    }
+    else {
+      navigate(`/login`);
+    }
+  };
+
 
   return (
     <header className="header">
@@ -93,6 +121,17 @@ const Header = () => {
           </button>
           <Tooltip id="header-find-page-tooltip" className="header-tooltip-style" />
         </div>
+        { loggedIn &&
+          <div className="header-icon">
+            <button className="header-nav-button"
+              data-tooltip-id="header-find-page-tooltip"
+              data-tooltip-content="Create a Club"
+              onClick={createClubClick}>
+              <FontAwesomeIcon icon={faPlus} />
+            </button>
+            <Tooltip id="header-find-page-tooltip" className="header-tooltip-style" />
+          </div>
+        }
       </div>
       <div className="header-middle-section" ref={wrapperRef}>
         <div className="header-search-bar" >
@@ -101,7 +140,7 @@ const Header = () => {
         {results && results.length > 0 && viewResults && <SearchResultsList results={results} />}
       </div>
       <div className="header-right-section">
-        <button className="header-login-button" onClick={handleLoginClick}>Login</button>
+        <button className="header-login-button" onClick={handleLoginLogoutClick}>{loggedIn ? 'Logout' : 'Login'}</button>
       </div>
     </header>
   );

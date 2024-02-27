@@ -52,6 +52,8 @@ app.use('/register', authRouter);
 
 app.use('/role', clubroleRouter);
 
+app.use('/auth', authRouter);
+
 app.get("/", (req, res) => {
     res.send("App is up");
 });
