@@ -7,6 +7,7 @@ import clubRoleApi from '../api/clubRole';
 import NotFound from '../components/NotFound';
 import eventApi from '../api/events';
 import { useNavigate } from 'react-router-dom';
+import Header from '../components/Header';
 
 // Header component
 const ClubPage = () => {
@@ -63,7 +64,7 @@ const ClubPage = () => {
     };
 
     const fetchClubEvents = async () => {
-      
+
       try {
         console.log(clubName)
         const { status: reqStatus, data: eventData } = await eventApi.getEventsForClub(clubName);
@@ -88,35 +89,35 @@ const ClubPage = () => {
 
   const handleJoin = async () => {
     try {
-      const response = await clubRoleApi.createClubRole(clubName, {role: "member"});
-      if(response.status === 200){
-          window.location.reload();
-      } else if(response.status === 400){
-          setErrorMessage(response.error);
+      const response = await clubRoleApi.createClubRole(clubName, { role: "member" });
+      if (response.status === 200) {
+        window.location.reload();
+      } else if (response.status === 400) {
+        setErrorMessage(response.error);
       }
-      else if(response.status === 403){
-          setErrorMessage('You must be signed in to join a club');
+      else if (response.status === 403) {
+        setErrorMessage('You must be signed in to join a club');
       }
     } catch (error) {
-        console.error('failed to join club ', error);
-        
+      console.error('failed to join club ', error);
+
     }
   }
 
   const handleLeave = async () => {
     try {
       const response = await clubRoleApi.deleteClubRole(clubName);
-      if(response.status === 200){
-          window.location.reload();
-      } else if(response.status === 400){
-          setErrorMessage(response.error);
+      if (response.status === 200) {
+        window.location.reload();
+      } else if (response.status === 400) {
+        setErrorMessage(response.error);
       }
-      else if(response.status === 403){
-          setErrorMessage('You must be signed in to leave a club');
+      else if (response.status === 403) {
+        setErrorMessage('You must be signed in to leave a club');
       }
     } catch (error) {
-        console.error('failed to leave the club ', error);
-        
+      console.error('failed to leave the club ', error);
+
     }
   }
   const handleEdit = async() => {
@@ -129,62 +130,62 @@ const ClubPage = () => {
 
 
 
-function Header() {
-  return (
-    <header className='club-page-header'>
-      <h1>{clubName}</h1>
-    </header>
-  );
-}
+  function Name_Header() {
+    return (
+      <header className='club-page-header'>
+        <h1 className='header-h1'>{clubName}</h1>
+      </header>
+    );
+  }
 
-// Banner component
-function Banner() {
-  return (
-    <section className="banner">
-      <h2>Welcome to Our Club</h2>
-      {/* Add any additional content for the banner */}
-    </section>
-  );
-}
+  // Banner component
+  function Banner() {
+    return (
+      <section className="banner">
+        <h2 className='banner-h2'>Welcome to Our Club</h2>
+        {/* Add any additional content for the banner */}
+      </section>
+    );
+  }
 
-// About section component
-function About() {
-  return (
-    <section className="about" >
-      <h2>About Us</h2>
-      <p>{clubDescription}</p>
-    </section>
-  );
-}
+  // About section component
+  function About() {
+    return (
+      <section className="about" >
+        <h2 className='about-h2'>About Us</h2>
+        <p>{clubDescription}</p>
+      </section>
+    );
+  }
 
-const handleCreateEventClick = () => {
-  navigate(`/club/createEvent/${clubName}`);
-};
-
-// Events section component
-function Events() {
-
-  const formatDate = (dateString) => {
-    const date = new Date(dateString);
-    return date.toDateString(); 
+  const handleCreateEventClick = () => {
+    navigate(`/club/createEvent/${clubName}`);
   };
 
-  return (
-    <section className="events">
-      <h2>Upcoming Events</h2>
-      <ul>
-        {clubEvents.map(event => (
-          <li key={event._id}>
-            <h3>{event.title}</h3>
-            <p>Description: {event.description}</p>
-            <p>Date: {formatDate(event.date)}</p>
-            <p>Location: {event.location}</p>
-          </li>
-        ))}
-      </ul>
-    </section>
-  );
-}
+  // Events section component
+  function Events() {
+
+    const formatDate = (dateString) => {
+      const date = new Date(dateString);
+      return date.toDateString();
+    };
+
+    return (
+      <section className="events">
+        <h2>Upcoming Events</h2>
+        <ul>
+          {clubEvents.map(event => (
+            <li key={event._id}>
+              <h3>{event.title}</h3>
+              <p>Description: {event.description}</p>
+              <p>Date: {formatDate(event.date)}</p>
+              <p>Location: {event.location}</p>
+            </li>
+          ))}
+        </ul>
+      </section>
+    );
+  }
 
   if (errorMessage === 'Club does not exist') {
     return <NotFound />;
@@ -192,17 +193,22 @@ function Events() {
 
   return (
     <div className='club-page'>
-        <img src={logo} alt="Logo" className="clubLogo" />
         <Header />
+    
+    <div className='club-page-col'>
+      
+      <img src={logo} alt="Logo" className="clubLogo" />
+      <Name_Header />
       <main>
         <Banner />
         <About />
         <Events />
-        {isAdmin &&<button onClick={handleCreateEventClick}>Create Event</button>}
+        {isAdmin && <button onClick={handleCreateEventClick}>Create Event</button>}
         {isAdmin &&<button onClick={handleEdit}>Edit Club</button>}
         {isAdmin ? <button onClick={handleDelete}>Delete Club</button> : <button onClick={isMember ? handleLeave : handleJoin}>{isMember ? 'Leave Club' : 'Join Club'}</button>}
         {errorMessage && <p className="error-message">{errorMessage}</p>}
       </main>
+    </div>
     </div>
   );
 };
