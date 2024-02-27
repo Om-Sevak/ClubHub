@@ -17,13 +17,13 @@
     "dotenv": "^16.4.1",
     "express": "^4.18.2",
     "express-session": "^1.18.0",
-    "mongoose": "^8.1.1",
-    "supertest-session": "^5.0.1"
+    "mongoose": "^8.1.1"
   },
   "devDependencies": {
     "jest": "^29.7.0",
     "mongodb-memory-server": "^9.1.6",
     "nodemon": "^3.0.3",
-    "supertest": "^6.3.4"
+    "supertest": "^6.3.4",
+    "supertest-session": "^5.0.1"
   }
 }
