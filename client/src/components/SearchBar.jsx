@@ -1,22 +1,23 @@
 import { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons"
+import clubApi from "../api/clubs";
 import './SearchBar.css'
 
 const SearchBar = ({ setResults }) => {
-    const [searchQuery, setSearchQuery] = useState('');
   
-    const fetchData = (value) => {
-        const data = ['test','Role Testing','EyalTest','123'];
-
-        
-        const fileted = data.filter((element) => element.toString().toLowerCase().includes(value.toString().toLowerCase()));
-        setResults(fileted);
+    const fetchData = async (value) => {
+        const { status: reqStatus, data: clubsData } = await clubApi.getClubs(value.toString().toLowerCase());
+        if (reqStatus === 200) {
+            setResults(clubsData.names);
+        }
+        else {
+            setResults([]);
+        }  
     }
     
     const handleSearchChange = (e) => {
-      setSearchQuery(e.target.value);
-      if(e.target.value) {
+      if(e.target.value && e.target.value.length > 2) {
         fetchData(e.target.value);
       } else {
         setResults([]);

@@ -1,7 +1,7 @@
 import sendRequest from "./client";
 
 const clubApi = {
-  getClubs: async () => sendRequest('GET', 'club'),
+  getClubs: async (query) => sendRequest('GET', `club/clubs/${query}`),
   getClub: async (clubName) => sendRequest('GET', `club/${clubName}`),
   createClub: async (clubData) => sendRequest('POST', 'club', clubData),
   updateClub: async (clubName, clubData) => sendRequest('PUT', `club/${clubName}`, clubData),

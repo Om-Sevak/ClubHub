@@ -213,3 +213,28 @@ exports.deleteClub = async(req, res) => {
         console.log(`${req.sessionID} - Request Failed: ${err.message}`);
     }
 };
+
+exports.getClubs = async(req, res) => {
+    try {
+        console.log(`${req.sessionID} - Request Get on ${ req.params.query}`);
+        
+        const clubs = await Club.find({ name:  {$regex: `${req.params.query}`, $options: 'i'} });
+        const clubsNames = clubs.map(club => club.name);
+
+        res.status(200).json({
+            names: clubsNames,
+            message: "Clubs Found Succesfully"
+        });
+        
+        console.log(`${req.sessionID} - Request Success: ${req.method}  ${req.originalUrl}`);
+
+    } catch (err) {
+        res.status(500).json({
+            status: "fail",
+            message: err.message,
+            description: `Bad Request: Server Error`,
+        });
+        console.log(`${req.sessionID} - Server Error: ${err}`)
+        console.log(`${req.sessionID} - Request Failed: ${err.message}`);
+    }
+};
