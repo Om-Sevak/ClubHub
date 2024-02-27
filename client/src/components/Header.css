@@ -6,6 +6,7 @@
   justify-content: start;
   /* optional; just for demo */
   background: white;
+  z-index: 1;
 }
 
 .header-left-section {
@@ -32,6 +33,8 @@
   cursor: pointer;
   border: none;
   position: relative;
+  min-height: 40px;
+  min-width: 80px;
   bottom: -20%;
 }
 
@@ -42,9 +45,9 @@
 
 .header-middle-section {
   flex: 1;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  display: inline-block;
+  justify-items: center;
+  align-items: start;
 }
 
 .header-icon {
@@ -57,34 +60,6 @@
   cursor: default;
 }
 
-.search {
-  width: 90%;
-  justify-content: center;
-  border: 1px solid #ddd;
-  border-radius: 6px;
-  box-sizing: border-box;
-  transition: border-color 0.3s ease;
-  align-items: center;
-  overflow: hidden;
-  font-size: 1rem;
-  display: flex;
-  flex-flow: row nowrap;
-}
-
-.search__input {
-  justify-content: center;
-  margin-bottom: 0 !important;
-  padding: 5px !important;
-  align-items: center;
-  background-color: #fff;
-  font-size: x-large;
-  border: none !important;
-  outline: none;
-}
-
-.header-search-icon {
-  padding-left: 10px;
-}
 
 .header-nav-button {
   height: 40px;
@@ -102,4 +77,13 @@
   font-size: small !important;
   font-family: "Arial", sans-serif !important;
   font-weight: 750;
+}
+
+.header-search-bar {
+  align-items: center;
+  justify-content: center;
+  display: flex;
+  width: 100%;
+  height: 100%;
+  position: relative;
 }

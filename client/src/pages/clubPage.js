@@ -132,7 +132,6 @@ const ClubPage = () => {
 function Header() {
   return (
     <header className='club-page-header'>
-      
       <h1>{clubName}</h1>
     </header>
   );
