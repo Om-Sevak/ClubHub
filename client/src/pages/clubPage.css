@@ -9,7 +9,7 @@
 .club-page-col {
     margin: 0;
     height: 100vh;
-    display: flex;
+    display: grid;
     flex-direction: column;
     justify-content: center;
     align-items: center;
