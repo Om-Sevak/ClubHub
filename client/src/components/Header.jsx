@@ -21,7 +21,13 @@ const Header = () => {
   useEffect(() => {
     const fetchClubData = async () => {
       try {
-        setLoggedIn(authApi.loginStatus());
+        const { status: reqStatus, data: reqData } = await authApi.loginStatus();
+        if (reqStatus === 200) {
+          setLoggedIn(reqData.loggedInStatus);
+        }
+        else {
+          throw new Error("Server Error");
+        }
       }
       catch (error) {
         console.error('Auth Error', error);
