@@ -74,6 +74,8 @@ exports.getClub = async(req, res) => {
             throw new Error('Not Found: Fail to edit club as DNE');
         }
         res.status(200).json({
+            name: club.name,
+            email: club.email,
             description: club.description,
             executives: club.executives,
             message: "Club Found Succesfully"
@@ -103,6 +105,21 @@ exports.getClub = async(req, res) => {
 exports.editClub = async(req, res) => {
     try {
         console.log(`${req.sessionID} - ${req.session.email} is requesting to edit club ${ req.params.name}. Changes: ${JSON.stringify(req.body)}`);
+        const { name, description, email } = req.body;
+
+        // Validate email format
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(email)) {
+            throw new Error('Bad Request: Invalid email format');
+        }
+
+        if (name !== req.params.name) {
+            const newClub = await Club.findOne({ name: name });
+            if (newClub) {
+                throw new Error(`Bad Request: club with name ${name} already exists`);
+            }
+        }
+        
         // Checking if club exists first as we need a valid club to get possible role
         const club = await Club.findOne({ name: req.params.name });  
         if (!club) {
@@ -138,6 +155,12 @@ exports.editClub = async(req, res) => {
                 status: "fail",
                 message: err.message,
                 description: `Unauthorized: ${req.session.email} is not and admin of club ${req.params.name}`,
+            });
+        } else if (err.message.includes('Bad Request')) {
+            res.status(400).json({
+                status: "fail",
+                message: err.message,
+                description: `Bad Request: Failed to create club`
             });
         } else if (err.message.includes('Not Found')) {
             res.status(404).json({

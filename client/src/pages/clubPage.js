@@ -103,7 +103,6 @@ const ClubPage = () => {
     }
   }
 
-  //TODO
   const handleLeave = async () => {
     try {
       const response = await clubRoleApi.deleteClubRole(clubName);
@@ -120,7 +119,9 @@ const ClubPage = () => {
         
     }
   }
-
+  const handleEdit = async() => {
+    navigate(`/club/edit/${clubName}`);
+  }
   //TODO
   const handleDelete = async () => {
 
@@ -199,6 +200,7 @@ function Events() {
         <About />
         <Events />
         {isAdmin &&<button onClick={handleCreateEventClick}>Create Event</button>}
+        {isAdmin &&<button onClick={handleEdit}>Edit Club</button>}
         {isAdmin ? <button onClick={handleDelete}>Delete Club</button> : <button onClick={isMember ? handleLeave : handleJoin}>{isMember ? 'Leave Club' : 'Join Club'}</button>}
         {errorMessage && <p className="error-message">{errorMessage}</p>}
       </main>
