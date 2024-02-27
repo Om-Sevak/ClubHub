@@ -9,12 +9,21 @@ import reportWebVitals from './reportWebVitals';
 import ClubCreatePage from './pages/createClubPage';
 import ClubPage from './pages/clubPage';
 import EventCreatePage from './pages/createEventPage';
+import HomePage from './pages/homePage';
+import ClubsPage from './pages/clubsPage';
+import EventsPage from './pages/eventsPage';
+import FindClubPage from './pages/findClubPage';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
     <Router>
       <Routes>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/homePage" element={<HomePage />} />
+        <Route path="/clubs" element={<ClubsPage />} />
+        <Route path="/events" element={<EventsPage />} />
+        <Route path="/findClub" element={<FindClubPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path='/register' element={<RegisterPage />} />
         <Route path="/App" element={<App />} />
