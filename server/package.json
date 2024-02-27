@@ -23,6 +23,7 @@
     "jest": "^29.7.0",
     "mongodb-memory-server": "^9.1.6",
     "nodemon": "^3.0.3",
-    "supertest": "^6.3.4"
+    "supertest": "^6.3.4",
+    "supertest-session": "^5.0.1"
   }
 }
