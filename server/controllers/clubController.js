@@ -160,7 +160,7 @@ exports.editClub = async(req, res) => {
             res.status(400).json({
                 status: "fail",
                 message: err.message,
-                description: `Bad Request: Failed to create club`
+                description: `Bad Request: Failed to edit club`
             });
         } else if (err.message.includes('Not Found')) {
             res.status(404).json({
