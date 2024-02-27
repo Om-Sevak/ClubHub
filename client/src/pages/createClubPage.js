@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import './createClubPage.css'; // Import CSS file for styling
-import logo from '../assets/logoIMG.jpeg'; // Import your logo image
 import clubApi from '../api/clubs';
 
 
@@ -11,7 +10,6 @@ const ClubCreatePage = () => {
     const [clubdescription, setClubDescription] = useState('');
     const [clubinterest, setClubInterest] = useState('');
     const [clubemail, setClubEmail] = useState('');
-    const [clubLogo, setClubLogo] = useState(null); // State to store uploaded logo file
     const [errorMessage, setErrorMessage] = useState('');
     const navigate = useNavigate();
     
@@ -23,7 +21,6 @@ const ClubCreatePage = () => {
             formData.append('name', clubname);
             formData.append('description', clubdescription);
             formData.append('email', clubemail);
-            formData.append('logo', clubLogo); // Append uploaded logo file
             
             const response = await clubApi.createClub(formData);
             if(response.status === 200){
@@ -38,13 +35,7 @@ const ClubCreatePage = () => {
             console.error('club creation failed: ', error);
         }
     };
-    
-    // Function to handle file upload
-    const handleFileUpload = (e) => {
-        const file = e.target.files[0];
-        setClubLogo(file);
-    };
-    
+        
     return (
         <div className="create-club-page">
           <div className="create-club-container">
@@ -92,16 +83,6 @@ const ClubCreatePage = () => {
                   placeholder="Enter the club email"
                   value={clubemail}
                   onChange={(e) => setClubEmail(e.target.value)}
-                />
-              </label>
-    
-              <label htmlFor="clublogo">
-                Club Logo:
-                <input
-                  id="clublogo"
-                  type="file"
-                  accept="image/*" // Allow only image files
-                  onChange={handleFileUpload}
                 />
               </label>
     
