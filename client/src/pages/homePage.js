@@ -1,7 +1,7 @@
 import React from 'react';
 import Header from '../components/Header';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { faMagnifyingGlass, faHouse, faPeopleGroup, faCalendarDays, faUsersViewfinder } from "@fortawesome/free-solid-svg-icons"
+import { faHouse} from "@fortawesome/free-solid-svg-icons"
 import './homePage.css';
 
 const HomePage = () => {
