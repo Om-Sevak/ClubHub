@@ -1,3 +1,5 @@
+## App Access:
+Access this deployed webpage on https://agreeable-stone-0a547f410.4.azurestaticapps.net/
 ## Team Members:
 1. Simon Wermie
 2. Om Sevak
