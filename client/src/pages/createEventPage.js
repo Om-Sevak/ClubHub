@@ -39,8 +39,7 @@ const EventCreatePage = () => {
 
     return (
         <div className="create-event-page">
-            <div className="login-container">
-            <img src={logo} alt="Logo" className="logo" />
+            <div className="create-event-container">
                 <h2>Create Event</h2>
                 <form onSubmit={handleeventcreate}>
                     <input
