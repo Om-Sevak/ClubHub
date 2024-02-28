@@ -1,0 +1,107 @@
+.club-page {
+    display:grid;
+    position: absolute;
+    width: 100%;
+    top: 0px;
+    left: 0px;
+}
+
+.club-page-col {
+    margin: 0;
+    height: 100vh;
+    display: grid;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #f5f5f5;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+
+.clubLogo {
+    max-width: 80%;
+    margin: 0 auto;
+    margin-bottom: 20px;
+    border-radius: 10%;
+    width: 100vh ;
+    height: 40vh;
+    padding-top: 2em;
+    
+}
+
+.club-page-header {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    background-color: #F2EAD0;
+    border-radius: 20px;
+    margin-bottom: 20px;
+}
+
+.club-page-details {
+    width: 100%;
+}
+
+.header-h1{
+    font-size: xx-large;
+    text-align: center;
+    padding: 20px;
+    width: 100%;
+}
+
+.banner {
+    display: flex;
+    align-items: flex-start;
+    width: 100%;   
+    padding: auto;
+}
+
+.banner-h2{
+    text-align: left;
+    color: black;
+    text-shadow: black 1px 1px 1px;
+}
+
+.about {
+    text-align: center;
+    background-color: #F2EAD0;
+    border-radius: 20px;
+}
+
+.about-h2 {
+    color: black;
+    text-shadow: black 1px 1px 1px;
+}
+
+.events {
+    background-color: #F26A4B;
+    border-radius: 20px;
+}
+
+button {
+    background: linear-gradient(45deg, #0C3559, #7EADBF);
+    color: #F2EAD0;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    display: block;
+    width: 100%;
+    margin-bottom: 20px;
+    padding: 14px 24px;
+    font-size: 16px;
+    font-weight: 600;
+    text-transform: uppercase;
+    transition: background 0.3s ease;
+    box-sizing: border-box;
+    outline: none;
+}
+
+button:hover {
+    background: linear-gradient(45deg, #F26A4B, #F26052);
+}
+
+
+  

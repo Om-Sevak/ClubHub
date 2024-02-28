@@ -9,7 +9,10 @@ import reportWebVitals from './reportWebVitals';
 import ClubCreatePage from './pages/createClubPage';
 import ClubPage from './pages/clubPage';
 import EventCreatePage from './pages/createEventPage';
+<<<<<<< HEAD
 import EditClubPage from './pages/editClubPage';
+=======
+>>>>>>> f00ead8f7f6beee89a0a155b30aa0a78d223f332
 import HomePage from './pages/homePage';
 import ClubsPage from './pages/clubsPage';
 import EventsPage from './pages/eventsPage';

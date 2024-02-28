@@ -1,16 +1,12 @@
 import './App.css';
+import Header from './components/Header';
+import ApiRequestBoxes from './components/ApiStatusTestBoxes';
 
 function App() {
   return (
     <div className="App">
-      <header className="App-header">
-  
-        <p>
-          Lets code ClubHub
-        </p>
-        
-        
-      </header>
+      <Header />
+      <ApiRequestBoxes />
     </div>
   );
 }
