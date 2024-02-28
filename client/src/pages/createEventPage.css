@@ -3,11 +3,19 @@
   /* Existing styles */
   background-image: linear-gradient(to right, #0B3559, #7EADBF);
   background-size: cover;
-  height: 100vh; /* Set full viewport height */
-  width: 100vw; /* Set full viewport width */
-  display: flex; /* Allow content to be centered vertically */
+  height: 100%; /* Set full viewport height */
+  width: 100%; /* Set full viewport width */
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  display: grid; /* Allow content to be centered vertically */
+}
+
+.create-event-col {
+  display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: flex-start;
+  height: 100%;
 }
 
   .create-event-container {

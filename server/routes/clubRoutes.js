@@ -22,6 +22,8 @@ router.route("/:name").delete(clubController.deleteClub);
 // Example: get a specific club based on club name
 router.route("/:name").get(clubController.getClub);
 
+router.route("/clubs/:query").get(clubController.getClubs);
+
 // Create a new club event
 router.route("/:name/event").post(eventController.createEvent);
 router.route("/:name/event").get(eventController.getEventsForClub);

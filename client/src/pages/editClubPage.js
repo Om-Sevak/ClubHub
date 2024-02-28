@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
-import './createClubPage.css'; // Import CSS file for styling
+import './editClubPage.css'; // Import CSS file for styling
 import logo from '../assets/logoIMG.jpeg'; // Import your logo image
 import clubApi from '../api/clubs';
 
@@ -36,7 +36,7 @@ const EditClubPage = () => {
         };
 
         fetchClubData();
-    }, [])
+    }, [clubName])
 
     const handleclubEdit = async (e) => {
         e.preventDefault(); // Prevent default form submission behavior
@@ -56,7 +56,7 @@ const EditClubPage = () => {
         }
     };
     return (
-        <div className="create-club-page">
+        <div className="edit-club-page">
             <div className="login-container">
             <img src={logo} alt="Logo" className="logo" />
                 <h2>Edit Club</h2>

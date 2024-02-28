@@ -1,0 +1,21 @@
+.search-results-container {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  text-align: center;
+  overflow: hidden;
+}
+
+
+.search-results-list {
+    width: 90%;
+    display: inline-block;
+    background-color: white;
+    border-color: gray;
+    border: 1px;
+    border-style: groove;
+    max-height: 300px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    z-index: 1;
+  }

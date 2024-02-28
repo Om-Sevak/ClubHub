@@ -104,3 +104,62 @@ exports.register = async (req, res) => {
         console.log(`${req.sessionID} - Request Failed: ${err.message}`);
     }
 };
+
+exports.isLoggedIn = async(req, res) => {
+    try {
+        console.log(`${req.sessionID} - Request To Be Logged Out`);
+        
+        const loggedInStatus = req.session.isLoggedIn ? true : false;
+
+        res.status(200).json({
+            loggedInStatus: loggedInStatus,
+            message: "Login Status Found"
+        });
+        
+        console.log(`${req.sessionID} - Request Success: ${req.method}  ${req.originalUrl}`);
+
+    } catch (err) {
+        res.status(500).json({
+            status: "fail",
+            message: err.message,
+            description: `Bad Request: Server Error`,
+        });
+        console.log(`${req.sessionID} - Server Error: ${err}`)
+        console.log(`${req.sessionID} - Request Failed: ${err.message}`);
+    }
+};
+
+exports.logout = async(req, res) => {
+    try {
+        console.log(`${req.sessionID} - Request To Check if Logged in on`);
+    
+        if (!req.session.isLoggedIn) {
+            throw new Error('Bad Request: Must be logged in to log out (fool!)');
+        }
+
+        req.session.isLoggedIn = false;
+        req.session.email = null;
+        req.session.save();
+        console.log(`\n *** ${req.sessionID} - Session unsaved with IP: ${req.ip} *** \n`);
+
+        res.status(200).json({ message: 'Logout successful' });
+        console.log(`${req.sessionID} - Request Success: ${req.method}  ${req.originalUrl}`);
+
+    } catch (err) {
+        if (err.message.includes('Bad Request')) {
+            res.status(400).json({
+                status: "fail",
+                message: err.message,
+                description: `Bad Request: Failed to logout`,
+            });
+        } else {
+            res.status(500).json({
+                status: "fail",
+                message: err.message,
+                description: `Bad Request: Server Error`,
+            });
+            console.log(`${req.sessionID} - Server Error: ${err}`)
+        }
+        console.log(`${req.sessionID} - Request Failed: ${err.message}`);
+    }
+};

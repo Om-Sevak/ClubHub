@@ -1,7 +1,16 @@
-/* Global styles */
-body {
+.club-page {
+    display:grid;
+    position: absolute;
+    width: 100%;
+    top: 0px;
+    left: 0px;
+}
+
+.club-page-col {
     margin: 0;
-    display: flex;
+    height: 100vh;
+    display: grid;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
     height: 100vh;
@@ -9,9 +18,8 @@ body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
-  
+
 .clubLogo {
-    display: block;
     max-width: 80%;
     margin: 0 auto;
     margin-bottom: 20px;
@@ -22,36 +30,48 @@ body {
     
 }
 
-header {
-
+.club-page-header {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
     background-color: #F2EAD0;
     border-radius: 20px;
-
+    margin-bottom: 20px;
 }
 
-header h1{
+.club-page-details {
+    width: 100%;
+}
+
+.header-h1{
     font-size: xx-large;
     text-align: center;
     padding: 20px;
+    width: 100%;
 }
 
-.banner {   
+.banner {
+    display: flex;
+    align-items: flex-start;
+    width: 100%;   
     padding: auto;
 }
 
-.banner h2{
+.banner-h2{
     text-align: left;
     color: black;
     text-shadow: black 1px 1px 1px;
 }
 
 .about {
+    text-align: center;
     background-color: #F2EAD0;
     border-radius: 20px;
 }
 
-.about h2 {
-    text-align: center;
+.about-h2 {
     color: black;
     text-shadow: black 1px 1px 1px;
 }
