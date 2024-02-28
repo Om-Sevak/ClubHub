@@ -74,16 +74,21 @@ const Header = () => {
   };
 
   const handleLoginLogoutClick = async () => {
-    const { data: loginData } = await authApi.loginStatus();
-    if(loginData.loggedInStatus) {
-      const { status: reqStatus } = await authApi.logout();
-      if (reqStatus === 200) {
-        setLoggedIn(false);
+    const { status: reqStatusLogin, data: loginData } = await authApi.loginStatus();
+    if (reqStatusLogin === 200) {
+      if(loginData.loggedInStatus) {
+        const { status: reqStatusLogout } = await authApi.logout();
+        if (reqStatusLogout === 200) {
+          setLoggedIn(false);
+        }
       }
+      else {
+        navigate(`/login`);
+      }
+    } else {
+      console.error("There was an authentication error on the server!")
     }
-    else {
-      navigate(`/login`);
-    }
+    
   };
 
 
