@@ -3,7 +3,7 @@
   height: 50px;
   margin-top: 0;
   padding: 0;
-  justify-content: start;
+  justify-content: flex-start;
   /* optional; just for demo */
   background: white;
   z-index: 1;
