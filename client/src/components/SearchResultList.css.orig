@@ -1,0 +1,33 @@
+<<<<<<< HEAD
+.search-results-container {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  text-align: center;
+  overflow: hidden;
+}
+
+
+=======
+>>>>>>> f00ead8f7f6beee89a0a155b30aa0a78d223f332
+.search-results-list {
+    width: 90%;
+    display: inline-block;
+    background-color: white;
+<<<<<<< HEAD
+    border-color: gray;
+    border: 1px;
+    border-style: groove;
+    max-height: 300px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    z-index: 1;
+  }
+=======
+    box-shadow: 0px 0px 8px #ddd;
+    border-radius: 10px;
+    max-height: 300px;
+    overflow-y: auto;
+    z-index: 1;
+  }
+>>>>>>> f00ead8f7f6beee89a0a155b30aa0a78d223f332

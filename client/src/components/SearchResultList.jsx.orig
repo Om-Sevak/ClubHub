@@ -1,0 +1,24 @@
+import "./SearchResultList.css";
+import { SearchResult } from "./SearchResult";
+
+export const SearchResultsList = ({ results }) => {
+  return (
+<<<<<<< HEAD
+    <div className="search-results-container">
+      <div className="search-results-list">
+        {results.map((result, id) => {
+          return <SearchResult result={result} key={id} />;
+        })}
+      </div>
+    </div>
+  );
+};  
+=======
+    <div className="search-results-list">
+      {results.map((result, id) => {
+        return <SearchResult result={result} key={id} />;
+      })}
+    </div>
+  );
+};
+>>>>>>> f00ead8f7f6beee89a0a155b30aa0a78d223f332

@@ -1,0 +1,88 @@
+<<<<<<< HEAD
+/* ClubCreatePage.css */
+
+.create-club-page {
+  /* Existing styles */
+  background-image: linear-gradient(to right, #0B3559, #7EADBF);
+  background-size: cover;
+  height: 100%; /* Set full viewport height */
+  width: 100%; /* Set full viewport width */
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  display: grid; /* Allow content to be centered vertically */
+}
+
+.create-club-col {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    height: 100%;
+}
+
+  .create-club-container {
+=======
+.create-club-page {
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #f5f5f5;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.login-container {
+    width: 80%;
+    max-width: 400px;
+    padding: 40px;
+    border-radius: 10px;
+>>>>>>> f00ead8f7f6beee89a0a155b30aa0a78d223f332
+    background-color: #fff;
+    border-radius: 20px;
+    padding: 50px; /* Increased padding */
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    width: 75rem; /* Responsive max-width */
+    margin: 0 auto; /* Center the container horizontally */
+  }
+  
+  /* Heading styles */
+  h2 {
+    text-align: center;
+    color: #fff;
+    margin-bottom: 10px;
+    text-shadow: 0 3px 5px rgba(0, 0, 0, 0.2);
+  }
+  
+  /* Form styles */
+  form {
+    display: flex;
+    flex-direction: column;
+    gap: 5px; 
+    width: 100%; 
+  }
+  
+  input[type="text"],
+  input[type="email"],
+  input[type="file"] {
+    padding: 15px;
+    border: 2px solid #ddd; /* thicker border */
+    border-radius: 10px; /* More rounded corners */
+    outline: none;
+    font-size: 16px; /* Larger font size */
+    transition: all 0.2s ease-in-out;
+  }
+  
+  input[type="text"],
+  input[type="email"]:hover,
+  input[type="file"]:hover {
+    border-color: #7EADBF; /* Change border color on hover */
+  }
+    
+  /* Error message styles */
+  .error-message {
+    color: #F24738;
+    margin-top: 10px;
+    font-weight: bold;
+  }
+  
