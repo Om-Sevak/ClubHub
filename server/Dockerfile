@@ -10,6 +10,6 @@ COPY . .
 
 EXPOSE 5000
 
-ENV MONGO_URI=mongodb+srv://Admin:ehiAGkcEh8508UEd@clubhub.4fw0aul.mongodb.net/ClubHub?retryWrites=true&w=majority
+ENV MONGO_URI = $MONGO_URI
 
 CMD ["npm", "start"]
