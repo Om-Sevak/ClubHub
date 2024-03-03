@@ -66,7 +66,7 @@ const ClubPage = () => {
     const fetchClubEvents = async () => {
 
       try {
-        console.log(clubName)
+        
         const { status: reqStatus, data: eventData } = await eventApi.getEventsForClub(clubName);
         if (reqStatus === 200) {
           setClubEvents(eventData.events);
@@ -170,13 +170,17 @@ const ClubPage = () => {
       return date.toDateString();
     };
 
+    const handleEventClick = (eventId) => {
+      navigate(`/club/${clubName}/${eventId}`);
+    }
+
     return (
       <section className="events">
         <h2>Upcoming Events</h2>
         <ul>
           {clubEvents.map(event => (
             <li key={event._id}>
-              <h3>{event.title}</h3>
+              <h3 onClick={() => handleEventClick(event._id)}>{event.title}</h3>
               <p>Description: {event.description}</p>
               <p>Date: {formatDate(event.date)}</p>
               <p>Location: {event.location}</p>

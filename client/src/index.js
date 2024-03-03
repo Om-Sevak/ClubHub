@@ -14,6 +14,7 @@ import HomePage from './pages/homePage';
 import ClubsPage from './pages/clubsPage';
 import EventsPage from './pages/eventsPage';
 import FindClubPage from './pages/findClubPage';
+import SingleEventPage from './pages/singleEventPage';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
@@ -32,6 +33,7 @@ root.render(
         <Route path="/club/:clubName" element={<ClubPage />} />
         <Route path="/club/edit/:clubName" element={<EditClubPage />} />
         <Route path="/club/createEvent/:clubName" element={<EventCreatePage />} />
+        <Route path="/club/:clubName/:eventId" element={<SingleEventPage />} />
       </Routes>
     </Router>
   </React.StrictMode>
