@@ -3,12 +3,13 @@ const mongoose = require("mongoose");
 const dotenv = require('dotenv');
 
 // Loading in environment variables
-if(!process.env.ENVIRONMENT) {
-  dotenv.config({path:'./config/.env'})
-}
+// if(!process.env.ENVIRONMENT) {
+//   dotenv.config({path:'./config/.env'})
+// }
 
 const PORT = process.env.PORT || 5000;
 const MONGODB_URI = process.env.MONGO_URI;
+console.log(MONGODB_URI);
 
 mongoose
   .connect(MONGODB_URI)
