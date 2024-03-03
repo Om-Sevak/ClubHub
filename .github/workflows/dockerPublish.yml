@@ -5,6 +5,9 @@ on:
     branches:
       - docker_cd 
 
+env:
+  MONGO_URI: ${{ secrets.MONGO_URI }}  
+
 jobs:
 
   build:
