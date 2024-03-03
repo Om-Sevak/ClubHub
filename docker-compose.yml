@@ -4,21 +4,21 @@ services:
   server:
     container_name: clubhub-server
     build: ./server
-    image: nudeli/clubhub-server
+    image: nudeli/clubhub-server:local
     ports:
       - "5000:5000"
     environment:
       - MONGO_URI=$MONGO_URI
-      - ORIGIN=http://localhost:3000
-      - SESSION_SECRET=1243f23d
+      - ORIGIN=$ORIGIN
+      - SESSION_SECRET=$SESSION_SECRET
 
   client:
     container_name: clubhub-client
     build: ./client
-    image: nudeli/clubhub-client
+    image: nudeli/clubhub-client:local
     ports:
       - "3000:3000"
     depends_on:
       - server
     environment:
-      - REACT_APP_API_BASE_URL=http://localhost:5000
+      - REACT_APP_API_BASE_URL=$REACT_APP_API_BASE_URL
