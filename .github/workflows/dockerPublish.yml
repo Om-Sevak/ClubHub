@@ -33,7 +33,10 @@ jobs:
           context: server
           push: true
           tags: nudeli/clubhub-server:latest
-          build-args: MONGO_URI=${{ secrets.MONGO_URI }},SESSION_SECRET=gwhhbgjwe,ORIGIN=http://localhost:3000 
+          build-args: |
+            MONGO_URI=${{ secrets.MONGO_URI }}
+            SESSION_SECRET=gwhhbgjwe
+            ORIGIN=http://localhost:3000 
 
       - name: Build and push client image
         uses: docker/build-push-action@v5
