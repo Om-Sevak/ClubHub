@@ -1,0 +1,24 @@
+version: '3.8'
+
+services:
+  server:
+    container_name: clubhub-server
+    build: ./server
+    image: nudeli/clubhub-server:local
+    ports:
+      - "5000:5000"
+    environment:
+      - MONGO_URI=$MONGO_URI
+      - ORIGIN=$ORIGIN
+      - SESSION_SECRET=$SESSION_SECRET
+
+  client:
+    container_name: clubhub-client
+    build: ./client
+    image: nudeli/clubhub-client:local
+    ports:
+      - "3000:3000"
+    depends_on:
+      - server
+    environment:
+      - REACT_APP_API_BASE_URL=$REACT_APP_API_BASE_URL
