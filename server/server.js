@@ -9,7 +9,6 @@ if(!process.env.ENVIRONMENT) {
 
 const PORT = process.env.PORT || 5000;
 const MONGODB_URI = process.env.MONGO_URI;
-console.log(MONGODB_URI);
 
 mongoose
   .connect(MONGODB_URI)
