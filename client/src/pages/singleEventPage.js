@@ -47,13 +47,13 @@ const SingleEventPage = () => {
             try{
                 const { status: reqStatus, data: eventData } = await eventApi.getEvent(clubName, eventId);
 
-                if (reqStatus == 200){
+                if (reqStatus === 200){
                     setEventTitle(eventData.title)
                     setEventDescription(eventData.description);
                     setEventLocation(eventData.location);
                     setEventDate(eventData.date)
                 }
-                else if (reqStatus == 404){
+                else if (reqStatus === 404){
                     setErrorMessage("Event does not exist")
                 }
             }
@@ -92,11 +92,26 @@ const SingleEventPage = () => {
     }
 
     const handleEdit = async() => {
-        
+        navigate(`/club/${clubName}/edit/${eventId}`);
       }
       //TODO
     const handleDelete = async () => {
+        const isConfirmed = window.confirm('Are you sure you want to delete the event?');
     
+        if (isConfirmed) {
+            try {
+                const response = await eventApi.deleteEvent(clubName, eventId);
+                if (response.status === 200) {
+                    navigate(`/club/${clubName}`);
+                } else if (response.status === 403) {
+                    setErrorMessage('Only an admin can delete the event');
+                } else if (response.status === 404) {
+                    setErrorMessage('Event not found');
+                }
+            } catch (error) {
+                console.error('Event deletion failed: ', error);
+            }
+    }
     }
     
     const handleBack = async() => {

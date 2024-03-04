@@ -28,6 +28,8 @@ router.route("/clubs/:query").get(clubController.getClubs);
 router.route("/:name/event").post(eventController.createEvent);
 router.route("/:name/event").get(eventController.getEventsForClub);
 router.route("/:name/event/:event").get(eventController.getEvent);
+router.route("/:name/event/:event").put(eventController.editEvent);
+router.route("/:name/event/:event").delete(eventController.deleteEvent);
 
 // Note: always put static routes (ex: /new) before dynamic routes (ex: /:id)
 
