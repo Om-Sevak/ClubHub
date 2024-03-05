@@ -9,12 +9,13 @@ import SearchBar from './SearchBar';
 import { SearchResultsList } from "./SearchResultList";
 import { useNavigate } from 'react-router-dom';
 import authApi from "../api/auth";
-
+import ConfirmationPopup from "./ConfirmationPopup";
 const Header = () => {
 
   const [results, setResults] = useState([]);
   const [viewResults, setViewResults] = useState(false);
   const [loggedIn, setLoggedIn] = useState(false);
+  const [showConfirmation, setShowConfirmation] = useState(false);
   const navigate = useNavigate();
 
   const wrapperRef = useRef(null);
@@ -74,21 +75,32 @@ const Header = () => {
   };
 
   const handleLoginLogoutClick = async () => {
-    const { status: reqStatusLogin, data: loginData } = await authApi.loginStatus();
-    if (reqStatusLogin === 200) {
+    if (loggedIn) {
+      setShowConfirmation(true); 
+    } else {
+      const { data: loginData } = await authApi.loginStatus();
       if(loginData.loggedInStatus) {
-        const { status: reqStatusLogout } = await authApi.logout();
-        if (reqStatusLogout === 200) {
+        const { status: reqStatus } = await authApi.logout();
+        if (reqStatus === 200) {
           setLoggedIn(false);
         }
       }
       else {
         navigate(`/login`);
       }
-    } else {
-      console.error("There was an authentication error on the server!")
     }
-    
+  };
+
+  const handleLogoutConfirmation = async () => {
+    const { status: reqStatus } = await authApi.logout();
+    if (reqStatus === 200) {
+      setLoggedIn(false);
+    }
+    setShowConfirmation(false); 
+  };
+
+  const handleCancelConfirmation = () => {
+    setShowConfirmation(false); 
   };
 
 
@@ -153,6 +165,13 @@ const Header = () => {
       <div className="header-right-section">
         <button className="header-login-button" onClick={handleLoginLogoutClick}>{loggedIn ? 'Logout' : 'Login'}</button>
       </div>
+      {showConfirmation && (
+        <ConfirmationPopup
+          message="Are you sure you want to logout?"
+          onConfirm={handleLogoutConfirmation}
+          onCancel={handleCancelConfirmation}
+        />
+      )}
     </header>
   );
 };
