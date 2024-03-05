@@ -6,6 +6,7 @@ import Header from '../components/Header';
 import clubRoleApi from '../api/clubRole';
 import NotFound from '../components/NotFound';
 import eventApi from '../api/events';
+import ConfirmationPopup from '../components/ConfirmationPopup';
 
 const SingleEventPage = () => {
     const {clubName, eventId} = useParams();
@@ -16,6 +17,7 @@ const SingleEventPage = () => {
     const [isMember, setIsMember] = useState(false);
     const [isAdmin, setIsAdmin] = useState(false);
     const [errorMessage, setErrorMessage] = useState('');
+    const [showConfirmationPopup, setShowConfirmationPopup] = useState(false); 
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -96,23 +98,28 @@ const SingleEventPage = () => {
       }
       //TODO
     const handleDelete = async () => {
-        const isConfirmed = window.confirm('Are you sure you want to delete the event?');
-    
-        if (isConfirmed) {
-            try {
-                const response = await eventApi.deleteEvent(clubName, eventId);
-                if (response.status === 200) {
-                    navigate(`/club/${clubName}`);
-                } else if (response.status === 403) {
-                    setErrorMessage('Only an admin can delete the event');
-                } else if (response.status === 404) {
-                    setErrorMessage('Event not found');
-                }
-            } catch (error) {
-                console.error('Event deletion failed: ', error);
+        setShowConfirmationPopup(true);
+    }
+
+    const confirmDelete = async () => {
+        try {
+            const response = await eventApi.deleteEvent(clubName, eventId);
+            if (response.status === 200) {
+                navigate(`/club/${clubName}`);
+            } else if (response.status === 403) {
+                setErrorMessage('Only an admin can delete the event');
+            } else if (response.status === 404) {
+                setErrorMessage('Event not found');
             }
-    }
-    }
+        } catch (error) {
+            console.error('Event deletion failed: ', error);
+        }
+        setShowConfirmationPopup(false);
+    };
+
+    const cancelDelete = () => {
+        setShowConfirmationPopup(false); 
+    };
     
     const handleBack = async() => {
         navigate(`/club/${clubName}`);
@@ -135,6 +142,13 @@ const SingleEventPage = () => {
                 {errorMessage && <p className="error-message">{errorMessage}</p>}
             </main>
         </div>
+        {showConfirmationPopup && (
+            <ConfirmationPopup
+                message="Are you sure you want to delete this event?"
+                onConfirm={confirmDelete}
+                onCancel={cancelDelete}
+            />
+        )}
         </div>
     )
 };
