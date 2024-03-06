@@ -8,6 +8,10 @@ const multer = require('multer');
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
 
+//Azure Blob Storage configuration
+const AZURE_STORAGE_CONNECTION_STRING = process.env.AZURE_STORAGE_CONNECTION_STRING;
+const CONTAINER_NAME = process.env.CONTAINER_NAME;
+
 exports.createClub = async(req, res) => {
     try {
         console.log(`${req.sessionID} - ${req.session.email} is requesting to create club. Changes: ${JSON.stringify(req.body)}`);
@@ -45,7 +49,7 @@ exports.createClub = async(req, res) => {
                 // Handle image upload
                 const imageBuffer = req.file.buffer;
                 const imageType = req.file.mimetype;
-                const imageUrl = await uploadImage(imageBuffer, imageType);
+                const imageUrl = await uploadImage(imageBuffer, imageType, AZURE_STORAGE_CONNECTION_STRING, CONTAINER_NAME);
         
                 const newClub = await Club.create({
                     name: name,

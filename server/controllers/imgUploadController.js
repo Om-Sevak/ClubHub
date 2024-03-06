@@ -1,22 +1,14 @@
-const dotenv = require('dotenv');
 const azure = require('@azure/storage-blob');
 const BlobServiceClient = azure.BlobServiceClient;
 const { v1: uuidv1 } = require("uuid");
 
-if (!process.env.ENVIRONMENT) {
-    dotenv.config({path:'./config/.env'});
-}
 
-// Azure Blob Storage configuration
-const AZURE_STORAGE_CONNECTION_STRING = process.env.AZURE_STORAGE_CONNECTION_STRING;
-const CONTAINER_NAME = process.env.CONTAINER_NAME;
-
-// Create the BlobServiceClient object with connection string
-const blobServiceClient = BlobServiceClient.fromConnectionString(AZURE_STORAGE_CONNECTION_STRING);
-const containerClient = blobServiceClient.getContainerClient(CONTAINER_NAME);
-
-const uploadImage = async (imageBuffer, imageType) => {
+const uploadImage = async (imageBuffer, imageType, AZURE_STORAGE_CONNECTION_STRING, CONTAINER_NAME) => {
     try {
+        // Create the BlobServiceClient object with connection string
+        const blobServiceClient = BlobServiceClient.fromConnectionString(AZURE_STORAGE_CONNECTION_STRING);
+        const containerClient = blobServiceClient.getContainerClient(CONTAINER_NAME);
+        
         // Generate unique blob name
         const blobName = "club-logo-" + uuidv1();
 
