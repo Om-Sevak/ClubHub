@@ -1,30 +1,30 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-
 import './createClubPage.css'; // Import CSS file for styling
 import clubApi from '../api/clubs';
 import Header from '../components/Header';
-
+import LoadingSpinner from '../components/LoadingSpinner'; // Import the LoadingSpinner component
 
 const ClubCreatePage = () => {
     const [clubname, setClubName] = useState('');
     const [clubdescription, setClubDescription] = useState('');
     const [clubinterest, setClubInterest] = useState('');
     const [clubemail, setClubEmail] = useState('');
-    const [clubImage, setClubImage] = useState(null); // State to store selected image file
+    const [clubImage, setClubImage] = useState(null);
     const [errorMessage, setErrorMessage] = useState('');
+    const [isLoading, setIsLoading] = useState(false);
     const navigate = useNavigate();
     
     const handleclubcreate = async (e) => {
-        e.preventDefault(); // Prevent default form submission behavior
+        e.preventDefault();
+        setIsLoading(true);
         try {
-            // Create FormData object to append image file
             const formData = new FormData();
             formData.append('name', clubname);
             formData.append('description', clubdescription);
             formData.append('interest', clubinterest);
             formData.append('email', clubemail);
-            formData.append('image', clubImage); // Append image file to form data
+            formData.append('image', clubImage);
 
             const response = await clubApi.createClub(formData);
             if(response.status === 200){
@@ -37,6 +37,8 @@ const ClubCreatePage = () => {
             }
         } catch (error) {
             console.error('club creation failed: ', error);
+        } finally {
+            setIsLoading(false);
         }
     };
         
@@ -47,7 +49,6 @@ const ClubCreatePage = () => {
             <div className="create-club-container">
               <h2>Let's create a new club!</h2>
               <form onSubmit={handleclubcreate}>
-                {/* Add labels for input fields */}
                 <label htmlFor="clubname">
                   Club Name:
                   <input
@@ -92,18 +93,19 @@ const ClubCreatePage = () => {
                   />
                 </label>
 
-                {/* Input for file upload */}
                 <label htmlFor="clubimage">
                   Club Image:
                   <input
                     id="clubimage"
                     type="file"
                     accept="image/*"
-                    onChange={(e) => setClubImage(e.target.files[0])} // Store selected image file in state
+                    onChange={(e) => setClubImage(e.target.files[0])}
                   />
                 </label>
       
-                <button type="submit">Create</button>
+                {/* Conditionally render the loading spinner */}
+                {isLoading && <LoadingSpinner />}
+                {!isLoading && <button type="submit">Create</button>}
               </form>
               {errorMessage && <p className="error-message">{errorMessage}</p>}
             </div>
