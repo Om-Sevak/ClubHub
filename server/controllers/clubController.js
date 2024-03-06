@@ -1,43 +1,79 @@
 const Club = require("../models/clubModel");
 const User = require("../models/userModel")
 const clubRole = require("./clubroleController");
+const uploadImage = require("./imgUploadController");
+const multer = require('multer');
+
+// Multer storage configuration
+const storage = multer.memoryStorage();
+const upload = multer({ storage: storage });
 
 exports.createClub = async(req, res) => {
     try {
         console.log(`${req.sessionID} - ${req.session.email} is requesting to create club. Changes: ${JSON.stringify(req.body)}`);
-        const { name, description, email } = req.body;
+    
         //const executives = [];
 
-        if (!req.session.isLoggedIn) {
-            throw new Error('Unauthorized: Must sign in to create a club');
-        }
+        upload.single('image')(req, res, async (err) => {
+            const body = JSON.parse(JSON.stringify(req.body));
+            const { name, description, email } = body;
+            if (err) {
+                console.error('Error uploading profile picture:', err);
+                return res.status(500).json({ message: 'Internal server error' });
+            }
+            try {
 
-        // Validate that a club with the provided name doesn't already exist
-        const club = await Club.findOne({ name: name });
-        if (club) {
-            throw new Error(`Bad Request: Club called ${name} already exists`);
-        }
-        // Validate email format
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!emailRegex.test(email)) {
-            throw new Error('Bad Request: Invalid email format');
-        }
+                if (!req.session.isLoggedIn) {
+                    throw new Error('Unauthorized: Must sign in to create a club');
+                }
+        
+                // Validate that a club with the provided name doesn't already exist
+                const club = await Club.findOne({ name: name });
+                if (club) {
+                    throw new Error(`Bad Request: Club called ${name} already exists`);
+                }
+                // Validate email format
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                if (!emailRegex.test(email)) {
+                    throw new Error('Bad Request: Invalid email format');
+                }
+        
+                const userEmail = req.session.email
+                const user = await User.findOne({ email: userEmail });
+                const userObjectId = user._id;
 
-        const userEmail = req.session.email
-        const user = await User.findOne({ email: userEmail });
-        const userObjectId = user._id;
+                // Handle image upload
+                const imageBuffer = req.file.buffer;
+                const imageType = req.file.mimetype;
+                const imageUrl = await uploadImage(imageBuffer, imageType);
+        
+                const newClub = await Club.create({
+                    name: name,
+                    description: description,
+                    email: email,
+                    createdBy: userObjectId,
+                    imgUrl: imageUrl
+                });
+        
+                const adminRole = await clubRole.createAdminRoleMiddleware(userEmail, name);
+        
+                res.status(200).json({ message: 'Club created successfully' });
+                console.log(`${req.sessionID} - Request Success: ${req.method}  ${req.originalUrl}`);
+            }
+            catch (err) {
+                
+                res.status(500).json({
+                    status: "fail",
+                    message: err.message,
+                    description: `Bad Request: Server Error`
+                });
+                console.log(`${req.sessionID} - Server Error: ${err}`)
+                
+                console.log(`${req.sessionID} - Request Failed: ${err.message}`);
+            }
 
-        const newClub = await Club.create({
-            name: name,
-            description: description,
-            email: email,
-            createdBy: userObjectId
-        });
+            });
 
-        const adminRole = await clubRole.createAdminRoleMiddleware(userEmail, name);
-
-        res.status(200).json({ message: 'Club created successfully' });
-        console.log(`${req.sessionID} - Request Success: ${req.method}  ${req.originalUrl}`);
 
     } catch (err) {
         if (err.message.includes('Unauthorized')) {

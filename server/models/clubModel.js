@@ -20,7 +20,10 @@ const clubSchema = new mongoose.Schema({
     executives: [{
         type: mongoose.Schema.Types.ObjectId, // Reference to users who are executives
         ref: 'User'
-    }]
+    }],
+    imgUrl: {
+        type: String
+    }
 });
 
 const Club = mongoose.model('Club', clubSchema);

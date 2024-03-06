@@ -11,13 +11,22 @@ const ClubCreatePage = () => {
     const [clubdescription, setClubDescription] = useState('');
     const [clubinterest, setClubInterest] = useState('');
     const [clubemail, setClubEmail] = useState('');
+    const [clubImage, setClubImage] = useState(null); // State to store selected image file
     const [errorMessage, setErrorMessage] = useState('');
     const navigate = useNavigate();
     
     const handleclubcreate = async (e) => {
         e.preventDefault(); // Prevent default form submission behavior
         try {
-            const response = await clubApi.createClub({ name: clubname, description: clubdescription, email: clubemail});
+            // Create FormData object to append image file
+            const formData = new FormData();
+            formData.append('name', clubname);
+            formData.append('description', clubdescription);
+            formData.append('interest', clubinterest);
+            formData.append('email', clubemail);
+            formData.append('image', clubImage); // Append image file to form data
+
+            const response = await clubApi.createClub(formData);
             if(response.status === 200){
                 navigate('/');
             } else if(response.status === 400){
@@ -80,6 +89,17 @@ const ClubCreatePage = () => {
                     placeholder="Enter the club email"
                     value={clubemail}
                     onChange={(e) => setClubEmail(e.target.value)}
+                  />
+                </label>
+
+                {/* Input for file upload */}
+                <label htmlFor="clubimage">
+                  Club Image:
+                  <input
+                    id="clubimage"
+                    type="file"
+                    accept="image/*"
+                    onChange={(e) => setClubImage(e.target.files[0])} // Store selected image file in state
                   />
                 </label>
       
