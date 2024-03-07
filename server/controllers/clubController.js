@@ -62,7 +62,9 @@ exports.createClub = async(req, res) => {
                 } else{
                      imageUrl = process.env.DEFAULT_LOGO_URL; 
                 }
-        
+
+                console.log(`${req.sessionID} - ${req.session.email} uploaded a club logo.`);
+
                 const newClub = await Club.create({
                     name: name,
                     description: description,
