@@ -1,65 +1,117 @@
 const Club = require("../models/clubModel");
 const User = require("../models/userModel")
 const clubRole = require("./clubroleController");
+const uploadImage = require("./imgUploadController");
+const multer = require('multer');
+
+// Multer storage configuration
+const storage = multer.memoryStorage();
+const upload = multer({ storage: storage });
+
+
 
 exports.createClub = async(req, res) => {
     try {
         console.log(`${req.sessionID} - ${req.session.email} is requesting to create club. Changes: ${JSON.stringify(req.body)}`);
-        const { name, description, email } = req.body;
+    
         //const executives = [];
 
-        if (!req.session.isLoggedIn) {
-            throw new Error('Unauthorized: Must sign in to create a club');
-        }
+        upload.single('image')(req, res, async (err) => {
 
-        // Validate that a club with the provided name doesn't already exist
-        const club = await Club.findOne({ name: name });
-        if (club) {
-            throw new Error(`Bad Request: Club called ${name} already exists`);
-        }
-        // Validate email format
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!emailRegex.test(email)) {
-            throw new Error('Bad Request: Invalid email format');
-        }
+            const body = JSON.parse(JSON.stringify(req.body));
+            const { name, description, email } = body;
 
-        const userEmail = req.session.email
-        const user = await User.findOne({ email: userEmail });
-        const userObjectId = user._id;
+            if (err) {
+                console.error('Error uploading profile picture:', err);
+                return res.status(500).json({ message: 'Internal server error' });
+            }
+            try {
 
-        const newClub = await Club.create({
-            name: name,
-            description: description,
-            email: email,
-            createdBy: userObjectId
-        });
+                if (!req.session.isLoggedIn) {
+                    throw new Error('Unauthorized: Must sign in to create a club');
+                }
+        
+                // Validate that a club with the provided name doesn't already exist
+                const club = await Club.findOne({ name: name });
+                if (club) {
+                    throw new Error(`Bad Request: Club called ${name} already exists`);
+                }
+                // Validate email format
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                if (!emailRegex.test(email)) {
+                    throw new Error('Bad Request: Invalid email format');
+                }
+        
+                const userEmail = req.session.email
+                const user = await User.findOne({ email: userEmail });
+                const userObjectId = user._id;
 
-        const adminRole = await clubRole.createAdminRoleMiddleware(userEmail, name);
+                // Handle image upload
+                let imageUrl = '';
+                //If image is uploaded, upload to Azure Blob Storage
+                //If not, use default image
+                if (req.file){
+                    //Azure Blob Storage configuration
+                    const AZURE_STORAGE_CONNECTION_STRING = process.env.AZURE_STORAGE_CONNECTION_STRING;
+                    const CONTAINER_NAME = process.env.CONTAINER_NAME;
+                    //getting image buffer and type
+                    const imageBuffer = req.file.buffer;
+                    const imageType = req.file.mimetype;
+                   
+                    imageUrl = await uploadImage(imageBuffer, imageType, AZURE_STORAGE_CONNECTION_STRING, CONTAINER_NAME);
+                } else{
+                     imageUrl = process.env.DEFAULT_LOGO_URL; 
+                }
 
-        res.status(200).json({ message: 'Club created successfully' });
-        console.log(`${req.sessionID} - Request Success: ${req.method}  ${req.originalUrl}`);
+                console.log(`${req.sessionID} - ${req.session.email} uploaded a club logo.`);
+
+                const newClub = await Club.create({
+                    name: name,
+                    description: description,
+                    email: email,
+                    createdBy: userObjectId,
+                    imgUrl: imageUrl
+                });
+        
+                const adminRole = await clubRole.createAdminRoleMiddleware(userEmail, name);
+        
+                res.status(200).json({ message: 'Club created successfully' });
+                console.log(`${req.sessionID} - Request Success: ${req.method}  ${req.originalUrl}`);
+            }
+            catch (err) {
+                if (err.message.includes('Unauthorized')) {
+                    res.status(403).json({
+                        status: "fail",
+                        message: err.message,
+                        description: `Unauthorized: ${req.session.email} is not an account`
+                    });
+                } else if (err.message.includes('Bad Request')) {
+                    res.status(400).json({
+                        status: "fail",
+                        message: err.message,
+                        description: `Bad Request: Failed to create club`
+                    });
+                } else {
+                    res.status(500).json({
+                        status: "fail",
+                        message: err.message,
+                        description: `Bad Request: Server Error`
+                    });
+                    console.log(`${req.sessionID} - Server Error: ${err}`)
+                }
+            }
+
+            });
 
     } catch (err) {
-        if (err.message.includes('Unauthorized')) {
-            res.status(403).json({
-                status: "fail",
-                message: err.message,
-                description: `Unauthorized: ${req.session.email} is not an account`
-            });
-        } else if (err.message.includes('Bad Request')) {
-            res.status(400).json({
-                status: "fail",
-                message: err.message,
-                description: `Bad Request: Failed to create club`
-            });
-        } else {
-            res.status(500).json({
-                status: "fail",
-                message: err.message,
-                description: `Bad Request: Server Error`
-            });
-            console.log(`${req.sessionID} - Server Error: ${err}`)
-        }
+
+        res.status(500).json({
+            status: "fail",
+            message: err.message,
+            description: `Bad Request: Server Error`
+        });
+        console.log(`${req.sessionID} - Server Error: ${err}`)
+        
         console.log(`${req.sessionID} - Request Failed: ${err.message}`);
     }
 };
