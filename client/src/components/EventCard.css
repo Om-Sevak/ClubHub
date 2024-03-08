@@ -1,0 +1,75 @@
+.card-event-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-direction: row;
+    flex:1
+}
+
+.card-event-left-col {
+    flex: 1;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.card-event-title-container {
+    display: flex;
+    flex-direction: column;
+    padding-left: 15px;
+}
+
+.card-event-name {
+    color: black !important;
+    font-size: x-large !important;
+    font-family: 'Trebuchet MS', sans-serif !important;
+    font-weight: 600;
+    vertical-align: top;
+    text-align: left;
+
+}
+
+.card-event-club-name {
+    color: #062b54 !important;
+    font-size: large !important;
+    font-family: 'Trebuchet MS', sans-serif !important;
+    font-weight: 600;
+    vertical-align: top;
+    text-align: left;
+}
+
+.card-event-right-col {
+    flex: 1;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.card-event-info-container {
+    display: flex;
+    flex-direction: row;
+}
+
+.card-event-club-date {
+    color: #062b54 !important;
+    font-size: x-large !important;
+    font-family: 'Trebuchet MS', sans-serif !important;
+    font-weight: 600;
+    margin-right: 10px;
+    vertical-align: top;
+    font-style: italic;
+    align-self: center;
+}
+
+.card-event-logo {
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+}
+
+.card-event-edit-icon {
+    position: relative;
+    font-size: 30px;
+    cursor: pointer;
+    color:#062b54;
+    cursor: default;
+  }
