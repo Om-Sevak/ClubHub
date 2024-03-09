@@ -7,7 +7,8 @@ const clubInterestSchema = new mongoose.Schema({
         required: true
     },
     interest: {
-        type: String,
+        type: mongoose.Schema.Types.ObjectId, // Reference to the interest
+        ref: 'Interest',
         required: true
     }
 });

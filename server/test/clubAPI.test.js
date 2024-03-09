@@ -52,7 +52,7 @@ describe('Club Endpoints', () => {
                 .expect(200);
 
             const createClubRes = await testSession.post('/club')
-                .send({name: 'test club', descirption: 'Test description', email: 'johnny@example.com'})
+                .send({name: 'test club', descirption: 'Test description', email: 'johnny@example.com', interest: "Coding,Sports,Technology"})
                 .expect(200);
         });
 
@@ -88,6 +88,19 @@ describe('Club Endpoints', () => {
 
             const createClubFail = await testSession.post('/club')
                 .send({name: 'test', descirption: 'Test description', email: 'johnnyexample.com'})
+                .expect(400);
+        });
+
+        test('Should fail to create a new club if there are less than 3 interests provided', async () => {
+
+            testSession = session(app);
+
+            const loginRes = await testSession.post('/login')
+                .send({ email: 'john@example.com', password: 'password' })
+                .expect(200);
+
+            const createClubFail = await testSession.post('/club')
+                .send({name: 'test', descirption: 'Test description', email: 'johnny@example.com', interest: "Coding,Sports"})
                 .expect(400);
         });
     })
@@ -148,7 +161,7 @@ describe('Club Endpoints', () => {
                 .expect(200);
 
             const createClubRes = await testSession.post('/club/')
-                .send({name: 'new club', descirption: 'testing editing', email: 'johnny@example.ca'})
+                .send({name: 'new club', descirption: 'testing editing', email: 'johnny@example.ca', interest: "Coding,Sports,Technology"})
                 .expect(200);
             
             const editClubRes = await testSession.put('/club/test club')

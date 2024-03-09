@@ -1,5 +1,6 @@
 const Club = require("../models/clubModel");
 const User = require("../models/userModel")
+const interests = require("./interestController")
 const clubRole = require("./clubroleController");
 const uploadImage = require("./imgUploadController");
 const multer = require('multer');
@@ -19,7 +20,7 @@ exports.createClub = async(req, res) => {
         upload.single('image')(req, res, async (err) => {
 
             const body = JSON.parse(JSON.stringify(req.body));
-            const { name, description, email } = body;
+            const { name, description, email, interest } = body;
 
             if (err) {
                 console.error('Error uploading profile picture:', err);
@@ -40,6 +41,11 @@ exports.createClub = async(req, res) => {
                 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
                 if (!emailRegex.test(email)) {
                     throw new Error('Bad Request: Invalid email format');
+                }
+
+                const interestArray = interest.split(",");
+                if (interestArray.length < 3){
+                    throw new Error('Bad Request: Please select at least 3 interests');
                 }
         
                 const userEmail = req.session.email
@@ -74,6 +80,8 @@ exports.createClub = async(req, res) => {
                 });
         
                 const adminRole = await clubRole.createAdminRoleMiddleware(userEmail, name);
+
+                const clubInterests = await interests.createClubInterestsMiddleware(interestArray, name);
         
                 res.status(200).json({ message: 'Club created successfully' });
                 console.log(`${req.sessionID} - Request Success: ${req.method}  ${req.originalUrl}`);
