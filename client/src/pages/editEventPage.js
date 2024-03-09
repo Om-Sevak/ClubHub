@@ -58,7 +58,7 @@ const EditEventPage = () => {
     };
 
     const handleCancel = () => {
-        navigate(`/club/${clubName}/${eventId}`);
+        navigate(-1);
     };
 
     return (

@@ -81,6 +81,13 @@
     border-radius: 20px;
 }
 
+.events {
+    background-color: #F26A4B;
+    border-radius: 20px;
+    margin-bottom: 20px;
+  }
+  
+
 button {
     background: linear-gradient(45deg, #0C3559, #7EADBF);
     color: #F2EAD0;
@@ -110,6 +117,21 @@ button:hover {
   
   .events h3:hover {
     text-decoration: underline; 
+  }
+
+.add-event-icon {
+    position: relative;
+    font-size: 30px;
+    cursor: pointer;
+    color:#062b54;
+    cursor: default;
+    margin-left: 20px;
+    cursor: pointer;
+    float: right; 
+    margin-right: 20px; 
+    border: 3px solid #062b54; 
+    padding: 5px; 
+    border-radius: 5px;
   }
 
   

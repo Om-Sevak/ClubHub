@@ -138,7 +138,7 @@ const SingleEventPage = () => {
                 <About />
                 {isAdmin &&<button onClick={handleEdit}>Edit Event</button>}
                 {isAdmin &&<button onClick={handleDelete}>Delete Event</button>}
-                {isAdmin &&<button onClick={handleBack}>Back</button>}
+                <button onClick={handleBack}>Back</button>
                 {errorMessage && <p className="error-message">{errorMessage}</p>}
             </main>
         </div>
