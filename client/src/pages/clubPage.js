@@ -8,6 +8,9 @@ import NotFound from '../components/NotFound';
 import eventApi from '../api/events';
 import { useNavigate } from 'react-router-dom';
 import Header from '../components/Header';
+import EventCard from '../components/EventCard';
+import { faPlus } from "@fortawesome/free-solid-svg-icons"
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 
 // Header component
 const ClubPage = () => {
@@ -175,18 +178,25 @@ const ClubPage = () => {
     }
 
     return (
-      <section className="events">
+      <section className="events" style={{ paddingBottom: isAdmin ? '65px' : '20px' }}>
         <h2>Upcoming Events</h2>
         <ul>
           {clubEvents.map(event => (
-            <li key={event._id}>
-              <h3 onClick={() => handleEventClick(event._id)}>{event.title}</h3>
-              <p>Description: {event.description}</p>
-              <p>Date: {formatDate(event.date)}</p>
-              <p>Location: {event.location}</p>
-            </li>
+            <div key={event._id} style={{ marginBottom: '20px' }}>
+              <EventCard
+                event={event.title}
+                eventId={event._id}
+                name={clubName}
+                isAdmin={isAdmin}
+                dateString={event.date}
+              />
+            </div>
           ))}
         </ul>
+        {isAdmin &&
+          <div className='add-event-icon' onClick={handleCreateEventClick}>
+          <FontAwesomeIcon icon={faPlus}  />
+          </div>}
       </section>
     );
   }
@@ -207,7 +217,6 @@ const ClubPage = () => {
         <Banner />
         <About />
         <Events />
-        {isAdmin && <button onClick={handleCreateEventClick}>Create Event</button>}
         {isAdmin &&<button onClick={handleEdit}>Edit Club</button>}
         {isAdmin ? <button onClick={handleDelete}>Delete Club</button> : <button onClick={isMember ? handleLeave : handleJoin}>{isMember ? 'Leave Club' : 'Join Club'}</button>}
         {errorMessage && <p className="error-message">{errorMessage}</p>}

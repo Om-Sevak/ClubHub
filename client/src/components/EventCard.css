@@ -11,6 +11,7 @@
     display: flex;
     justify-content: flex-start;
     align-items: center;
+    cursor: pointer;
 }
 
 .card-event-title-container {
@@ -72,4 +73,15 @@
     cursor: pointer;
     color:#062b54;
     cursor: default;
+    cursor: pointer;
+  }
+
+.card-event-delete-icon {
+    position: relative;
+    font-size: 30px;
+    cursor: pointer;
+    color:#062b54;
+    cursor: default;
+    margin-left: 20px;
+    cursor: pointer;
   }
