@@ -4,11 +4,12 @@ import './createClubPage.css'; // Import CSS file for styling
 import clubApi from '../api/clubs';
 import Header from '../components/Header';
 import LoadingSpinner from '../components/LoadingSpinner'; // Import the LoadingSpinner component
+import InterestMultiSelect from '../components/InterestMultiSelect';
 
 const ClubCreatePage = () => {
     const [clubname, setClubName] = useState('');
     const [clubdescription, setClubDescription] = useState('');
-    const [clubinterest, setClubInterest] = useState('');
+    const [clubinterest, setClubInterest] = useState([]);
     const [clubemail, setClubEmail] = useState('');
     const [clubImage, setClubImage] = useState(null);
     const [errorMessage, setErrorMessage] = useState('');
@@ -18,11 +19,17 @@ const ClubCreatePage = () => {
     const handleclubcreate = async (e) => {
         e.preventDefault();
         setIsLoading(true);
+
+        const interestNames  = [];
+        clubinterest.forEach(interest => {
+          interestNames.push(interest.value)
+        });
+
         try {
             const formData = new FormData();
             formData.append('name', clubname);
             formData.append('description', clubdescription);
-            formData.append('interest', clubinterest);
+            formData.append('interest', interestNames);
             formData.append('email', clubemail);
             formData.append('image', clubImage);
 
@@ -41,7 +48,7 @@ const ClubCreatePage = () => {
             setIsLoading(false);
         }
     };
-        
+
     return (
         <div className="create-club-page">
           <Header />
@@ -71,17 +78,6 @@ const ClubCreatePage = () => {
                   />
                 </label>
       
-                <label htmlFor="clubinterest">
-                  Club Interests:
-                  <input
-                    id="clubinterest"
-                    type="text"
-                    placeholder="Enter the interests for the club"
-                    value={clubinterest}
-                    onChange={(e) => setClubInterest(e.target.value)}
-                  />
-                </label>
-      
                 <label htmlFor="clubemail">
                   Club Email:
                   <input
@@ -92,6 +88,8 @@ const ClubCreatePage = () => {
                     onChange={(e) => setClubEmail(e.target.value)}
                   />
                 </label>
+
+                <InterestMultiSelect selectedOptions={clubinterest} setSelectedOptions={setClubInterest}/>
 
                 <label htmlFor="clubimage">
                   Club Image:
