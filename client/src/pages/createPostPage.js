@@ -30,8 +30,8 @@ const PostCreatePage = () => {
             
             if (response.status === 200) {
                 navigate(`/club/${clubName}`);
-            } else if (response.status === 400) {
-                setErrorMessage('Invalid email');
+            } else if(response.status === 403){
+                setErrorMessage('You must be an admin to create a post for this club');
             }
         } catch (error) {
             console.error('post creation failed: ', error);
