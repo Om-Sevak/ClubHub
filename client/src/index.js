@@ -16,6 +16,7 @@ import EventsPage from './pages/eventsPage';
 import FindClubPage from './pages/findClubPage';
 import SingleEventPage from './pages/singleEventPage';
 import EditEventPage from './pages/editEventPage';
+import PostCreatePage from './pages/createPostPage';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
@@ -36,6 +37,7 @@ root.render(
         <Route path="/club/createEvent/:clubName" element={<EventCreatePage />} />
         <Route path="/club/:clubName/:eventId" element={<SingleEventPage />} />
         <Route path="/club/:clubName/edit/:eventId" element={<EditEventPage />} />
+        <Route path="/club/createPost/:clubName" element={<PostCreatePage />} />
       </Routes>
     </Router>
   </React.StrictMode>

@@ -81,7 +81,15 @@
     border-radius: 20px;
 }
 
-.events {
+.posts {
+    background-color: #F26A4B;
+    border-radius: 20px;
+    width: 45%;
+    margin: 0 auto;
+}
+
+.events,
+.posts {
     background-color: #F26A4B;
     border-radius: 20px;
     margin-bottom: 20px;
@@ -119,7 +127,8 @@ button:hover {
     text-decoration: underline; 
   }
 
-.add-event-icon {
+.add-event-icon,
+.add-post-icon {
     position: relative;
     font-size: 30px;
     cursor: pointer;

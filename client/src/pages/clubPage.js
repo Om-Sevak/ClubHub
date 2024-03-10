@@ -6,11 +6,13 @@ import clubApi from '../api/clubs';
 import clubRoleApi from '../api/clubRole';
 import NotFound from '../components/NotFound';
 import eventApi from '../api/events';
+import postApi from '../api/posts';
 import { useNavigate } from 'react-router-dom';
 import Header from '../components/Header';
 import EventCard from '../components/EventCard';
 import { faPlus } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+import PostCard from '../components/PostCard';
 
 // Header component
 const ClubPage = () => {
@@ -20,6 +22,7 @@ const ClubPage = () => {
   const [isMember, setIsMember] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
   const [clubEvents, setClubEvents] = useState([])
+  const [clubPosts, setClubPosts] = useState([])
   const [errorMessage, setErrorMessage] = useState('');
   const navigate = useNavigate();
 
@@ -84,9 +87,28 @@ const ClubPage = () => {
       }
     };
 
+    const fetchClubPosts = async () => {
+
+      try {
+        
+        const { status: reqStatus, data: postData } = await postApi.getPostsForClub(clubName);
+        if (reqStatus === 200) {
+          setClubPosts(postData.posts);
+        }
+        else if (reqStatus === 404) {
+          setErrorMessage("Club does not exist")
+        }
+      }
+      catch (error) {
+        console.error('unable to get posts ', error);
+        setErrorMessage('Club does not exist');
+      }
+    };
+
     fetchClubData();
     fetchUserRoleData();
     fetchClubEvents();
+    fetchClubPosts();
 
   }, [])
 
@@ -201,6 +223,37 @@ const ClubPage = () => {
     );
   }
 
+  const handleCreatePostClick = () => {
+    navigate(`/club/createPost/${clubName}`);
+  };
+
+  function Posts() {
+
+    return (
+      <section className="posts" style={{ paddingBottom: isAdmin ? '65px' : '20px' }}>
+        <h2>Latest Posts</h2>
+        <ul>
+          {clubPosts.map(post => (
+            <div key={post._id} style={{ marginBottom: '20px' }}>
+              <PostCard
+                clubname={clubName}
+                postname={post.title}
+                postId={post._id}
+                contents={post.content}
+                isAdmin={isAdmin}
+                dateString={post.date}
+              />
+            </div>
+          ))}
+        </ul>
+        {isAdmin &&
+          <div className='add-post-icon' onClick={handleCreatePostClick}>
+          <FontAwesomeIcon icon={faPlus}  />
+          </div>}
+      </section>
+    );
+  }
+
   if (errorMessage === 'Club does not exist') {
     return <NotFound />;
   }
@@ -216,6 +269,7 @@ const ClubPage = () => {
       <main>
         <Banner />
         <About />
+        <Posts />
         <Events />
         {isAdmin &&<button onClick={handleEdit}>Edit Club</button>}
         {isAdmin ? <button onClick={handleDelete}>Delete Club</button> : <button onClick={isMember ? handleLeave : handleJoin}>{isMember ? 'Leave Club' : 'Join Club'}</button>}
