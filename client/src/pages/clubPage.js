@@ -300,7 +300,7 @@ const ClubPage = () => {
     </div>
     {showConfirmationPopup && (
             <ConfirmationPopup
-                message="Are you sure you want to delete this event?"
+                message="Are you sure you want to delete this club?"
                 onConfirm={confirmDelete}
                 onCancel={cancelDelete}
             />
