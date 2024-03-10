@@ -1,6 +1,7 @@
 const express = require("express");
 const clubController = require("../controllers/clubController");
 const eventController = require("../controllers/eventController");
+const postController = require("../controllers/postController");
 
 const router = express.Router();
 
@@ -30,6 +31,10 @@ router.route("/:name/event").get(eventController.getEventsForClub);
 router.route("/:name/event/:event").get(eventController.getEvent);
 router.route("/:name/event/:event").put(eventController.editEvent);
 router.route("/:name/event/:event").delete(eventController.deleteEvent);
+
+//Posts
+router.route("/:name/post").post(postController.createPost);
+router.route("/:name/post").get(postController.getPostsForClub);
 
 // Note: always put static routes (ex: /new) before dynamic routes (ex: /:id)
 

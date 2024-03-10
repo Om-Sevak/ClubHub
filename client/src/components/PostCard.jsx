@@ -6,10 +6,11 @@ import { useNavigate } from 'react-router-dom';
 
 const DESC_LIMIT = 500;
 
-export default function PostCard({ clubname, postname, desc }) {
+export default function PostCard({ clubname, postname, postId, contents, isAdmin, img, dateString }) {
     const navigate = useNavigate();
 
-    const shortdesc = desc.length > DESC_LIMIT ? `${desc.substring(0, DESC_LIMIT)} . . .` : desc;
+    const shortdesc = contents.length > DESC_LIMIT ? `${contents.substring(0, DESC_LIMIT)} . . .` : contents;
+    const formatedDate = (new Date(dateString)).toDateString();
 
 
     const handleCardClick = () => {
@@ -36,6 +37,7 @@ export default function PostCard({ clubname, postname, desc }) {
                             <span className='card-post-name'> {postname} </span>
                         </div>
                     </div>
+                    <span className='card-post-club-date'>{formatedDate}</span>
                     <span className='card-post-club-name'> Post from {clubname}:</span>
                     <span className='card-post-desc'> {shortdesc}</span>
                 </div>
