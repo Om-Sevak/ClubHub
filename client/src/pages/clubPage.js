@@ -13,6 +13,7 @@ import EventCard from '../components/EventCard';
 import { faPlus } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import PostCard from '../components/PostCard';
+import ConfirmationPopup from '../components/ConfirmationPopup';
 
 // Header component
 const ClubPage = () => {
@@ -24,6 +25,7 @@ const ClubPage = () => {
   const [clubEvents, setClubEvents] = useState([])
   const [clubPosts, setClubPosts] = useState([])
   const [errorMessage, setErrorMessage] = useState('');
+  const [showConfirmationPopup, setShowConfirmationPopup] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -148,10 +150,30 @@ const ClubPage = () => {
   const handleEdit = async() => {
     navigate(`/club/edit/${clubName}`);
   }
-  //TODO
-  const handleDelete = async () => {
 
+  const handleDelete = async () => {
+    setShowConfirmationPopup(true);
   }
+  
+  const confirmDelete = async () => {
+    try {
+        const response = await clubApi.deleteClub(clubName);
+        if (response.status === 200) {
+            navigate(`/`);
+        } else if (response.status === 403) {
+            setErrorMessage('Only an admin can delete the club');
+        } else if (response.status === 404) {
+            setErrorMessage('club not found');
+        }
+    } catch (error) {
+        console.error('club deletion failed: ', error);
+    }
+    setShowConfirmationPopup(false);
+  };
+
+  const cancelDelete = () => {
+      setShowConfirmationPopup(false); 
+  };
 
 
 
@@ -276,6 +298,13 @@ const ClubPage = () => {
         {errorMessage && <p className="error-message">{errorMessage}</p>}
       </main>
     </div>
+    {showConfirmationPopup && (
+            <ConfirmationPopup
+                message="Are you sure you want to delete this event?"
+                onConfirm={confirmDelete}
+                onCancel={cancelDelete}
+            />
+        )}
     </div>
   );
 };

@@ -1,5 +1,9 @@
 const Club = require("../models/clubModel");
 const User = require("../models/userModel")
+const ClubMembership = require('../models/clubMembershipsModel');
+const ClubPost = require('../models/clubPostModel');
+const ClubEvent = require('../models/clubEventModel');
+const ClubInterest = require('../models/clubInterestsModel');
 const interests = require("./interestController")
 const clubRole = require("./clubroleController");
 const uploadImage = require("./imgUploadController");
@@ -246,7 +250,7 @@ exports.deleteClub = async(req, res) => {
         // Checking if club exists first as we need a valid club to get possible role
         const club = await Club.findOne({ name: req.params.name }); 
          if (!club) {
-            throw new Error('Not Found: Fail to edit club as DNE');
+            throw new Error('Not Found: Fail to delete club as DNE');
         }
 
         if (!req.session.isLoggedIn) {
@@ -258,17 +262,19 @@ exports.deleteClub = async(req, res) => {
             throw new Error('Unauthorized: Only admins can delete the club.');
         }
 
-        const deleteStatus = await Club.deleteMany({ name: req.params.name });
-        if (!updateStatus.acknowledged) {
-            throw err;
-        }
+        await Promise.all([
+            ClubMembership.deleteMany({ club: club._id }),
+            ClubPost.deleteMany({ club: club._id }),
+            ClubEvent.deleteMany({ club: club._id }),
+            ClubInterest.deleteMany({ club: club._id })
+        ]);
+
+        
+        await club.deleteOne();
 
         res.status(200).json({
             status: "success",
             message: "club deleted",
-            data: {
-                club: club,
-            },
         });
         console.log(`${req.sessionID} - Request Success: ${req.method}  ${req.originalUrl}`);
 
@@ -283,7 +289,7 @@ exports.deleteClub = async(req, res) => {
             res.status(404).json({
                 status: "fail",
                 message: err.message,
-                description: `Not Found: Fail to delete new club as ${req.params.name} DNE`,
+                description: `Not Found: Fail to delete club as ${req.params.name} DNE`,
             });
         } else {
             res.status(500).json({
