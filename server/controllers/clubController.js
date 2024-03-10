@@ -169,7 +169,7 @@ exports.getClub = async(req, res) => {
 exports.editClub = async(req, res) => {
     try {
         console.log(`${req.sessionID} - ${req.session.email} is requesting to edit club ${ req.params.name}. Changes: ${JSON.stringify(req.body)}`);
-        const { name, description, email } = req.body;
+        const { name, description, email, interest } = req.body;
 
         // Validate email format
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -198,11 +198,18 @@ exports.editClub = async(req, res) => {
         if (!isAdmin) {
             throw new Error('Unauthorized: Only admins can modify the club.');
         }
+
+        if (interest.length < 3){
+            throw new Error('Bad Request: Please select at least 3 interests');
+        }
+        
         
         const updateStatus = await Club.updateOne({ name: req.params.name },req.body);
         if (!updateStatus.acknowledged) {
             throw err;
         }
+
+        const clubInterests = await interests.editClubInterestsMiddleware(interest, name);
 
         res.status(201).json({
             status: "success",
