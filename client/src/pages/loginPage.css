@@ -33,22 +33,6 @@ h2 {
     font-size: 24px;
 }
 
-input[type="text"],
-input[type="password"] {
-    width: 100%;
-    padding: 12px;
-    margin-bottom: 20px;
-    border: 1px solid #ddd;
-    border-radius: 6px;
-    box-sizing: border-box;
-    transition: border-color 0.3s ease;
-}
-
-input[type="text"]:focus,
-input[type="password"]:focus,
-button:focus {
-    border-color: #007bff;
-}
 
 button {
     background: linear-gradient(45deg, #0C3559, #7EADBF);

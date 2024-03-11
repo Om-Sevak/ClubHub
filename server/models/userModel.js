@@ -17,8 +17,7 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true,
         unique: true
-    },
-    interests: [String] // Array of user interests
+    }
 });
 
 const User = mongoose.model('User', userSchema);

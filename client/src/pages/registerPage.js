@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useToast } from '../components/ToastContext';
 import './loginPage.css'; // Import CSS file for styling
 import logo from '../assets/logoIMG.jpeg'; // Import your logo image
 import authAPI from '../api/auth.js'; // Import your API file
+import InterestMultiSelect from '../components/InterestMultiSelect.jsx';
 
 const RegisterPage = () => {
     const [firstName, setFirstName] = useState('');
@@ -11,7 +13,9 @@ const RegisterPage = () => {
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
+    const [userInterests, setUserInterests] = useState([]);
     const navigate = useNavigate();
+    const { showToast } = useToast();
 
     const handleRegister = async (e) => {
         e.preventDefault(); // Prevent default form submission behavior
@@ -22,13 +26,24 @@ const RegisterPage = () => {
                 return;
             }
 
+            const interest  = [];
+            userInterests.forEach(selected => {
+              interest.push(selected.value)
+            });
+
+            if(interest.length < 3){
+                setErrorMessage('Please select at least 3 interests');
+                return;
+            }
+
             // Make API request to register user
-            const response = await authAPI.register({ firstName, lastName, email, password });
+            const response = await authAPI.register({ firstName, lastName, email, password, interest });
             //console.log(response);
 
             // Check response status and navigate accordingly
             if (response.status === 200) {
-                navigate('/');
+                showToast('Registration successful!');
+                navigate('/login');
             } else if (response.status === 400) {
                 // Handle validation errors from the server
                 console.log(response)
@@ -78,9 +93,12 @@ const RegisterPage = () => {
                         value={confirmPassword}
                         onChange={(e) => setConfirmPassword(e.target.value)}
                     />
+
+                    <InterestMultiSelect selectedOptions={userInterests} setSelectedOptions={setUserInterests} />
+                    
                     <button type="submit">Register</button>
                 </form>
-                {errorMessage && <p className="error-message">{errorMessage}</p>}
+                {errorMessage && <p className="error-message">{errorMessage}</p>}              
             </div>
         </div>
     );
