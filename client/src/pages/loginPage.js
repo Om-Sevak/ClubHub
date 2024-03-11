@@ -3,15 +3,18 @@ import { useNavigate } from 'react-router-dom';
 import './registerPage.css'; // Import CSS file for styling
 import logo from '../assets/logoIMG.jpeg'; // Import your logo image
 import authAPI from '../api/auth.js'; // Import your API file
+import LoadingSpinner from '../components/LoadingSpinner'; // Import the LoadingSpinner component
 
 const LoginPage = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
+    const [isLoading, setIsLoading] = useState(false);
     const navigate = useNavigate();
 
     const handleLogin = async (e) => {
         e.preventDefault(); // Prevent default form submission behavior
+        setIsLoading(true);
         try {
 
             const response = await authAPI.login({ email, password });
@@ -23,6 +26,8 @@ const LoginPage = () => {
         } catch (error) {
             console.error('login failed: ', error);
             setErrorMessage('Invalid email or password');
+        } finally {
+            setIsLoading(false);
         }
     };
 
@@ -51,6 +56,7 @@ const LoginPage = () => {
                     <button type="submit">Login</button>
                 </form>
                 {errorMessage && <p className="error-message">{errorMessage}</p>}
+                {isLoading && <LoadingSpinner />}
                 <button onClick={handleRegister}>Register</button>
             </div>
         </div>
