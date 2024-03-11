@@ -26,7 +26,7 @@ const LoginPage = () => {
         } catch (error) {
             console.error('login failed: ', error);
             setErrorMessage('Invalid email or password');
-        } finally {
+        }finally {
             setIsLoading(false);
         }
     };
@@ -57,7 +57,7 @@ const LoginPage = () => {
                 </form>
                 {errorMessage && <p className="error-message">{errorMessage}</p>}
                 {isLoading && <LoadingSpinner />}
-                <button onClick={handleRegister}>Register</button>
+                {<button onClick={handleRegister}>Register</button>}
             </div>
         </div>
     );
