@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Select from 'react-select';
 import interestsApi from '../api/interests';
+import './InterestMultiSelect.css'
 
 
 const InterestMultiSelect = ({selectedOptions, setSelectedOptions}) => {
@@ -33,15 +34,15 @@ const InterestMultiSelect = ({selectedOptions, setSelectedOptions}) => {
   };
 
   return (
-    <label htmlFor="clubInterests">
+    <label className="interests-select"  htmlFor="clubInterests">
       Club Interests (Select at least 3):
       <Select
         isMulti
         options={options}
+        placeholder="Select at least 3 Interests"
         value={selectedOptions}
         onChange={handleChange}
         isLoading={isLoading}
-        className="interests-select"
       />
     </label>
   );
