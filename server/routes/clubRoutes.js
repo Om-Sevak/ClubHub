@@ -16,13 +16,15 @@ router.get("/", (req,res) => {
 // Example: create a new club by calling the controller method
 router.route("/").post(clubController.createClub);
 
+// Get clubs with interests algorthim used
+router.route("/browse").post(clubController.getClubsBrowse)
+
 router.route("/:name").put(clubController.editClub);
 
 router.route("/:name").delete(clubController.deleteClub);
 
 // Example: get a specific club based on club name
 router.route("/:name").get(clubController.getClub);
-
 router.route("/clubs/:query").get(clubController.getClubs);
 
 // Create a new club event
@@ -35,7 +37,6 @@ router.route("/:name/event/:event").delete(eventController.deleteEvent);
 //Posts
 router.route("/:name/post").post(postController.createPost);
 router.route("/:name/post").get(postController.getPostsForClub);
-
 // Note: always put static routes (ex: /new) before dynamic routes (ex: /:id)
 
 
