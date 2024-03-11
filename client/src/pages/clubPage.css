@@ -1,107 +1,114 @@
+/* Container styles */
 .club-page {
-    display:grid;
+    display: grid;
     position: absolute;
     width: 100%;
-    top: 0px;
-    left: 0px;
-}
-
-.club-page-col {
-    margin: 0;
-    height: 100vh;
-    display: grid;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
+    top: 0;
+    left: 0;
     background-color: #f5f5f5;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-}
+  }
 
+  
+  .club-page-col {
+    display: flex;
+    flex-direction:column;
+    width: auto;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    gap: 0;
 
-.clubLogo {
-    max-width: 80%;
-    margin: 0 auto;
-    margin-bottom: 20px;
-    border-radius: 10%;
-    width: 100vh ;
-    height: 40vh;
-    padding-top: 2em;
+  }
+  
+  /* Header styles */
+  .club-page-header {
+    text-align: center;
     
-}
-
-.club-page-header {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-    background-color: #F2EAD0;
-    border-radius: 20px;
+  }
+  
+  .header-h1 {
+    font-size: 3rem;
+    color: #333;
+    background-color: burlywood;
+    display: inline;
+    position: relative;
+    top: -100px;
+    border-radius: 5px;
+  }
+  
+  /* Logo styles */
+  .clubLogo {
+    width: 300px;
+    height: auto;
+    border-radius: 10px;
+    margin-top: 20px;
+    border: 4mm ridge black;
+  }
+  
+  /* About section styles */
+  .about {
+    text-align: center;
+    margin: 0;
+  }
+  
+  .about p {
+    font-size: 1.2rem;
+    color: black;
+    padding-left: 50px;
+    padding-right: 50px;
+    font-weight: bold;
+  }
+  
+  /* Events section styles */
+  .events {
+    margin-top: 20px;
     margin-bottom: 20px;
-}
-
-.club-page-details {
-    width: 100%;
-}
-
-.header-h1{
-    font-size: xx-large;
-    text-align: center;
-    padding: 20px;
-    width: 100%;
-}
-
-.banner {
-    display: flex;
-    align-items: flex-start;
-    width: 100%;   
-    padding: auto;
-}
-
-.banner-h2{
-    text-align: left;
-    color: black;
-    text-shadow: black 1px 1px 1px;
-}
-
-.about {
-    text-align: center;
-    background-color: #F2EAD0;
-    border-radius: 20px;
-}
-
-.about-h2 {
-    color: black;
-    text-shadow: black 1px 1px 1px;
-}
-
-.events {
-    background-color: #F26A4B;
-    border-radius: 20px;
-}
-
-button {
-    background: linear-gradient(45deg, #0C3559, #7EADBF);
-    color: #F2EAD0;
+  }
+  
+  .events h2 {
+    font-size: 3rem;
+    margin-bottom: 10px;
+    color: #333;
+    background-color: aquamarine;
+    position: relative;
+    display: inline;
+    margin-left: 10px;
+    border-radius: 2px;
+  }
+  
+  .events ul {
+    list-style-type: none;
+    padding: 0;
+    
+  }
+  
+  .events li {
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 10px;
+    margin-bottom: 10px;
+    background-color: #f9f9f9;
+  }
+  
+  /* Buttons styles */
+  button {
+    background-color: black;
+    color: white;
     border: none;
-    border-radius: 6px;
+    border-radius: 5px;
+    padding: 10px 20px;
+    margin-right: 10px;
     cursor: pointer;
-    display: block;
-    width: 100%;
-    margin-bottom: 20px;
-    padding: 14px 24px;
-    font-size: 16px;
-    font-weight: 600;
-    text-transform: uppercase;
-    transition: background 0.3s ease;
-    box-sizing: border-box;
-    outline: none;
-}
-
-button:hover {
-    background: linear-gradient(45deg, #F26A4B, #F26052);
-}
-
-
+    transition: background-color 0.3s ease;
+  }
+  
+  button:hover {
+    background-color: #0056b3;
+  }
+  
+  /* Error message styles */
+  .error-message {
+    color: red;
+    margin-top: 10px;
+    font-size: 1.2rem;
+  }
   

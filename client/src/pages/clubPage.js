@@ -138,21 +138,12 @@ const ClubPage = () => {
     );
   }
 
-  // Banner component
-  function Banner() {
-    return (
-      <section className="banner">
-        <h2 className='banner-h2'>Welcome to Our Club</h2>
-        {/* Add any additional content for the banner */}
-      </section>
-    );
-  }
+  
 
   // About section component
   function About() {
     return (
       <section className="about" >
-        <h2 className='about-h2'>About Us</h2>
         <p>{clubDescription}</p>
       </section>
     );
@@ -197,10 +188,9 @@ const ClubPage = () => {
     
     <div className='club-page-col'>
       
-      <img src={logo} alt="Logo" className="clubLogo" />
+       <img src={logo} alt="Logo" className="clubLogo" />  
       <Name_Header />
       <main>
-        <Banner />
         <About />
         <Events />
         {isAdmin && <button onClick={handleCreateEventClick}>Create Event</button>}
