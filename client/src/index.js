@@ -18,10 +18,13 @@ import SingleEventPage from './pages/singleEventPage';
 import EditEventPage from './pages/editEventPage';
 import PostCreatePage from './pages/createPostPage';
 
+import { ToastProvider } from './components/ToastContext';
+
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
     <Router>
+    <ToastProvider>
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/homePage" element={<HomePage />} />
@@ -39,6 +42,7 @@ root.render(
         <Route path="/club/:clubName/edit/:eventId" element={<EditEventPage />} />
         <Route path="/club/createPost/:clubName" element={<PostCreatePage />} />
       </Routes>
+     </ToastProvider>
     </Router>
   </React.StrictMode>
 );

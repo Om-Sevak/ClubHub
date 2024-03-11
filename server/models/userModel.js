@@ -18,7 +18,10 @@ const userSchema = new mongoose.Schema({
         required: true,
         unique: true
     },
-    interests: [String] // Array of user interests
+    interests:{
+        type: [mongoose.Schema.Types.ObjectId],
+        ref: 'Interest'
+    }
 });
 
 const User = mongoose.model('User', userSchema);
