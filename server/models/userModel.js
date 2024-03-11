@@ -17,10 +17,6 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true,
         unique: true
-    },
-    interests:{
-        type: [mongoose.Schema.Types.ObjectId],
-        ref: 'Interest'
     }
 });
 

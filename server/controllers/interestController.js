@@ -55,23 +55,21 @@ exports.createUserInterestsMiddleware = async (interests, email) => {
 
         // Check if user exists
         if (!user) {
-            console.log(`User DNE to add interests to`);
+            console.log(`User does not exists to add interests to`);
             return;
         }
 
         //Create the interests
-        // Iterate through interests
-        for (const item of interests) {
-            const interest = await Interest.findOne({ name: item });
+        interests.forEach(async item => {
+            const interest = await Interest.findOne({name: item});
 
-            if (interest) {
-                // Push interest ID to user's interests array
-                user.interests.push(interest._id);
+            if (!interest) {
+                return;
             }
-        }
 
-         // Save the user document
-         await user.save();
+            const clubInterest = await UserInterest.create({user: user._id, interest: interest._id});
+        })
+
 
     } catch (err) {
         console.log(`Server Error: ${err}`)

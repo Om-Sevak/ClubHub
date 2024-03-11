@@ -18,8 +18,6 @@ const RegisterPage = () => {
     const { showToast } = useToast();
 
     const handleRegister = async (e) => {
-        showToast('Registration successful!');
-        navigate('/login');
         e.preventDefault(); // Prevent default form submission behavior
         try {
             // Validate password and confirmPassword
