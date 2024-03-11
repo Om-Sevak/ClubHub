@@ -35,7 +35,7 @@ const InterestMultiSelect = ({selectedOptions, setSelectedOptions}) => {
 
   return (
     <label className="interests-select"  htmlFor="clubInterests">
-      Club Interests (Select at least 3):
+      Club Interests (Select at least 5):
       <Select
         isMulti
         options={options}

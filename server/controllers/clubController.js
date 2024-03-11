@@ -6,6 +6,7 @@ const ClubEvent = require('../models/clubEventModel');
 const ClubInterest = require('../models/clubInterestsModel');
 const interests = require("./interestController")
 const clubRole = require("./clubroleController");
+const utils = require("../utils/utils");
 const uploadImage = require("./imgUploadController");
 const multer = require('multer');
 
@@ -13,7 +14,7 @@ const multer = require('multer');
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
 
-
+const MAX_INTERESTS_PER_CLUB = 5
 
 exports.createClub = async(req, res) => {
     try {
@@ -48,7 +49,7 @@ exports.createClub = async(req, res) => {
                 }
 
                 const interestArray = interest.split(",");
-                if (interestArray.length < 3){
+                if (interestArray.length < MAX_INTERESTS_PER_CLUB){
                     throw new Error('Bad Request: Please select at least 3 interests');
                 }
         
@@ -333,4 +334,131 @@ exports.getClubs = async(req, res) => {
         console.log(`${req.sessionID} - Server Error: ${err}`)
         console.log(`${req.sessionID} - Request Failed: ${err.message}`);
     }
+};
+
+exports.getClubsBrowse = async(req, res) => {
+    try {
+            console.log(`${req.sessionID} - Request for Clubs to browse on ${ JSON.stringify(req.body)}`);
+
+            const body = JSON.parse(JSON.stringify(req.body));
+            
+            const { limit, includeJoined } = body;
+
+            const aggregationPipeline = [
+                {
+                  $lookup: {
+                    from: 'clubinterests', // Collection name for clubinterests
+                    localField: '_id',
+                    foreignField: 'club',
+                    as: 'club_interests'
+                  }
+                },
+                {
+                    $unwind: {
+                        path: '$club_interests',
+                        preserveNullAndEmptyArrays: true // Left outer join
+                      }
+                },
+                {
+                  $lookup: {
+                    from: 'interests', // Collection name for interests
+                    localField: 'club_interests.interest',
+                    foreignField: '_id',
+                    as: 'interests'
+                  }
+                },
+                {
+                  $group: {
+                    _id: '$_id',
+                    name: { $first: '$name' },
+                    description: { $first: '$description' },
+                    imgUrl: { $first: '$imgUrl' },
+                    interests: { $push: '$interests' }
+                  }
+                }
+              ];
+              
+            var clubs = await Club.aggregate(aggregationPipeline);
+
+            clubs.forEach(club => {
+                club.interests = club.interests
+                  .flat();
+              });
+
+            if (req.session.isLoggedIn) {
+                const userEmail = req.session.email
+                const user = await User.findOne({ email: userEmail });
+                const userObjectId = user._id;
+                
+                const clubMemberships = await ClubMembership.find({user:userObjectId});
+                const joinedClubsObjectIds = clubMemberships.length > 0 ? clubMemberships.map(joinedClub => joinedClub.club.toString()):[];
+                clubs.forEach(club => {
+                    club["isJoined"] = joinedClubsObjectIds.includes(club._id.toString());
+                })
+
+                const userInterestsStringList = await interests.getUserInterestsMiddleware(userObjectId);
+                clubs.forEach(club => {
+                    
+                    var finalInterests = [];
+                    const diffInterests = [];
+
+                    const clubsInterestsString = club.interests.map(interest => interest.name)
+                    for (const interest of clubsInterestsString) {
+                        if(userInterestsStringList.includes(interest)) {
+                            finalInterests.push(interest);
+                        } else {
+                            diffInterests.push(interest);
+                        }
+                    }
+
+                    const requiredOtherInterests = MAX_INTERESTS_PER_CLUB - finalInterests.length;
+                    const matchingPercent = club.interests.length > 0 ? finalInterests.length/club.interests.length:0;
+                    
+                    if(requiredOtherInterests > 0) {
+                        const chosenInterests = utils.getRandomElements(diffInterests,requiredOtherInterests);
+                        finalInterests = finalInterests.concat(chosenInterests);
+                    } else if (requiredOtherInterests < 0) {
+                        finalInterests =  utils.getRandomElements(finalInterests,MAX_INTERESTS_PER_CLUB);
+                    }
+
+                    club.interests = finalInterests;
+                    club["percentMatch"] = Math.floor(matchingPercent*100);
+                })
+
+                const joinedClubs = clubs.filter(club => club.isJoined);
+                const randomizedJoinedClubs = utils.getRandomElements(joinedClubs,joinedClubs.length);
+
+                var recommendedClubs = clubs.filter(club => club.percentMatch > 0 && !club.isJoined);
+                if(recommendedClubs.length > 0) {
+                    recommendedClubs.sort((clubA, clubB) => clubB.percentMatch - clubA.percentMatch);
+                }
+
+                const otherClubs = clubs.filter(club => !club.isJoined && club.percentMatch == 0);
+                const randomizedOtherClubs = utils.getRandomElements(otherClubs,otherClubs.length);
+
+                const allReturnedClubs = includeJoined ? 
+                randomizedJoinedClubs.concat(recommendedClubs).concat(randomizedOtherClubs) :
+                recommendedClubs.concat(otherClubs);
+                
+                clubs = allReturnedClubs.slice(0,limit);
+            } else {
+                clubs = utils.getRandomElements(clubs,clubs.length);
+            }
+
+            res.status(200).json({
+                clubs: clubs,
+                message: "Clubs Found Succesfully"
+            });
+            
+            console.log(`${req.sessionID} - Request Success: ${req.method}  ${req.originalUrl}`);
+    
+        } catch (err) {
+            res.status(500).json({
+                status: "fail",
+                message: err.message,
+                description: `Bad Request: Server Error`,
+            });
+            console.log(`${req.sessionID} - Server Error: ${err}`)
+            console.log(`${req.sessionID} - Request Failed: ${err.message}`);
+        }
 };

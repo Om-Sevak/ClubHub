@@ -1,6 +1,7 @@
 const Club = require('../models/clubModel');
 const Interest = require('../models/interestModel');
 const ClubInterest = require('../models/clubInterestsModel');
+const UserInterest = require('../models/userInterestsModel');
 
 exports.createClubInterestsMiddleware = async (interests, clubName) => {
     try {
@@ -26,6 +27,21 @@ exports.createClubInterestsMiddleware = async (interests, clubName) => {
 
     } catch (err) {
         console.log(`Server Error: ${err}`)
+        return;
+    }
+}
+
+
+exports.getUserInterestsMiddleware = async (userObjectId) => {
+    try {
+        const usersInterests = await UserInterest.find({user:userObjectId});
+        const userInterestObjectIds = usersInterests.map(usersInterest => usersInterest.interest.toString());
+
+        const interests = await Interest.find({ '_id': { $in: userInterestObjectIds}});
+
+        return interests.map(interest => interest.name);
+    } catch (err) {
+        console.log(`Server Error: ${err}`);
         return;
     }
 }
@@ -78,7 +94,6 @@ exports.editClubInterestsMiddleware = async (newInterests, clubName) => {
         return;
     }
 }
-
 
 exports.getAllInterests = async (req,res) => {
     try {
