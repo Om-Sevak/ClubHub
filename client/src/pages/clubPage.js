@@ -319,8 +319,9 @@ const ClubPage = () => {
         <About />
 
         <div className='postsevents'>
-        <Posts />
         <Events />
+        <Posts />
+       
         {isAdmin &&<button onClick={handleEdit}>Edit Club</button>}
         {isAdmin ? <button onClick={handleDelete}>Delete Club</button> : <button onClick={isMember ? handleLeave : handleJoin}>{isMember ? 'Leave Club' : 'Join Club'}</button>}
         {errorMessage && <p className="error-message">{errorMessage}</p>}
