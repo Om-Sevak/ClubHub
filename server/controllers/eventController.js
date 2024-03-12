@@ -359,7 +359,6 @@ exports.getEventsBrowse = async (req, res) => {
         console.log(`${req.sessionID} - Request Failed: ${err.message}`);
     }
 };
-};
 
 exports.getAllEvents = async (req, res) => {
     try {
