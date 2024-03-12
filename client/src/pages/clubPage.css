@@ -7,96 +7,105 @@
 }
 
 .club-page-col {
-    margin: 0;
-    height: 100vh;
-    display: grid;
-    flex-direction: column;
-    justify-content: center;
+    display: flexbox; 
+    justify-content: flex-start;
     align-items: center;
-    height: 100vh;
-    background-color: #f5f5f5;
+    
+    background-image: linear-gradient(to right, #09203F,#537895);
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-}
-
-
-.clubLogo {
-    max-width: 80%;
-    margin: 0 auto;
-    margin-bottom: 20px;
-    border-radius: 10%;
-    width: 100vh ;
-    height: 40vh;
-    padding-top: 2em;
     
 }
 
-.club-page-header {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-    background-color: #F2EAD0;
-    border-radius: 20px;
-    margin-bottom: 20px;
+.clubLogo {
+    position: absolute;
+    top: 50px;
+    max-width: 80%;
+    border-radius: 10%;
+    width: 30vh ;
+    height: 20vh;
+    margin-left: 0px;
+    margin-top: 20px;
+    border: 10px ridge #F26052 ;
+    margin-bottom: 0;
 }
 
-.club-page-details {
-    width: 100%;
+
+
+.club-page-header {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    border-radius: 20px;
+    margin-top: 40px;
+    border: 10px ridge antiquewhite;
 }
 
 .header-h1{
-    font-size: xx-large;
+    font-size: x-large;
+    color: black;
+    text-shadow: 1px 1px 1px black;
+    background-color: antiquewhite;
+    display: inline-block;
+    
+   
+}
+
+
+
+.about{
+    padding-top: 10px;
+    padding-bottom: 10px;
+    margin-top: 50px;
+
+    overflow-wrap: normal;
     text-align: center;
-    padding: 20px;
-    width: 100%;
+    border: 10px ridge antiquewhite;
+    
+    border-radius: 20px;
+    margin-bottom: 40px;
+    
 }
 
-.banner {
-    display: flex;
-    align-items: flex-start;
-    width: 100%;   
-    padding: auto;
+.about p{
+    font-weight: 600;
 }
 
-.banner-h2{
+.interest {
+    font-weight: bold;
+}
+
+.club-email {
+    color: black;
+    font-size: medium;
+}
+.posts h2,.events h2{
+    color: black;
+    text-shadow: 1px 1px 1px black;
+    text-decoration: dashed;
     text-align: left;
-    color: black;
-    text-shadow: black 1px 1px 1px;
+    padding-top: 5px;
+    padding-left: 5px;
+    font-size: 1.5rem;
+    border: 10px ridge antiquewhite;
+    font-weight: bolder;
+    background-color: antiquewhite;
+    display: inline-block;
 }
 
-.about {
-    text-align: center;
-    background-color: #F2EAD0;
-    border-radius: 20px;
-}
 
-.about-h2 {
-    color: black;
-    text-shadow: black 1px 1px 1px;
-}
-
-.events {
-    background-color: #F26A4B;
-    border-radius: 20px;
-}
-
-.posts {
-    background-color: #F26A4B;
-    border-radius: 20px;
-    width: 45%;
-    margin: 0 auto;
-}
 
 .events,
 .posts {
-    background-color: #F26A4B;
+    
+    text-align: center;
+    align-items: center;
+    border: 10px ridge antiquewhite;
     border-radius: 20px;
-    margin-bottom: 20px;
-  }
-  
+    margin-bottom: 10px;
+    
+}
 
-button {
+.button {
     background: linear-gradient(45deg, #0C3559, #7EADBF);
     color: #F2EAD0;
     border: none;
@@ -112,35 +121,35 @@ button {
     transition: background 0.3s ease;
     box-sizing: border-box;
     outline: none;
+    font-size: 5rem;
 }
 
-button:hover {
+.button:hover {
     background: linear-gradient(45deg, #F26A4B, #F26052);
 }
 
 .events h3 {
     color: blue; 
     cursor: pointer; 
-  }
-  
-  .events h3:hover {
+}
+
+.events h3:hover {
     text-decoration: underline; 
-  }
+}
 
 .add-event-icon,
 .add-post-icon {
-    position: relative;
     font-size: 30px;
     cursor: pointer;
     color:#062b54;
-    cursor: default;
     margin-left: 20px;
-    cursor: pointer;
     float: right; 
     margin-right: 20px; 
     border: 3px solid #062b54; 
     padding: 5px; 
     border-radius: 5px;
-  }
+    display: in;
+}
+
 
   

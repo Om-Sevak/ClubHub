@@ -7,6 +7,7 @@ import clubRoleApi from '../api/clubRole';
 import NotFound from '../components/NotFound';
 import eventApi from '../api/events';
 import postApi from '../api/posts';
+import interestsApi from '../api/interests';
 import { useNavigate } from 'react-router-dom';
 import Header from '../components/Header';
 import EventCard from '../components/EventCard';
@@ -19,6 +20,8 @@ import ConfirmationPopup from '../components/ConfirmationPopup';
 const ClubPage = () => {
   const { clubName } = useParams();
   const [clubDescription, setClubDescription] = useState('');
+  const [clubEmail, setClubEmail] = useState('');
+  const [clubInterests, setClubInterests] = useState([]);
   const [clubExecutives, setClubExecutives] = useState('');
   const [isMember, setIsMember] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
@@ -36,6 +39,7 @@ const ClubPage = () => {
         if (reqStatus === 200) {
           setClubDescription(clubData.description);
           setClubExecutives(clubData.executives);
+          setClubEmail(clubData.email)
         }
         else if (reqStatus === 404) {
           setErrorMessage("Club does not exist")
@@ -107,10 +111,28 @@ const ClubPage = () => {
       }
     };
 
+    const fetchClubInterests = async () => {
+      try {
+        const { status: reqStatus, data: interestData } = await interestsApi.getClubInterests(clubName);
+        if (reqStatus === 200) {
+          const interests = interestData.interests;
+          setClubInterests(interests);
+        }
+        else if (reqStatus === 404) {
+          setErrorMessage("Club does not exist")
+        }
+      }
+      catch (error) {
+        console.error('unable to get interests ', error);
+        setErrorMessage('Club does not exist');
+      }
+    };
+
     fetchClubData();
     fetchUserRoleData();
     fetchClubEvents();
     fetchClubPosts();
+    fetchClubInterests();
 
   }, [])
 
@@ -185,25 +207,30 @@ const ClubPage = () => {
     );
   }
 
-  // Banner component
-  function Banner() {
-    return (
-      <section className="banner">
-        <h2 className='banner-h2'>Welcome to Our Club</h2>
-        {/* Add any additional content for the banner */}
-      </section>
-    );
-  }
 
-  // About section component
   function About() {
     return (
       <section className="about" >
-        <h2 className='about-h2'>About Us</h2>
         <p>{clubDescription}</p>
+        
+        <div className="interests">
+        
+          {clubInterests.map((interest, index) => (
+  
+            <span key={index} className="interest">
+              
+              {interest}
+              {index !== clubInterests.length - 1 && ','} {/* Add comma if not the last interest */}
+            </span>
+          ))}
+        </div>
+        <h2 className='header-h2'>Contact Us : <span className='club-email' >{clubEmail}</span></h2>
       </section>
     );
   }
+  
+  
+  
 
   const handleCreateEventClick = () => {
     navigate(`/club/createEvent/${clubName}`);
@@ -283,21 +310,26 @@ const ClubPage = () => {
   return (
     <div className='club-page'>
         <Header />
-    
+    <img src={logo} alt="Logo" className="clubLogo" /> 
     <div className='club-page-col'>
-      
-      <img src={logo} alt="Logo" className="clubLogo" />
       <Name_Header />
+      
       <main>
-        <Banner />
+        
         <About />
-        <Posts />
+
+        <div className='postsevents'>
         <Events />
+        <Posts />
+       
         {isAdmin &&<button onClick={handleEdit}>Edit Club</button>}
         {isAdmin ? <button onClick={handleDelete}>Delete Club</button> : <button onClick={isMember ? handleLeave : handleJoin}>{isMember ? 'Leave Club' : 'Join Club'}</button>}
         {errorMessage && <p className="error-message">{errorMessage}</p>}
+      </div>
       </main>
+      
     </div>
+    
     {showConfirmationPopup && (
             <ConfirmationPopup
                 message="Are you sure you want to delete this club?"
