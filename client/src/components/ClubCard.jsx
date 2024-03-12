@@ -1,7 +1,6 @@
 import Card from '@mui/joy/Card';
 import CardContent from '@mui/joy/CardContent';
 import Chip from '@mui/joy/Chip';
-import logoIMG from '../assets/logoIMG.jpeg'
 import './ClubCard.css'
 import { useNavigate } from 'react-router-dom';
 
@@ -19,6 +18,11 @@ export default function ClubCard({ name, desc, img, followed, interests, match }
         matchColor = 'orange';
     } else {
         matchColor = 'red';
+    }
+
+    let matchExists = false;
+    if (match >= 0){
+        matchExists = true;
     }
 
     const handleCardClick = () => {
@@ -46,7 +50,7 @@ export default function ClubCard({ name, desc, img, followed, interests, match }
                             <span className='card-club-name'>{name}</span>
                             <div className='card-club-followed-match-container'>
                                 <span className='card-club-joined'>{followed ? 'Joined' : ' '} </span>
-                                {match && <span className={`card-club-match card-club-match-${matchColor}`}>Match: {match}%</span>}
+                                {matchExists && <span className={`card-club-match card-club-match-${matchColor}`}>Match: {match}%</span>}
                             </div>
                         </div>
                     </div>
