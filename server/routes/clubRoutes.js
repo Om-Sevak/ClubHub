@@ -13,6 +13,7 @@ router.get("/", (req,res) => {
     res.send("Club List")
 });
 
+router.route("/events").get(eventController.getAllEvents);
 // Example: create a new club by calling the controller method
 router.route("/").post(clubController.createClub);
 
@@ -26,6 +27,7 @@ router.route("/:name").get(clubController.getClub);
 router.route("/clubs/:query").get(clubController.getClubs);
 
 // Create a new club event
+
 router.route("/:name/event").post(eventController.createEvent);
 router.route("/:name/event").get(eventController.getEventsForClub);
 router.route("/:name/event/:event").get(eventController.getEvent);

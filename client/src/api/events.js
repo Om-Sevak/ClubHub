@@ -1,7 +1,7 @@
 import sendRequest from "./client";
 
 const eventApi = {
-  getAllEvents: async () => sendRequest('GET', 'event'),
+  getAllEvents: async () => sendRequest('GET', 'club/events'),
   getEventsForClub: async (clubName) => sendRequest('GET', `club/${clubName}/event`),
   getEvent: async (clubName, eventId) => sendRequest('GET', `club/${clubName}/event/${eventId}`),
   createEvent: async (eventData, clubName) => sendRequest('POST', `club/${clubName}/event`, eventData),

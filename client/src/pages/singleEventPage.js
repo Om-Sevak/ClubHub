@@ -122,7 +122,7 @@ const SingleEventPage = () => {
     };
     
     const handleBack = async() => {
-        navigate(`/club/${clubName}`);
+        navigate(-1);
     }
 
     if (errorMessage === 'Event does not exist') {

@@ -143,7 +143,7 @@ exports.editEvent = async(req, res) => {
         // Checking if club exists first as we need a valid club to get possible role
         const event = await Event.findOne({ _id: req.params.event });  
         if (!event) {
-            throw new Error('Not Found: Fail to edit club as DNE');
+            throw new Error('Not Found: Fail to edit event as DNE');
         }
 
         if (!req.session.isLoggedIn) {
@@ -253,3 +253,25 @@ exports.deleteEvent = async (req, res) => {
         console.log(`${req.sessionID} - Request Failed: ${err.message}`);
     }
 };
+
+exports.getAllEvents = async (req, res) => {
+    try {
+      console.log(`${req.sessionID} - ${req.session.email} is requesting to get all events`);
+  
+      const events = await Event.find().populate('club', 'name');;
+  
+      res.status(200).json({
+        events: events,
+        message: "Events found successfully"
+      });
+  
+      console.log(`${req.sessionID} - Request Success: ${req.method}  ${req.originalUrl}`);
+    } catch (err) {
+      res.status(500).json({
+        status: "fail",
+        message: err.message,
+        description: `Bad Request: Server Error`,
+      });
+      console.log(`${req.sessionID} - Server Error: ${err}`);
+    }
+  };
