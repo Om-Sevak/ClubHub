@@ -23,7 +23,7 @@
 }
 
 .header-welcome-message {
-  margin-right: 20px;
+  margin-right: 10px;
   font-size: 16px;
   font-weight: bold;
   color: #555;
@@ -47,6 +47,17 @@
   min-height: 40px;
   min-width: 80px;
   bottom: -20%;
+}
+
+.header-logout-button {
+  margin-right: 10px;
+  height: 40px;
+  width: 40px;
+  padding: 1px;
+  background: transparent;
+  font-size: 28px;
+  margin-bottom: 0;
+  color:#062b54
 }
 
 .header-logo {
