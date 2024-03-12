@@ -18,7 +18,7 @@ export default function EventCard({ event, eventId, name, img, isAdmin, dateStri
 
     const handleCardClick = (e) => {
         e.stopPropagation();
-        navigate(`/club/${name}/${eventId}`);
+        navigate(`/club/${name}/event/${eventId}`);
         window.location.reload();
     }
 
