@@ -1,5 +1,5 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPlus, faHouse, faPeopleGroup, faCalendarDays, faUsersViewfinder } from "@fortawesome/free-solid-svg-icons";
+import { faPlus, faHouse, faPeopleGroup, faCalendarDays, faUsersViewfinder, faArrowRightFromBracket } from "@fortawesome/free-solid-svg-icons";
 import { Tooltip } from 'react-tooltip';
 import { useEffect, useState, useRef } from "react";
 import logoSmall from '../assets/logoSmall.jpeg';
@@ -164,7 +164,12 @@ const Header = () => {
       </div>
       <div className="header-right-section">
         {loggedIn && <span className="header-welcome-message">Hello, {userName}</span>}
-        <button className="header-login-button" onClick={handleLoginLogoutClick}>{loggedIn ? 'Logout' : 'Login'}</button>
+        {loggedIn ? 
+        <button className="header-logout-button"
+              onClick={handleLoginLogoutClick}>
+              <FontAwesomeIcon icon={faArrowRightFromBracket} />
+            </button> :
+            <button className="header-login-button" onClick={handleLoginLogoutClick}>Login</button>}
       </div>
       {showConfirmation && (
         <ConfirmationPopup
