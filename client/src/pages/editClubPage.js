@@ -4,13 +4,16 @@ import { useNavigate, useParams } from 'react-router-dom';
 import './editClubPage.css'; // Import CSS file for styling
 import logo from '../assets/logoIMG.jpeg'; // Import your logo image
 import clubApi from '../api/clubs';
+import interestsApi from '../api/interests';
+import InterestMultiSelect from '../components/InterestMultiSelect';
+import Header from '../components/Header';
 
 
 const EditClubPage = () => {
     const { clubName } = useParams();
     const [clubname, setClubName] = useState('');
     const [clubdescription, setClubDescription] = useState('');
-    const [clubinterest, setClubInterest] = useState('');
+    const [clubinterest, setClubInterest] = useState([]);
     const [clubemail, setClubEmail] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
     const navigate = useNavigate();
@@ -35,13 +38,39 @@ const EditClubPage = () => {
           }
         };
 
+        const fetchClubInterests = async () => {
+            try {
+              const { status: reqStatus, data: interestData } = await interestsApi.getClubInterests(clubName);
+              console.log(interestData);
+              if (reqStatus === 200) {
+                const interests = interestData.interests;
+                console.log(interests);
+                const formattedOptions = interests.map(interest => ({ value: interest, label: interest}));
+                setClubInterest(formattedOptions);
+              }
+              else if (reqStatus === 404) {
+                setErrorMessage("Club does not exist")
+              }
+            }
+            catch (error) {
+              console.error('unable to get interests ', error);
+              setErrorMessage('Club does not exist');
+            }
+          };
+
         fetchClubData();
+        fetchClubInterests();
     }, [clubName])
 
     const handleclubEdit = async (e) => {
         e.preventDefault(); // Prevent default form submission behavior
+
+        const interestNames  = [];
+        clubinterest.forEach(interest => {
+          interestNames.push(interest.value)
+        });
         try {
-            const response = await clubApi.editClub(clubName, { name: clubname, description: clubdescription, email: clubemail});
+            const response = await clubApi.editClub(clubName, { name: clubname, description: clubdescription, email: clubemail, interest: interestNames});
             if(response.status === 201){
                 navigate(`/club/${clubname}`);
             } else if(response.status === 400){
@@ -57,39 +86,48 @@ const EditClubPage = () => {
     };
     return (
         <div className="edit-club-page">
-            <div className="login-container">
-            <img src={logo} alt="Logo" className="logo" />
+          <Header />
+          <div className="edit-club-col">
+            <div className="edit-club-container">
                 <h2>Edit Club</h2>
                 <form onSubmit={handleclubEdit}>
-                    <input
-                        type="text"
-                        placeholder="Enter the name of the club"
-                        value={clubname}
-                        onChange={(e) => setClubName(e.target.value)}
-                    />
-                    <input
-                        type="text"
-                        placeholder="Enter the description for the club"
-                        value={clubdescription}
-                        onChange={(e) => setClubDescription(e.target.value)}
-                    />
+                    <label>
+                        Club Name:
+                        <input
+                            type="text"
+                            placeholder="Enter the name of the club"
+                            value={clubname}
+                            onChange={(e) => setClubName(e.target.value)}
+                        />
+                    </label>
 
-                    <input
-                        type="text"
-                        placeholder="Enter the interests for the club"
-                        value={clubinterest}
-                        onChange={(e) => setClubInterest(e.target.value)}
-                    />
-                    <input
-                        type="text"
-                        placeholder="Enter the club email"
-                        value={clubemail}
-                        onChange={(e) => setClubEmail(e.target.value)}
-                    />
+                    <label>
+                        Club Description:
+                        <input
+                            type="text"
+                            placeholder="Enter the description for the club"
+                            value={clubdescription}
+                            onChange={(e) => setClubDescription(e.target.value)}
+                        />
+                    </label>
+                    
+                    <label>
+                        Club Email:
+                        <input
+                            type="text"
+                            placeholder="Enter the club email"
+                            value={clubemail}
+                            onChange={(e) => setClubEmail(e.target.value)}
+                        />
+                    </label>
+
+                    <InterestMultiSelect selectedOptions={clubinterest} setSelectedOptions={setClubInterest}/>
+
                     <button type="submit">Save</button>
                 </form>
                 {errorMessage && <p className="error-message">{errorMessage}</p>}
             </div>
+          </div>
         </div>
     );
 };

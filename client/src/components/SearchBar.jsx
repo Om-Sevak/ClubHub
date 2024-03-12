@@ -13,7 +13,7 @@ const SearchBar = ({ setResults }) => {
         else {
             setResults([]);
         }  
-    }
+    };
     
     const handleSearchChange = (e) => {
       if(e.target.value && e.target.value.length > 2) {

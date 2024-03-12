@@ -24,7 +24,7 @@ export default function EventCard({ event, eventId, name, img, isAdmin, dateStri
 
     const handleEditClick = (e) => {
         e.stopPropagation();
-        navigate(`/club/${name}/edit/${eventId}`);
+        navigate(`/club/${name}/event/edit/${eventId}`);
     }
 
     const handleDeleteClick = (e) => {
@@ -59,13 +59,14 @@ export default function EventCard({ event, eventId, name, img, isAdmin, dateStri
             sx={{
                 width: 660,
                 height: 60,
-                '&:hover': { boxShadow: 'xl', borderColor: 'neutral.outlinedHoverBorder' },
+                '&:hover': { boxShadow: 'xl', borderColor: 'black' },
             }}
+            style={{backgroundColor: "white"}}
         >
             <CardContent>
                 <div className='card-event-content'>
                     <div className='card-event-left-col' onClick={handleCardClick}>
-                        <img src={logoIMG} alt="Company Logo" className="card-event-logo" />
+                        <img src={img} alt="Company Logo" className="card-event-logo" />
                         <div className='card-event-title-container'>
                             <span className='card-event-name'>{event}</span>
                             <span className='card-event-club-name'>{name}</span>

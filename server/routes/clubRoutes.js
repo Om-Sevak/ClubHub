@@ -17,13 +17,17 @@ router.route("/events").get(eventController.getAllEvents);
 // Example: create a new club by calling the controller method
 router.route("/").post(clubController.createClub);
 
+// Get clubs with interests algorthim used
+router.route("/clubs/browse").post(clubController.getClubsBrowse);
+router.route("/events/browse").post(eventController.getEventsBrowse);
+router.route("/posts/browse").post(postController.getPostsBrowse);
+
 router.route("/:name").put(clubController.editClub);
 
 router.route("/:name").delete(clubController.deleteClub);
 
 // Example: get a specific club based on club name
 router.route("/:name").get(clubController.getClub);
-
 router.route("/clubs/:query").get(clubController.getClubs);
 
 // Create a new club event
@@ -37,7 +41,9 @@ router.route("/:name/event/:event").delete(eventController.deleteEvent);
 //Posts
 router.route("/:name/post").post(postController.createPost);
 router.route("/:name/post").get(postController.getPostsForClub);
-
+router.route("/:name/post/:post").get(postController.getPost);
+router.route("/:name/post/:post").put(postController.editPost);
+router.route("/:name/post/:post").delete(postController.deletePost);
 // Note: always put static routes (ex: /new) before dynamic routes (ex: /:id)
 
 
