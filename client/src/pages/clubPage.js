@@ -214,8 +214,11 @@ const ClubPage = () => {
         <p>{clubDescription}</p>
         
         <div className="interests">
+        
           {clubInterests.map((interest, index) => (
+  
             <span key={index} className="interest">
+              
               {interest}
               {index !== clubInterests.length - 1 && ','} {/* Add comma if not the last interest */}
             </span>
