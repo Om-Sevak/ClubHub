@@ -9,6 +9,7 @@ import { SearchResultsList } from "./SearchResultList";
 import { useNavigate } from 'react-router-dom';
 import authApi from "../api/auth";
 import ConfirmationPopup from "./ConfirmationPopup";
+import { useToast } from '../components/ToastContext';
 
 const Header = () => {
   const [results, setResults] = useState([]);
@@ -18,6 +19,7 @@ const Header = () => {
   const [userName, setUserName] = useState("");
   const navigate = useNavigate();
   const wrapperRef = useRef(null);
+  const { showToast } = useToast();
 
   useEffect(() => {
     const fetchClubData = async () => {
@@ -90,6 +92,7 @@ const Header = () => {
     const { status: reqStatus } = await authApi.logout();
     if (reqStatus === 200) {
       setLoggedIn(false);
+      showToast('Logout successful!');
     }
     setShowConfirmation(false); 
   };
