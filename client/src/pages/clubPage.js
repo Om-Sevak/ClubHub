@@ -264,6 +264,7 @@ const ClubPage = () => {
                 contents={post.content}
                 isAdmin={isAdmin}
                 dateString={post.date}
+                isPoster={post.imgUrl}
               />
             </div>
           ))}

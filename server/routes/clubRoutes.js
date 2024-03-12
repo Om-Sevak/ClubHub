@@ -39,6 +39,9 @@ router.route("/:name/event/:event").delete(eventController.deleteEvent);
 //Posts
 router.route("/:name/post").post(postController.createPost);
 router.route("/:name/post").get(postController.getPostsForClub);
+router.route("/:name/post/:post").get(postController.getPost);
+router.route("/:name/post/:post").put(postController.editPost);
+router.route("/:name/post/:post").delete(postController.deletePost);
 // Note: always put static routes (ex: /new) before dynamic routes (ex: /:id)
 
 

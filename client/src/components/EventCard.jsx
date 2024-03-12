@@ -17,13 +17,13 @@ export default function EventCard({ event, eventId, name, img, isAdmin, dateStri
     const formatedDate = (new Date(dateString)).toDateString();
 
     const handleCardClick = () => {
-        navigate(`/club/${name}/${eventId}`);
+        navigate(`/club/${name}/event/${eventId}`);
         window.location.reload();
     }
 
     const handleEditClick = (e) => {
         e.stopPropagation();
-        navigate(`/club/${name}/edit/${eventId}`);
+        navigate(`/club/${name}/event/edit/${eventId}`);
     }
 
     const handleDeleteClick = (e) => {
