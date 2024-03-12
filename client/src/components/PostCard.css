@@ -1,6 +1,5 @@
 .card-post-content {
     display: flex;
-    align-items: flex-start;
     flex-direction: column;
 }
 
@@ -9,6 +8,15 @@
     align-items: center;
 }
 
+.card-post-bottom {
+    display: flex;
+    justify-content: flex-end;
+    position: absolute;
+    bottom: 0;
+    width: 85%; 
+    padding: 16px; 
+    
+}
 
 .card-post-logo {
     border-radius: 50%;
@@ -58,3 +66,31 @@
     text-align: left;
 }
 
+.card-post-edit-icon {
+    position: relative;
+    font-size: 30px;
+    cursor: pointer;
+    color:#062b54;
+    cursor: default;
+    margin-left: 20px;
+    cursor: pointer;
+  }
+
+.card-post-delete-icon {
+    position: relative;
+    font-size: 30px;
+    cursor: pointer;
+    color:#062b54;
+    cursor: default;
+    margin-left: 20px;
+    cursor: pointer;
+  }
+
+  .card-post-poster-icon {
+    position: relative;
+    font-size: 30px;
+    cursor: pointer;
+    color:#062b54;
+    cursor: default;
+    cursor: pointer;
+  }
