@@ -22,6 +22,7 @@ const ClubPage = () => {
   const [clubDescription, setClubDescription] = useState('');
   const [clubEmail, setClubEmail] = useState('');
   const [clubInterests, setClubInterests] = useState([]);
+  const [clubImage, setClubImage] = useState('');
   const [clubExecutives, setClubExecutives] = useState('');
   const [isMember, setIsMember] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
@@ -39,7 +40,8 @@ const ClubPage = () => {
         if (reqStatus === 200) {
           setClubDescription(clubData.description);
           setClubExecutives(clubData.executives);
-          setClubEmail(clubData.email)
+          setClubEmail(clubData.email);
+          setClubImage(clubData.imgUrl);
         }
         else if (reqStatus === 404) {
           setErrorMessage("Club does not exist")
@@ -127,7 +129,7 @@ const ClubPage = () => {
         setErrorMessage('Club does not exist');
       }
     };
-
+    
     fetchClubData();
     fetchUserRoleData();
     fetchClubEvents();
@@ -260,6 +262,7 @@ const ClubPage = () => {
                 name={clubName}
                 isAdmin={isAdmin}
                 dateString={event.date}
+                img={clubImage}
               />
             </div>
           ))}
@@ -292,6 +295,7 @@ const ClubPage = () => {
                 isAdmin={isAdmin}
                 dateString={post.date}
                 isPoster={post.imgUrl}
+                img={clubImage}
               />
             </div>
           ))}
@@ -311,7 +315,7 @@ const ClubPage = () => {
   return (
     <div className='club-page'>
         <Header />
-    <img src={logo} alt="Logo" className="clubLogo" /> 
+    <img src={clubImage} alt="Logo" className="clubLogo" /> 
     <div className='club-page-col'>
       <Name_Header />
       
