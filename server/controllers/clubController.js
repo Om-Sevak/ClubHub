@@ -143,6 +143,7 @@ exports.getClub = async(req, res) => {
             email: club.email,
             description: club.description,
             executives: club.executives,
+            imgUrl: club.imgUrl,
             message: "Club Found Succesfully"
         });
         

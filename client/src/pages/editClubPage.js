@@ -102,7 +102,7 @@ const EditClubPage = () => {
                     </label>
 
                     <label>
-                        Club Name:
+                        Club Description:
                         <input
                             type="text"
                             placeholder="Enter the description for the club"
@@ -112,7 +112,7 @@ const EditClubPage = () => {
                     </label>
                     
                     <label>
-                        Club Name:
+                        Club Email:
                         <input
                             type="text"
                             placeholder="Enter the club email"
