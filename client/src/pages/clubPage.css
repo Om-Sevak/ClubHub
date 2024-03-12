@@ -68,10 +68,15 @@
 
 .about p{
     font-weight: 600;
-    
 }
 
+.interest {
+    font-weight: bold;
+}
 
+.club-email {
+    color: black;
+}
 .posts h2,.events h2{
     color: black;
     text-shadow: 1px 1px 1px black;
