@@ -7,6 +7,7 @@ import clubRoleApi from '../api/clubRole';
 import NotFound from '../components/NotFound';
 import eventApi from '../api/events';
 import postApi from '../api/posts';
+import interestsApi from '../api/interests';
 import { useNavigate } from 'react-router-dom';
 import Header from '../components/Header';
 import EventCard from '../components/EventCard';
@@ -19,6 +20,8 @@ import ConfirmationPopup from '../components/ConfirmationPopup';
 const ClubPage = () => {
   const { clubName } = useParams();
   const [clubDescription, setClubDescription] = useState('');
+  const [clubEmail, setClubEmail] = useState('');
+  const [clubInterests, setClubInterests] = useState([]);
   const [clubExecutives, setClubExecutives] = useState('');
   const [isMember, setIsMember] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
@@ -36,6 +39,7 @@ const ClubPage = () => {
         if (reqStatus === 200) {
           setClubDescription(clubData.description);
           setClubExecutives(clubData.executives);
+          setClubEmail(clubData.email)
         }
         else if (reqStatus === 404) {
           setErrorMessage("Club does not exist")
@@ -107,10 +111,28 @@ const ClubPage = () => {
       }
     };
 
+    const fetchClubInterests = async () => {
+      try {
+        const { status: reqStatus, data: interestData } = await interestsApi.getClubInterests(clubName);
+        if (reqStatus === 200) {
+          const interests = interestData.interests;
+          setClubInterests(interests);
+        }
+        else if (reqStatus === 404) {
+          setErrorMessage("Club does not exist")
+        }
+      }
+      catch (error) {
+        console.error('unable to get interests ', error);
+        setErrorMessage('Club does not exist');
+      }
+    };
+
     fetchClubData();
     fetchUserRoleData();
     fetchClubEvents();
     fetchClubPosts();
+    fetchClubInterests();
 
   }, [])
 
