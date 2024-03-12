@@ -39,13 +39,20 @@
   margin: 0 5px;
 }
 
-.pagination-container .MuiPaginationItem-root.Mui-selected {
-  background-color: #062b54;
-  color: #fff;
+.pagination-container button {
+  background-color: #429b4e !important; 
+  color: #fff; 
+  border: none; 
+  border-radius: 5px; 
+  padding: 8px 16px; 
+  margin: 0 4px; 
 }
 
-.pagination-container .MuiPaginationItem-root:hover {
-  background-color: #062b54;
-  color: #fff;
+.pagination-container button.Mui-selected {
+  background-color: #55b67a; 
+  color: #fff; 
 }
-  
+
+.pagination-container button:hover {
+  background-color: #3f0abb; 
+}

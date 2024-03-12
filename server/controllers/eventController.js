@@ -364,7 +364,11 @@ exports.getAllEvents = async (req, res) => {
     try {
       console.log(`${req.sessionID} - ${req.session.email} is requesting to get all events`);
   
-      const events = await Event.find().populate('club', 'name');;
+      const events = await Event.find().populate({
+        path: 'club',
+        select: 'name imgUrl', 
+    });
+    
   
       res.status(200).json({
         events: events,
