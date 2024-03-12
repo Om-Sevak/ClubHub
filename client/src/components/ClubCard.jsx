@@ -10,8 +10,7 @@ const DESC_LIMIT = 200;
 export default function ClubCard({ name, desc, img, followed, interests, match }) {
     const navigate = useNavigate();
 
-    const shortdesc = desc.length > DESC_LIMIT ? `${desc.substring(0, DESC_LIMIT)} . . .` : desc;
-
+    const shortdesc = desc ? (desc.length > DESC_LIMIT ? `${desc.substring(0, DESC_LIMIT)} . . .` : desc) : "";
     // Determine the color based on match percentage
     let matchColor;
     if (match >= 80) {
@@ -34,14 +33,15 @@ export default function ClubCard({ name, desc, img, followed, interests, match }
             sx={{
                 width: 300,
                 height: 300,
-                '&:hover': { boxShadow: 'xl', borderColor: 'neutral.outlinedHoverBorder' },
+                '&:hover': { boxShadow: 'xl', borderColor: 'black' },
             }}
             onClick={handleCardClick}
+            style={{backgroundColor: "white"}}
         >
             <CardContent>
                 <div className='card-club-content'>
                     <div className='card-club-top'>
-                        <img src={logoIMG} alt="Company Logo" className="card-club-logo" />
+                        <img src={img} alt="Company Logo" className="card-club-logo" />
                         <div className='card-club-title-container'>
                             <span className='card-club-name'>{name}</span>
                             <div className='card-club-followed-match-container'>
@@ -53,7 +53,7 @@ export default function ClubCard({ name, desc, img, followed, interests, match }
                     <span className='card-club-desc'> {shortdesc}</span>
                 </div>
                 <div className='card-club-interests'>
-                    {interests.map(item => <div className='card-club-interest'>
+                    {interests.map((item, key) =>  {return (<div className='card-club-interest' key={key}>
                         <Chip
                             variant="outlined"
                             color="primary"
@@ -62,7 +62,7 @@ export default function ClubCard({ name, desc, img, followed, interests, match }
                         >
                             {item}
                         </Chip>
-                    </div>)}
+                    </div>)})}
                 </div>
             </CardContent>
         </Card>

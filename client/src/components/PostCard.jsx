@@ -9,13 +9,11 @@ const DESC_LIMIT = 500;
 export default function PostCard({ clubname, postname, postId, contents, isAdmin, img, dateString }) {
     const navigate = useNavigate();
 
-    const shortdesc = contents.length > DESC_LIMIT ? `${contents.substring(0, DESC_LIMIT)} . . .` : contents;
+    const shortdesc = contents ? (contents.length > DESC_LIMIT ? `${contents.substring(0, DESC_LIMIT)} . . .` : contents) : "";
     const formatedDate = (new Date(dateString)).toDateString();
-
 
     const handleCardClick = () => {
         //navigate to single post page
-        window.location.reload();
     }
 
     return (
@@ -25,14 +23,15 @@ export default function PostCard({ clubname, postname, postId, contents, isAdmin
             sx={{
                 width: 300,
                 height: 400,
-                '&:hover': { boxShadow: 'xl', borderColor: 'neutral.outlinedHoverBorder' },
+                '&:hover': { boxShadow: 'xl', borderColor: 'black' },
             }}
             onClick={handleCardClick}
+            style={{backgroundColor: "white"}}
         >
             <CardContent>
                 <div className='card-post-content'>
                     <div className='card-post-top'>
-                        <img src={logoIMG} alt="Company Logo" className="card-post-logo" />
+                        <img src={img} alt="Company Logo" className="card-post-logo" />
                         <div className='card-post-title-container'>
                             <span className='card-post-name'> {postname} </span>
                         </div>
