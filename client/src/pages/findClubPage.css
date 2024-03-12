@@ -75,3 +75,15 @@
 .edit-interests-modal h2{
   margin-bottom: 20px;
 }
+
+.findClubPage-icon {
+  font-size: 40px;
+  color: #062b54;
+  cursor: default;
+  text-align: center;
+}
+
+.findClubPage-message {
+  text-align: center;
+  font-size: 24px;
+}
