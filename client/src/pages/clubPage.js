@@ -214,6 +214,8 @@ const ClubPage = () => {
       <section className="about" >
         
         <p>{clubDescription}</p>
+        <h2> Interests : </h2>
+        <h2> Contact us : </h2>
       </section>
     );
   }
