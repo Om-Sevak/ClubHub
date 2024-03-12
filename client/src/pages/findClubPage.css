@@ -1,29 +1,89 @@
 .findClubPage {
-    display: grid;
     position: absolute;
     width: 100%;
     top: 0px;
     left: 0px;
-    text-align: center;
 }
 
-.findClubPage-container {
+.findClubPage-clubs {
+ 
+    height: 100%; 
+    max-width: 80%;
+    margin-left: 100px;
+    margin-right: auto;
+  }
+
+.findClubPage-interests {
+    margin-left: 100px;
+    margin-right: auto;
+    width: 70%;
+    
+  }
+
+  .wrapper-interest{
     display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    height: 100%;
-    width: 100%;
-    position: fixed;
+  }
+
+.interests-chips{
+  flex-wrap: wrap;
+  width: max-content;
+  margin-top: auto;
+  margin-bottom: auto;
+  margin-left: 5px;
+
+}
+
+.findClubPage-container{
+    margin-top: 20px;
+}
+
+.findClubPage-interests h3{
+  display: flex;
+}
+
+.edit-interest-button{
+  border-radius: 100px;
+  height: min-content;
+  border: none;
+  cursor: pointer;
+  width: 40px;
+  margin-top: auto;
+  margin-bottom: auto;
+  padding: 1px;
+}
+
+.edit-interests-modal {
+  position: fixed;
+  display: inline-block;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #f0f0f0; /* Your background color */
+  border-radius: 10px; /* Rounded border */
+  padding: 20px;
+  width: 30%;
+}
+
+.save-button{
+  width: min-content;
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 0;
+  margin-top: 15px;
+}
+
+.edit-interests-modal h2{
+  margin-bottom: 20px;
 }
 
 .findClubPage-icon {
-    font-size: 40px;
-    color: #062b54;
-    cursor: default;
+  font-size: 40px;
+  color: #062b54;
+  cursor: default;
+  text-align: center;
 }
 
 .findClubPage-message {
-    text-align: center;
-    font-size: 24px;
+  text-align: center;
+  font-size: 24px;
 }
