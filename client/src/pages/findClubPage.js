@@ -8,55 +8,77 @@ import ClubCard from '../components/ClubCard';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEdit, faUsersViewfinder } from "@fortawesome/free-solid-svg-icons";
 import authApi from "../api/auth";
-
-
+import interestAPI from "../api/interests";
+import clubApi from '../api/clubs';
+import LoadingSpinner from '../components/LoadingSpinner';
 
 const FindClubPage = () => {
-  const [userInterests, setUserInterests] = useState([
-    'Science',
-    'Art',
-    'Environment',
-    'Coolness',
-    'Religion'
-  ]);
+  const [userInterests, setUserInterests] = useState([]);
   const [openModal, setOpenModal] = useState(false);
   const [selectedInterests, setSelectedInterests] = useState(userInterests);
   const [loggedIn, setLoggedIn] = useState(); // Add loggedIn state
-  const wrapperRef = useRef(null);
-  const [viewResults, setViewResults] = useState(false);
+  const [availableInterests, setAvailableInterests] = useState([]);
+  const [errorMessage, setErrorMessage] = useState('');
+  const [clubs, setClubs] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const fetchData = async () => {
+    setIsLoading(true);
+    try {
+      const { status: reqStatus, data: reqData } = await authApi.loginStatus();
+      if (reqStatus === 200) {
+        setLoggedIn(reqData.loggedInStatus);
+      } else {
+        throw new Error("Server Error");
+      }
+    } catch (error) {
+      console.error('Auth Error', error);
+    }
+
+    try {
+      const { status: reqStatus, data: reqData } = await interestAPI.getAllInterests();
+      if (reqStatus === 200) {
+        setAvailableInterests(reqData.interests);
+      } else {
+        throw new Error("Server Error");
+      }
+    } catch (error) {
+      console.error('Auth Error', error);
+    }
+
+    try {
+      const { status: reqStatus, data: reqData } = await interestAPI.getUserInterests('userInterest');
+      if (reqStatus === 200) {
+        setUserInterests(reqData.interests);
+      } else {
+        throw new Error("Server Error");
+      }
+    } catch (error) {
+      console.error('Interest Error', error);
+    }
+
+    try {
+      const body = {
+        "includeJoined": false,
+        "limit": 10,
+      }
+      const { status: reqStatus, data: reqData } = await clubApi.getClubsBrowse(body);
+      if (reqStatus === 200) {
+        setClubs(reqData.clubs);
+      } else {
+        throw new Error("Server Error");
+      }
+    } catch (error) {
+      console.error('Interest Error', error);
+    }
+    setIsLoading(false);
+
+  };
 
   useEffect(() => {
-    const fetchClubData = async () => {
-      try {
-        const { status: reqStatus, data: reqData } = await authApi.loginStatus();
-        if (reqStatus === 200) {
-          setLoggedIn(reqData.loggedInStatus);
-        } else {
-          throw new Error("Server Error");
-        }
-      } catch (error) {
-        console.error('Auth Error', error);
-      }
-    };
-
-    function handleClickOutside(event) {
-      if (wrapperRef.current && !wrapperRef.current.contains(event.target)) {
-        setViewResults(false);
-      } else {
-        setViewResults(true);
-      }
-    }
-    document.addEventListener("mousedown", handleClickOutside);
-
-    fetchClubData();
-
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
+    fetchData();
   }, []);
 
-
-  
 
   const handleEditInterests = () => {
     setSelectedInterests(userInterests);
@@ -68,7 +90,26 @@ const FindClubPage = () => {
   };
 
   const handleSaveInterests = () => {
+    if (selectedInterests.length < 3) {
+      setErrorMessage('Please select at least three interests');
+      return; // Prevent saving if less than three interests are selected
+    }
+  
     setUserInterests(selectedInterests);
+    const saveInterest = async () => {
+      try {
+        const { status: reqStatus, data: reqData } = await interestAPI.editUserInterests(selectedInterests);
+        if (reqStatus === 200) {
+          fetchData();
+        } else {
+          throw new Error("Server Error");
+        }
+      } catch (error) {
+        console.error('Interest Error', error);
+      }
+    };
+    saveInterest();
+    setErrorMessage('');
     handleCloseModal();
   };
 
@@ -80,27 +121,11 @@ const FindClubPage = () => {
     }
   };
 
-  const availableInterests = [
-    'Science',
-    'Art',
-    'Environment',
-    'Coolness',
-    'Religion',
-    'Technology',
-    'Music',
-    'Sports',
-    'Reading',
-    'Writing',
-    'Photography',
-    'Cooking',
-    'Traveling',
-    'Fashion',
-    // Add more interests here
-  ];
 
   return (
     <div className='findClubPage'>
       <Header />
+      {isLoading && <LoadingSpinner />}
       {loggedIn && (
         <div className='findClubPage-container'>
           <div>
@@ -129,15 +154,14 @@ const FindClubPage = () => {
             <div className='findClubPage-clubs'>
               <h1>Recommended clubs based on your interests</h1>
               <Grid container spacing={{ xs: 1, md: 3 }} columns={{ xs: 'auto', sm: 'auto', md: 'auto'}}>
-                {Array.from(Array(20)).map((_, index) => (
+                {Array.from(clubs).map(( club, index) => (
                   <Grid item key={index}>
                     <ClubCard 
-                      name="Test Club Header" 
-                      desc="In the quiet dusk, shadows dance, whispering tales of forgotten dreams. Moonlight weaves through branches, a celestial ballet. Nature's lullaby cradles the world, where fleeting moments become timeless memories, etched in the tapestry of existence."
-                      img=" "
-                      followed={true}
-                      interests={['Science', 'Art', 'Environment', 'Coolness', 'Religion']}
-                      match={90}
+                      name= {club.name} 
+                      desc={club.description}
+                      img= {club.imgUrl}
+                      interests={club.interests}
+                      match={club.percentMatch}
                     />
                   </Grid>
                 ))}
@@ -166,7 +190,9 @@ const FindClubPage = () => {
                 ))}
               </div>
               <button className='save-button' onClick={handleSaveInterests}>Save</button>
+              {errorMessage && <p className="error-message">{errorMessage}</p>}
             </div>
+            
           </Modal>
         </div>
       )}{(loggedIn === false) && (
@@ -182,6 +208,8 @@ const FindClubPage = () => {
     </div>
   );
 };
+
+
 
 export default FindClubPage;
 

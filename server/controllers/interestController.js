@@ -190,3 +190,109 @@ exports.getClubInterests = async (req,res) => {
         console.log(`${req.sessionID} - Request Failed: ${err.message}`);
     }
 }
+
+exports.getUserInterests = async (req,res) => {
+    try {
+        console.log(`${req.sessionID} - ${req.session.email} is requesting to get user Intrests`);
+
+        if(!req.session.email) {
+            throw new Error('Need to be logged in to get user interests');
+        }
+
+        const user = await User.findOne({ email: req.session.email });
+
+        if (!user) {
+            throw new Error('Not Found: Fail to get interest as user DNE');
+        }
+        
+        const interestsNames = await exports.getUserInterestsMiddleware(user._id);
+
+        res.status(200).json({ interests: interestsNames });
+        console.log(`${req.sessionID} - Request Success: ${req.method}  ${req.originalUrl}`);
+    }
+    catch (err) {
+        if (err.message.includes('Not Found')) {
+            res.status(404).json({
+                status: "fail",
+                message: err.message,
+                description: `Not Found: Fail to get interest as ${req.session.email} DNE`,
+            });
+        }
+        else {
+            res.status(500).json({
+                status: "fail",
+                message: err.message,
+                description: `Bad Request: Server Error`
+            });
+        }
+        
+        console.log(`${req.sessionID} - Request Failed: ${err.message}`);
+    }
+}  
+
+// Edit user interests
+exports.editUserInterests = async (req,res) => {
+    try {
+        console.log(`${req.sessionID} - ${req.session.email} is requesting to edit user Intrests`);
+
+        if(!req.session.email) {
+            throw new Error('Need to be logged in to edit user interests');
+        }
+
+        const user = await User.findOne({ email: req.session.email });
+
+        if (!user) {
+            throw new Error('Not Found: Fail to edit user as DNE');
+        }
+
+        const interests = req.body.interests;
+
+        //check if valid length
+        if (interests.length < 3) {
+            throw new Error('Invalid Interests: User must have at least 3 interests');
+        }
+
+        //Check if interests are valid
+        const validInterests = await Interest.find({name: { $in: interests }});
+
+        if (validInterests.length !== interests.length) {
+            throw new Error('Invalid Interests: Some interests do not exist');
+        }
+
+        //Delete old interests
+        const deleteStatus = await UserInterest.deleteMany({user: user._id});
+        if (!deleteStatus.acknowledged) {
+            throw err;
+        }
+
+        this.createUserInterestsMiddleware(interests, req.session.email);
+
+        res.status(200).json({ interests: interests });
+        console.log(`${req.sessionID} - Request Success: ${req.method}  ${req.originalUrl}`);
+    }
+    catch (err) {
+        if (err.message.includes('Not Found')) {
+            res.status(404).json({
+                status: "fail",
+                message: err.message,
+                description: `Not Found: Fail to edit user as ${req.session.email} DNE`,
+            });
+        }
+        else if (err.message.includes('Invalid Interests')) {
+            res.status(400).json({
+                status: "fail",
+                message: err.message,
+                description: `Bad Request: Some interests do not exist`
+            });
+        }
+        else {
+            res.status(500).json({
+                status: "fail",
+                message: err.message,
+                description: `Bad Request: Server Error`
+            });
+        }
+        
+        console.log(`${req.sessionID} - Request Failed: ${err.message}`);
+    }
+}
