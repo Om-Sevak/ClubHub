@@ -27,6 +27,9 @@
     font-weight: 600;
     vertical-align: top;
     text-align: left;
+    overflow: hidden;
+    max-height: 35px;
+
 
 }
 

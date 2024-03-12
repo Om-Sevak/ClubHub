@@ -93,6 +93,7 @@ const Header = () => {
     if (reqStatus === 200) {
       setLoggedIn(false);
       showToast('Logout successful!');
+      navigate(`/`);
     }
     setShowConfirmation(false); 
   };

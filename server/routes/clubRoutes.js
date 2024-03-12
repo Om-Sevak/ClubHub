@@ -17,7 +17,9 @@ router.get("/", (req,res) => {
 router.route("/").post(clubController.createClub);
 
 // Get clubs with interests algorthim used
-router.route("/browse").post(clubController.getClubsBrowse)
+router.route("/clubs/browse").post(clubController.getClubsBrowse);
+router.route("/events/browse").post(eventController.getEventsBrowse);
+router.route("/posts/browse").post(postController.getPostsBrowse);
 
 router.route("/:name").put(clubController.editClub);
 
