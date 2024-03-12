@@ -8,7 +8,7 @@
 
 .club-page-col {
     display: flexbox; 
-    justify-content: center;
+    justify-content: flex-start;
     align-items: center;
     
     background-image: linear-gradient(to right, #09203F,#537895);
@@ -34,7 +34,7 @@
 .club-page-header {
     display: flex;
     justify-content: center;
-    align-items: center;
+    align-items: flex-start;
     border-radius: 20px;
     margin-top: 40px;
     border: 10px ridge antiquewhite;
@@ -62,7 +62,7 @@
     border: 10px ridge antiquewhite;
     
     border-radius: 20px;
-    margin-bottom: 20px;
+    margin-bottom: 40px;
     
 }
 
@@ -83,17 +83,19 @@
     border: 10px ridge antiquewhite;
     font-weight: bolder;
     background-color: antiquewhite;
+    display: inline-block;
 }
 
 
-.about,
+
 .events,
 .posts {
     
     text-align: center;
+    align-items: center;
     border: 10px ridge antiquewhite;
     border-radius: 20px;
-    margin-bottom: 20px;
+    margin-bottom: 10px;
     border: 5px hidden cadetblue;
 }
 
