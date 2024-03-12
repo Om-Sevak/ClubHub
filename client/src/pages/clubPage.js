@@ -185,21 +185,12 @@ const ClubPage = () => {
     );
   }
 
-  // Banner component
-  function Banner() {
-    return (
-      <section className="banner">
-        <h2 className='banner-h2'>Welcome to Our Club</h2>
-        {/* Add any additional content for the banner */}
-      </section>
-    );
-  }
 
   // About section component
   function About() {
     return (
       <section className="about" >
-        <h2 className='about-h2'>About Us</h2>
+        
         <p>{clubDescription}</p>
       </section>
     );
@@ -283,21 +274,25 @@ const ClubPage = () => {
   return (
     <div className='club-page'>
         <Header />
-    
+    <img src={logo} alt="Logo" className="clubLogo" /> 
     <div className='club-page-col'>
-      
-      <img src={logo} alt="Logo" className="clubLogo" />
       <Name_Header />
+      
       <main>
-        <Banner />
+        
         <About />
+
+        <div className='postsevents'>
         <Posts />
         <Events />
         {isAdmin &&<button onClick={handleEdit}>Edit Club</button>}
         {isAdmin ? <button onClick={handleDelete}>Delete Club</button> : <button onClick={isMember ? handleLeave : handleJoin}>{isMember ? 'Leave Club' : 'Join Club'}</button>}
         {errorMessage && <p className="error-message">{errorMessage}</p>}
+      </div>
       </main>
+      
     </div>
+    
     {showConfirmationPopup && (
             <ConfirmationPopup
                 message="Are you sure you want to delete this club?"

@@ -23,6 +23,7 @@ const Header = () => {
     const fetchClubData = async () => {
       try {
         const { status: reqStatus, data: reqData } = await authApi.loginStatus();
+        console.log(reqData);
         if (reqStatus === 200) {
           setLoggedIn(reqData.loggedInStatus);
         }
