@@ -26,7 +26,7 @@ function App() {
       <PostCard
       clubname="Test Club Header"
       postname="Free Lunch Ideas"
-      desc="Nestled amid city chaos, a serene park thrives. Mornings see joggers and blooming flowers; evenings reflect city lights on the pond. This enclave offers solace, a testament to nature's allure amidst the urban rush—a peaceful haven in the heart of the metropolis, inviting all to savor a moment of quiet amidst the bustling rhythm of city life. Beneath the lush canopy, the park weaves a tapestry of tranquility for those seeking respite. In the quiet dusk, shadows dance, whispering tales of forgotten dreams. Moonlight weaves through branches, a celestial ballet. Nature's lullaby cradles the world, where fleeting moments become timeless memories, etched in the tapestry of existence."
+      contents="Nestled amid city chaos, a serene park thrives. Mornings see joggers and blooming flowers; evenings reflect city lights on the pond. This enclave offers solace, a testament to nature's allure amidst the urban rush—a peaceful haven in the heart of the metropolis, inviting all to savor a moment of quiet amidst the bustling rhythm of city life. Beneath the lush canopy, the park weaves a tapestry of tranquility for those seeking respite. In the quiet dusk, shadows dance, whispering tales of forgotten dreams. Moonlight weaves through branches, a celestial ballet. Nature's lullaby cradles the world, where fleeting moments become timeless memories, etched in the tapestry of existence."
       />
     </div>
   );

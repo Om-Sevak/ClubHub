@@ -10,8 +10,7 @@ const DESC_LIMIT = 200;
 export default function ClubCard({ name, desc, img, followed, interests }) {
     const navigate = useNavigate();
 
-    const shortdesc = desc.length > DESC_LIMIT ? `${desc.substring(0, DESC_LIMIT)} . . .` : desc;
-
+    const shortdesc = desc ? (desc.length > DESC_LIMIT ? `${desc.substring(0, DESC_LIMIT)} . . .` : desc) : "";
 
     const handleCardClick = () => {
         navigate(`/club/${name}`);
@@ -25,14 +24,15 @@ export default function ClubCard({ name, desc, img, followed, interests }) {
             sx={{
                 width: 300,
                 height: 300,
-                '&:hover': { boxShadow: 'xl', borderColor: 'neutral.outlinedHoverBorder' },
+                '&:hover': { boxShadow: 'xl', borderColor: 'black' },
             }}
             onClick={handleCardClick}
+            style={{backgroundColor: "white"}}
         >
             <CardContent>
                 <div className='card-club-content'>
                     <div className='card-club-top'>
-                        <img src={logoIMG} alt="Company Logo" className="card-club-logo" />
+                        <img src={img} alt="Company Logo" className="card-club-logo" />
                         <div className='card-club-title-container'>
                             <span className='card-club-name'>{name}</span>
                             <span className='card-club-joined'>{followed ? 'Joined' : ' '} </span>
@@ -43,7 +43,7 @@ export default function ClubCard({ name, desc, img, followed, interests }) {
                 </div>
                 <div className='card-club-interests'>
 
-                    {interests.map(item => <div className='card-club-interest'>
+                    {interests.map((item, key) =>  {return (<div className='card-club-interest' key={key}>
                         <Chip
                             variant="outlined"
                             color="primary"
@@ -52,7 +52,7 @@ export default function ClubCard({ name, desc, img, followed, interests }) {
                         >
                             {item}
                         </Chip>
-                    </div>)}
+                    </div>)})}
 
                 </div>
             </CardContent>

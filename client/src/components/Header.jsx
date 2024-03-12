@@ -95,6 +95,7 @@ const Header = () => {
     const { status: reqStatus } = await authApi.logout();
     if (reqStatus === 200) {
       setLoggedIn(false);
+      navigate(`/`);
     }
     setShowConfirmation(false); 
   };

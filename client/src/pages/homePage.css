@@ -1,5 +1,7 @@
 .homePage {
-display:grid;
+  background-image: linear-gradient(to right, #0e497c, #7fb2c7);
+  background-size: cover;
+  display:grid;
   position: absolute;
   width: 100%;
   top: 0px;
@@ -7,23 +9,58 @@ display:grid;
   text-align: center;
 }
 
-.homePage-container {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    height: 100%;
-    width: 100%;
-    position: fixed;
+.homePage-top-msg-row {
+  display: flex;
+  justify-content: center;
+  padding-top: 50px;
+  padding-bottom: 30px;
 }
 
-.homePage-icon {
-    font-size: 40px;
-    color:#062b54;
-    cursor: default;
-  }
+.homePage-top-msg-row-text {
+  color: black !important;
+  background-color: white;
+  padding: 20px;
+  font-size: xxx-large !important;
+  font-family: 'Trebuchet MS', sans-serif !important;
+  font-weight: 600;
+  background-color: white;
+  border-radius: 20px;
+  width: 65%;
+}
 
-.homePage-message {
-    text-align: center;
-    font-size: 24px;
+
+.homePage-carousel-header-row {
+  display: flex;
+  justify-content: center;
+  padding-top: 50px;
+}
+
+.homePage-carousel-header-row-container-first {
+  max-width: 75vw;
+  width: 90%;
+  display: flex;
+  justify-content: center;
+  padding-bottom: 20px;
+}
+
+.homePage-carousel-header-row-container {
+  max-width: 75vw;
+  width: 90%;
+  display: flex;
+  justify-content: center;
+  padding-top: 30px;
+  padding-bottom: 20px;
+}
+
+.homePage-carousel-header-row-text {
+  color:#062b54 !important;
+  background-image: linear-gradient(to right, #ffffff, #cfcfcf);
+  font-size: xx-large !important;
+  font-family: 'Trebuchet MS', sans-serif !important;
+  font-weight: 600;
+  text-align: center;
+  padding: 15px;
+  border-radius: 20px;
+  border: 3px solid black;
+  width: 60%;
 }

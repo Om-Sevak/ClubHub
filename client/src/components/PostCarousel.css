@@ -1,0 +1,52 @@
+.post-carousel-row {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+}
+
+.post-carousel-container {
+    max-width: 75vw;
+    width: 90%;
+    align-items: center;
+    display: block;
+}
+
+.post-carousel-card {
+    display: flex;
+    justify-content: center;
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+
+.post-carousel-icon {
+    display: flex;
+    align-items: center;
+    padding-top: 10px;
+}
+
+.post-carousel-nav-button {
+    height: 0px;
+    width: 0px;
+    padding: 20px 40px;
+    font-size: 50px;
+    margin-bottom: 0 !important;
+    color:#062b54;
+    justify-content: center;
+    align-items: center;
+    display: flex;
+    background: white;
+    border-radius: 50px;
+    border: 1px solid transparent;
+}
+
+.post-carousel-nav-button:hover {
+    background: linear-gradient(45deg, #F26A4B, #F26052);
+    border: 1px solid black;
+}
+
+.post-double-container {
+    display: flex;
+    justify-content: space-around;
+}
