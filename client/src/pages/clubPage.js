@@ -208,17 +208,26 @@ const ClubPage = () => {
   }
 
 
-  // About section component
   function About() {
     return (
       <section className="about" >
-        
         <p>{clubDescription}</p>
-        <h2> Interests : </h2>
-        <h2> Contact us : </h2>
+        
+        <div className="interests">
+          {clubInterests.map((interest, index) => (
+            <span key={index} className="interest">
+              {interest}
+              {index !== clubInterests.length - 1 && ','} {/* Add comma if not the last interest */}
+            </span>
+          ))}
+        </div>
+        <h2 className='header-h2'>Contact Us : <span className='club-email' >{clubEmail}</span></h2>
       </section>
     );
   }
+  
+  
+  
 
   const handleCreateEventClick = () => {
     navigate(`/club/createEvent/${clubName}`);
