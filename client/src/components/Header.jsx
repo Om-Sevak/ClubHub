@@ -1,55 +1,51 @@
-
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { faPlus, faHouse, faPeopleGroup, faCalendarDays, faUsersViewfinder } from "@fortawesome/free-solid-svg-icons"
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPlus, faHouse, faPeopleGroup, faCalendarDays, faUsersViewfinder } from "@fortawesome/free-solid-svg-icons";
 import { Tooltip } from 'react-tooltip';
 import { useEffect, useState, useRef } from "react";
-import logoSmall from '../assets/logoSmall.jpeg'
-import './Header.css'
+import logoSmall from '../assets/logoSmall.jpeg';
+import './Header.css';
 import SearchBar from './SearchBar';
 import { SearchResultsList } from "./SearchResultList";
 import { useNavigate } from 'react-router-dom';
 import authApi from "../api/auth";
 import ConfirmationPopup from "./ConfirmationPopup";
-const Header = () => {
 
+const Header = () => {
   const [results, setResults] = useState([]);
   const [viewResults, setViewResults] = useState(false);
   const [loggedIn, setLoggedIn] = useState(false);
   const [showConfirmation, setShowConfirmation] = useState(false);
+  const [userName, setUserName] = useState("");
   const navigate = useNavigate();
-
   const wrapperRef = useRef(null);
+
   useEffect(() => {
     const fetchClubData = async () => {
       try {
         const { status: reqStatus, data: reqData } = await authApi.loginStatus();
         if (reqStatus === 200) {
           setLoggedIn(reqData.loggedInStatus);
-        }
-        else {
+          setUserName(reqData.userName);
+        } else {
           throw new Error("Server Error");
         }
-      }
-      catch (error) {
+      } catch (error) {
         console.error('Auth Error', error);
       }
     };
-   
 
     function handleClickOutside(event) {
       if (wrapperRef.current && !wrapperRef.current.contains(event.target)) {
         setViewResults(false);
-      }
-      else {
+      } else {
         setViewResults(true);
       }
     }
     document.addEventListener("mousedown", handleClickOutside);
-    
+
     fetchClubData();
-    
+
     return () => {
-      // Unbind the event listener on clean up
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
@@ -79,13 +75,12 @@ const Header = () => {
       setShowConfirmation(true); 
     } else {
       const { data: loginData } = await authApi.loginStatus();
-      if(loginData.loggedInStatus) {
+      if (loginData.loggedInStatus) {
         const { status: reqStatus } = await authApi.logout();
         if (reqStatus === 200) {
           setLoggedIn(false);
         }
-      }
-      else {
+      } else {
         navigate(`/login`);
       }
     }
@@ -144,7 +139,7 @@ const Header = () => {
           </button>
           <Tooltip id="header-find-page-tooltip" className="header-tooltip-style" />
         </div>
-        { loggedIn &&
+        {loggedIn &&
           <div className="header-icon">
             <button className="header-nav-button"
               data-tooltip-id="header-find-page-tooltip"
@@ -163,6 +158,7 @@ const Header = () => {
         {results && results.length > 0 && viewResults && <SearchResultsList results={results} />}
       </div>
       <div className="header-right-section">
+        {loggedIn && <span className="header-welcome-message">Hello, {userName}</span>}
         <button className="header-login-button" onClick={handleLoginLogoutClick}>{loggedIn ? 'Logout' : 'Login'}</button>
       </div>
       {showConfirmation && (
@@ -175,6 +171,5 @@ const Header = () => {
     </header>
   );
 };
-
 
 export default Header;

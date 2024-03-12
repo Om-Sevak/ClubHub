@@ -117,8 +117,21 @@ exports.isLoggedIn = async(req, res) => {
         
         const loggedInStatus = req.session.isLoggedIn ? true : false;
 
+        let userName = "";
+
+        if(loggedInStatus){
+            // Get user's name
+            const user = await User.findOne({ email: req.session.email });
+            if(user){
+                userName = user.firstName;
+                //make sure its camel case
+                userName = userName.charAt(0).toUpperCase() + userName.slice(1);
+            }
+        }
+
         res.status(200).json({
             loggedInStatus: loggedInStatus,
+            userName: userName,
             message: "Login Status Found"
         });
         
