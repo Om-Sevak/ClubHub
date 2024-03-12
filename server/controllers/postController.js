@@ -1,5 +1,7 @@
 const Club = require("../models/clubModel");
 const Post = require("../models/clubPostModel");
+const User = require("../models/userModel");
+const utils = require("../utils/utils");
 const clubRole = require("./clubroleController");
 const uploadImage = require("./imgUploadController");
 const multer = require('multer');
@@ -141,6 +143,109 @@ exports.getPostsForClub = async (req, res) => {
             });
             console.log(`${req.sessionID} - Server Error: ${err}`)
         }
+        console.log(`${req.sessionID} - Request Failed: ${err.message}`);
+    }
+};
+
+exports.getPostsBrowse = async (req, res) => {
+    try {
+        console.log(`${req.sessionID} - Request for Posts to browse on ${JSON.stringify(req.body)}`);
+
+        const body = JSON.parse(JSON.stringify(req.body));
+
+        const { limit, includeJoined } = body;
+
+        const aggregationPipeline = [
+            {
+                $lookup: {
+                    from: 'clubs', // Collecttion name for clubs
+                    localField: 'club',
+                    foreignField: '_id',
+                    as: 'club_info'
+                }
+            },
+            {
+                $unwind: '$club_info'
+            },
+            {
+                $lookup: {
+                    from: 'clubinterests', // Collection name for clubinterests
+                    localField: 'club',
+                    foreignField: 'club',
+                    as: 'club_interests'
+                }
+            },
+            {
+                $unwind: {
+                    path: '$club_interests',
+                    preserveNullAndEmptyArrays: true // Left outer join
+                }
+            },
+            {
+                $lookup: {
+                    from: 'interests', // Collection name for interests
+                    localField: 'club_interests.interest',
+                    foreignField: '_id',
+                    as: 'interests'
+                }
+            },
+            {
+                $group: {
+                    _id: '$_id',
+                    title: { $first: '$title' },
+                    content: { $first: '$content' },
+                    date: { $first: '$date' },
+                    club: { $first: '$club_info'},
+                    interests: { $push: '$interests' }
+                }
+            },
+            
+        ];
+
+        // perform aggregate mongo call
+        var posts = await Post.aggregate(aggregationPipeline);
+
+        // format each dictionary for easier reading
+        posts.forEach(post => {
+            post["clubName"] = post.club.name;
+            post["imgUrl"] = post.club.imgUrl;
+            post.club = post.club._id;
+            post.interests = post.interests.flat();
+            post.interests = post.interests.map(interest => interest.name);
+        });
+
+         // if user is logged in 
+        if (req.session.isLoggedIn) {
+            // get user info
+            const userEmail = req.session.email
+            const user = await User.findOne({ email: userEmail });
+            const userObjectId = user._id;
+
+            // used also by events
+            posts = await utils.orderClubs(posts, userObjectId, includeJoined)
+        } else {
+            // .getRandomElements directly modifies the list, it does not return a copy unless we modify the length
+            utils.getRandomElements(posts,posts.length);
+        }
+
+        if (limit > 0) {
+            posts = posts.slice(0,limit);
+        }
+        
+        res.status(200).json({
+            posts: posts,
+            message: "Posts Found Succesfully"
+        });
+
+        console.log(`${req.sessionID} - Request Success: ${req.method}  ${req.originalUrl}`);
+
+    } catch (err) {
+        res.status(500).json({
+            status: "fail",
+            message: err.message,
+            description: `Bad Request: Server Error`,
+        });
+        console.log(`${req.sessionID} - Server Error: ${err}`)
         console.log(`${req.sessionID} - Request Failed: ${err.message}`);
     }
 };

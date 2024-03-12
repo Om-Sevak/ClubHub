@@ -336,129 +336,152 @@ exports.getClubs = async(req, res) => {
     }
 };
 
-exports.getClubsBrowse = async(req, res) => {
+exports.getClubsBrowse = async (req, res) => {
     try {
-            console.log(`${req.sessionID} - Request for Clubs to browse on ${ JSON.stringify(req.body)}`);
+        console.log(`${req.sessionID} - Request for Clubs to browse on ${JSON.stringify(req.body)}`);
 
-            const body = JSON.parse(JSON.stringify(req.body));
-            
-            const { limit, includeJoined } = body;
+        const body = JSON.parse(JSON.stringify(req.body));
 
-            const aggregationPipeline = [
-                {
-                  $lookup: {
+        const { limit, includeJoined } = body;
+
+        const aggregationPipeline = [
+            {
+                $lookup: {
                     from: 'clubinterests', // Collection name for clubinterests
                     localField: '_id',
                     foreignField: 'club',
                     as: 'club_interests'
-                  }
-                },
-                {
-                    $unwind: {
-                        path: '$club_interests',
-                        preserveNullAndEmptyArrays: true // Left outer join
-                      }
-                },
-                {
-                  $lookup: {
+                }
+            },
+            {
+                $unwind: {
+                    path: '$club_interests',
+                    preserveNullAndEmptyArrays: true // Left outer join
+                }
+            },
+            {
+                $lookup: {
                     from: 'interests', // Collection name for interests
                     localField: 'club_interests.interest',
                     foreignField: '_id',
                     as: 'interests'
-                  }
-                },
-                {
-                  $group: {
+                }
+            },
+            {
+                $group: {
                     _id: '$_id',
                     name: { $first: '$name' },
                     description: { $first: '$description' },
                     imgUrl: { $first: '$imgUrl' },
                     interests: { $push: '$interests' }
-                  }
                 }
-              ];
-              
-            var clubs = await Club.aggregate(aggregationPipeline);
+            }
+        ];
 
+        // perform aggregate mongo call
+        var clubs = await Club.aggregate(aggregationPipeline);
+
+        // format each dictionary for easier reading
+        clubs.forEach(club => {
+            club.interests = club.interests
+                .flat();
+            club.interests = club.interests.map(interest => interest.name);
+        });
+
+        // if user is logged in 
+        if (req.session.isLoggedIn) {
+            // get user info
+            const userEmail = req.session.email
+            const user = await User.findOne({ email: userEmail });
+            const userObjectId = user._id;
+
+            // find and demark clubs that are joined by user
+            const clubMemberships = await ClubMembership.find({ user: userObjectId });
+            const joinedClubsObjectIds = clubMemberships.map(joinedClub => joinedClub.club.toString());
             clubs.forEach(club => {
-                club.interests = club.interests
-                  .flat();
-              });
+                club["isJoined"] = joinedClubsObjectIds.includes(club._id.toString());
+            })
 
-            if (req.session.isLoggedIn) {
-                const userEmail = req.session.email
-                const user = await User.findOne({ email: userEmail });
-                const userObjectId = user._id;
-                
-                const clubMemberships = await ClubMembership.find({user:userObjectId});
-                const joinedClubsObjectIds = clubMemberships.length > 0 ? clubMemberships.map(joinedClub => joinedClub.club.toString()):[];
-                clubs.forEach(club => {
-                    club["isJoined"] = joinedClubsObjectIds.includes(club._id.toString());
-                })
+            // get user interests
+            const userInterestsStringList = await interests.getUserInterestsMiddleware(userObjectId);
+            
+            // algorithm to get percentage match and format interests by random(matching) the fill last 5 with random(not matching)
+            clubs.forEach(club => {
 
-                const userInterestsStringList = await interests.getUserInterestsMiddleware(userObjectId);
-                clubs.forEach(club => {
-                    
-                    var finalInterests = [];
-                    const diffInterests = [];
+                const sameInterests = [];
+                const diffInterests = [];
 
-                    const clubsInterestsString = club.interests.map(interest => interest.name)
-                    for (const interest of clubsInterestsString) {
-                        if(userInterestsStringList.includes(interest)) {
-                            finalInterests.push(interest);
-                        } else {
-                            diffInterests.push(interest);
-                        }
+                // we define matching as interets in the club and user, non matching as those that exist in club but not user
+                // ^ this means "not matching" is not bi-directional
+                for (const interest of club.interests) {
+                    if (userInterestsStringList.includes(interest)) {
+                        sameInterests.push(interest);
+                    } else {
+                        diffInterests.push(interest);
                     }
-
-                    const requiredOtherInterests = MAX_INTERESTS_PER_CLUB - finalInterests.length;
-                    const matchingPercent = club.interests.length > 0 ? finalInterests.length/club.interests.length:0;
-                    
-                    if(requiredOtherInterests > 0) {
-                        const chosenInterests = utils.getRandomElements(diffInterests,requiredOtherInterests);
-                        finalInterests = finalInterests.concat(chosenInterests);
-                    } else if (requiredOtherInterests < 0) {
-                        finalInterests =  utils.getRandomElements(finalInterests,MAX_INTERESTS_PER_CLUB);
-                    }
-
-                    club.interests = finalInterests;
-                    club["percentMatch"] = Math.floor(matchingPercent*100);
-                })
-
-                const joinedClubs = clubs.filter(club => club.isJoined);
-                const randomizedJoinedClubs = utils.getRandomElements(joinedClubs,joinedClubs.length);
-
-                var recommendedClubs = clubs.filter(club => club.percentMatch > 0 && !club.isJoined);
-                if(recommendedClubs.length > 0) {
-                    recommendedClubs.sort((clubA, clubB) => clubB.percentMatch - clubA.percentMatch);
                 }
 
-                const otherClubs = clubs.filter(club => !club.isJoined && club.percentMatch == 0);
-                const randomizedOtherClubs = utils.getRandomElements(otherClubs,otherClubs.length);
+                // calculate percentage match and the required number of non matching interests to fill the required amount
+                const requiredOtherInterests = MAX_INTERESTS_PER_CLUB - sameInterests.length;
+                const matchingPercent = club.interests.length > 0 ? sameInterests.length / club.interests.length : 0;
 
-                const allReturnedClubs = includeJoined ? 
-                randomizedJoinedClubs.concat(recommendedClubs).concat(randomizedOtherClubs) :
-                recommendedClubs.concat(otherClubs);
-                
-                clubs = allReturnedClubs.slice(0,limit);
-            } else {
-                clubs = utils.getRandomElements(clubs,clubs.length);
+                // randomized the matching interests, but also cut off some if needed
+                var finalInterests = utils.getRandomElements(
+                    sameInterests,
+                    Math.min(MAX_INTERESTS_PER_CLUB, sameInterests.length))
+
+                // fill in other required interests, randomizing their order
+                if (requiredOtherInterests > 0) {
+                    const chosenDiffInterests = utils.getRandomElements(diffInterests, requiredOtherInterests);
+                    finalInterests = finalInterests.concat(chosenDiffInterests);
+                }
+
+                club.interests = finalInterests;
+                club["percentMatch"] = Math.floor(matchingPercent * 100); // percentage
+            })
+
+            // .getRandomElements directly modifies the list, it does not return a copy unless we modify the length
+            const joinedClubs = clubs.filter(club => club.isJoined);
+            utils.getRandomElements(joinedClubs, joinedClubs.length);
+
+            // we do not include joined clubs that are also recommended (they already appear!)
+            var recommendedClubs = clubs.filter(club => club.percentMatch > 0 && !club.isJoined);
+            if (recommendedClubs.length > 0) {
+                recommendedClubs.sort((clubA, clubB) => clubB.percentMatch - clubA.percentMatch);
             }
 
-            res.status(200).json({
-                clubs: clubs,
-                message: "Clubs Found Succesfully"
-            });
-            
-            console.log(`${req.sessionID} - Request Success: ${req.method}  ${req.originalUrl}`);
-    
-        } catch (err) {
-            res.status(500).json({
-                status: "fail",
-                message: err.message,
-                description: `Bad Request: Server Error`,
-            });
-            console.log(`${req.sessionID} - Server Error: ${err}`)
-            console.log(`${req.sessionID} - Request Failed: ${err.message}`);
+            const otherClubs = clubs.filter(club => !club.isJoined && club.percentMatch == 0);
+            utils.getRandomElements(otherClubs, otherClubs.length); // see comment above 
+
+            // order is joined=>recommended=>other, though we don't always include joined
+            const allReturnedClubs = includeJoined ?
+                joinedClubs.concat(recommendedClubs).concat(otherClubs) :
+                recommendedClubs.concat(otherClubs);
+
+            clubs = allReturnedClubs;
+        } else {
+            utils.getRandomElements(clubs, clubs.length);
         }
+
+        // limit as needed
+        if (limit > 0) {
+            clubs = clubs.slice(0, limit);
+        }
+
+        res.status(200).json({
+            clubs: clubs,
+            message: "Clubs Found Succesfully"
+        });
+
+        console.log(`${req.sessionID} - Request Success: ${req.method}  ${req.originalUrl}`);
+
+    } catch (err) {
+        res.status(500).json({
+            status: "fail",
+            message: err.message,
+            description: `Bad Request: Server Error`,
+        });
+        console.log(`${req.sessionID} - Server Error: ${err}`)
+        console.log(`${req.sessionID} - Request Failed: ${err.message}`);
+    }
 };

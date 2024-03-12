@@ -107,7 +107,7 @@ exports.register = async (req, res) => {
 
 exports.isLoggedIn = async(req, res) => {
     try {
-        console.log(`${req.sessionID} - Request To Be Logged Out`);
+        console.log(`${req.sessionID} - Request To Check if logged in`);
         
         const loggedInStatus = req.session.isLoggedIn ? true : false;
 
