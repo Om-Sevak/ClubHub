@@ -55,8 +55,6 @@ exports.createPost = async (req, res) => {
                     const imageType = req.file.mimetype;
                    
                     imageUrl = await uploadImage(imageBuffer, imageType, AZURE_STORAGE_CONNECTION_STRING, CONTAINER_NAME);
-                } else{
-                     imageUrl = process.env.DEFAULT_LOGO_URL; 
                 }
 
                 console.log(`${req.sessionID} - ${req.session.email} uploaded a poster.`);
