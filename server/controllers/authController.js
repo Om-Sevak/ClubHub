@@ -1,6 +1,7 @@
 // authController.js
 const User = require('../models/userModel');
 const bcrypt = require('bcryptjs');
+const interestsController = require('./interestController');
 
 exports.login = async (req, res) => {
     try {
@@ -51,9 +52,7 @@ exports.login = async (req, res) => {
 exports.register = async (req, res) => {
     try {
         console.log(`${req.sessionID} - Is attempting create account with credentials: ${JSON.stringify(req.body)}`);
-        const { firstName, lastName, email, password } = req.body;
-        const interests = ['Coding'];
-
+        const { firstName, lastName, email, password, interest } = req.body;
         // Validate email format
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (!emailRegex.test(email)) {
@@ -74,15 +73,22 @@ exports.register = async (req, res) => {
         // Hash the password
         const passwordHash = await bcrypt.hash(password, 12);
 
+        if (interest && interest.length < 3){
+            throw new Error('Bad Request: Please select at least 3 interests');
+        }
+
         // Create a new user
         const newUser = await User.create({
             firstName,
             lastName,
             email,
-            passwordHash,
-            interests
+            passwordHash
         });
 
+        if (interest){
+            const newInterests = await interestsController.createUserInterestsMiddleware(interest, newUser.email);
+        }
+           
         res.status(200).json({ message: 'User created successfully' });
         console.log(`${req.sessionID} - Request Success: ${req.method}  ${req.originalUrl}`);
         
@@ -111,8 +117,21 @@ exports.isLoggedIn = async(req, res) => {
         
         const loggedInStatus = req.session.isLoggedIn ? true : false;
 
+        let userName = "";
+
+        if(loggedInStatus){
+            // Get user's name
+            const user = await User.findOne({ email: req.session.email });
+            if(user){
+                userName = user.firstName;
+                //make sure its camel case
+                userName = userName.charAt(0).toUpperCase() + userName.slice(1);
+            }
+        }
+
         res.status(200).json({
             loggedInStatus: loggedInStatus,
+            userName: userName,
             message: "Login Status Found"
         });
         

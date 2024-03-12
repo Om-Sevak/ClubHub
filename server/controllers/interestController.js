@@ -2,6 +2,7 @@ const Club = require('../models/clubModel');
 const Interest = require('../models/interestModel');
 const ClubInterest = require('../models/clubInterestsModel');
 const UserInterest = require('../models/userInterestsModel');
+const User = require('../models/userModel');
 
 exports.createClubInterestsMiddleware = async (interests, clubName) => {
     try {
@@ -42,6 +43,36 @@ exports.getUserInterestsMiddleware = async (userObjectId) => {
         return interests.map(interest => interest.name);
     } catch (err) {
         console.log(`Server Error: ${err}`);
+        return;
+    }
+}
+
+exports.createUserInterestsMiddleware = async (interests, email) => {
+    try {
+
+        // Find the user by id
+        const user = await User.findOne({ email: email })
+
+        // Check if user exists
+        if (!user) {
+            console.log(`User does not exists to add interests to`);
+            return;
+        }
+
+        //Create the interests
+        interests.forEach(async item => {
+            const interest = await Interest.findOne({name: item});
+
+            if (!interest) {
+                return;
+            }
+
+            const clubInterest = await UserInterest.create({user: user._id, interest: interest._id});
+        })
+
+
+    } catch (err) {
+        console.log(`Server Error: ${err}`)
         return;
     }
 }
