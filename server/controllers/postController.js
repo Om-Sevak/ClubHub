@@ -351,6 +351,7 @@ exports.getPostsBrowse = async (req, res) => {
                     _id: '$_id',
                     title: { $first: '$title' },
                     content: { $first: '$content' },
+                    imgUrl: { $first: '$imgUrl'},
                     date: { $first: '$date' },
                     club: { $first: '$club_info'},
                     interests: { $push: '$interests' }
@@ -365,7 +366,7 @@ exports.getPostsBrowse = async (req, res) => {
         // format each dictionary for easier reading
         posts.forEach(post => {
             post["clubName"] = post.club.name;
-            post["imgUrl"] = post.club.imgUrl;
+            post["clubIconImgUrl"] = post.club.imgUrl;
             post.club = post.club._id;
             post.interests = post.interests.flat();
             post.interests = post.interests.map(interest => interest.name);
