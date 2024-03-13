@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import Card from '@mui/joy/Card';
 import CardContent from '@mui/joy/CardContent';
-import logoIMG from '../assets/logoIMG.jpeg'
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faPencil, faTrash, faFileImage } from "@fortawesome/free-solid-svg-icons"
 import './PostCard.css'

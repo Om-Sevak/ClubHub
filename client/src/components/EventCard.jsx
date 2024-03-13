@@ -16,7 +16,8 @@ export default function EventCard({ event, eventId, name, img, isAdmin, dateStri
 
     const formatedDate = (new Date(dateString)).toDateString();
 
-    const handleCardClick = () => {
+    const handleCardClick = (e) => {
+        e.stopPropagation();
         navigate(`/club/${name}/event/${eventId}`);
         window.location.reload();
     }

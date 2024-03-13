@@ -136,7 +136,7 @@ exports.getClub = async(req, res) => {
         const club = await Club.findOne({ name: req.params.name });
 
         if (!club) {
-            throw new Error('Not Found: Fail to edit club as DNE');
+            throw new Error('Not Found: Fail to get club as DNE');
         }
         res.status(200).json({
             name: club.name,
