@@ -8,7 +8,8 @@ on:
     branches: [ "Dev","main" ]
 
 env:
-  MONGO_URI: ${{ secrets.MONGO_URI }}  
+  MONGO_URI: ${{ secrets.MONGO_URI}}  
+  MONGO_URI_TEST: ${{ secrets.MONGO_URI_TEST }}  
 
 jobs:
   build:
