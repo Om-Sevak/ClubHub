@@ -1,16 +1,16 @@
 const request = require("supertest");
 var session = require('supertest-session');
-const app = require('../app');
+const app = require('../../app');
 const { MongoMemoryServer } = require('mongodb-memory-server');
 const mongoose = require('mongoose');
-const User = require('../models/userModel');
-const Club = require('../models/clubModel')
-const Interest = require('../models/interestModel');
-const Event = require('../models/clubEventModel');
-const Post = require('../models/clubPostModel');
-const ClubMembership = require('../models/clubMembershipsModel');
-const utils = require('../utils/utils');
-const InterestController = require('../controllers/interestController');
+const User = require('../../models/userModel');
+const Club = require('../../models/clubModel')
+const Interest = require('../../models/interestModel');
+const Event = require('../../models/clubEventModel');
+const Post = require('../../models/clubPostModel');
+const ClubMembership = require('../../models/clubMembershipsModel');
+const utils = require('../../utils/utils');
+const InterestController = require('../../controllers/interestController');
 const bcrypt = require('bcryptjs');
 
 let mongoServer;

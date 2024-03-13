@@ -2,11 +2,12 @@ Server:
 For .env file in server/config:
 
 MONGO_URI=mongodb+srv://... (this is a secret!)
+MONGO_URI_TEST=mongodb+srv://...(this is a secret!)
 ORIGIN=http://localhost:3000
 ENVIRONMENT=LOCAL
-AZURE_STORAGE_CONNECTION_STRING="DefaultEndpointsProtocol=https;AccountName=//..."
-CONTAINER_NAME="//..."
-DEFAULT_LOGO_URL="https://..."
+AZURE_STORAGE_CONNECTION_STRING="DefaultEndpointsProtocol=https;AccountName=//...(this is a secret!)"
+CONTAINER_NAME="//...(this is a secret!)"
+DEFAULT_LOGO_URL="https://...(this is a secret!)"
 
 Client:
 For .env file in client/:

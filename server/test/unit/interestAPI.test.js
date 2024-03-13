@@ -5,7 +5,7 @@ const { MongoMemoryServer } = require('mongodb-memory-server');
 const mongoose = require('mongoose');
 const User = require('../../models/userModel');
 const Club = require('../../models/clubModel')
-const Interest = require('../..//interestModel');
+const Interest = require('../../models/interestModel');
 const interestsController = require('../../controllers/interestController');
 const bcrypt = require('bcryptjs');
 
