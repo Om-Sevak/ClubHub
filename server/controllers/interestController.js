@@ -93,7 +93,7 @@ exports.editClubInterestsMiddleware = async (newInterests, clubName) => {
 
         //Add new interests
         for (const item of newInterests) {
-            
+
             const interest = await Interest.findOne({name: item});
 
             if (!interest) {
@@ -103,8 +103,8 @@ exports.editClubInterestsMiddleware = async (newInterests, clubName) => {
 
             if (!clubInterestExist) {
                 const newClubInterest = await ClubInterest.create({club: club._id, interest: interest._id});
-                
-            } 
+
+            }
         }
 
         //Delete removed interests
@@ -161,7 +161,7 @@ exports.getClubInterests = async (req,res) => {
         }
 
         const interests = await ClubInterest.find({club: club._id});
-        
+
         const interestNames = []
         for (const interest of interests) {
             const interestDocument = await Interest.findOne({_id: interest.interest});
@@ -186,7 +186,7 @@ exports.getClubInterests = async (req,res) => {
                 description: `Bad Request: Server Error`
             });
         }
-        
+
         console.log(`${req.sessionID} - Request Failed: ${err.message}`);
     }
 }
@@ -195,8 +195,8 @@ exports.getUserInterests = async (req,res) => {
     try {
         console.log(`${req.sessionID} - ${req.session.email} is requesting to get user Intrests`);
 
-        if(!req.session.email) {
-            throw new Error('Need to be logged in to get user interests');
+        if (!req.session.email) {
+            throw new Error('Unauthorized: Need to be logged in to get user interests');
         }
 
         const user = await User.findOne({ email: req.session.email });
@@ -204,7 +204,7 @@ exports.getUserInterests = async (req,res) => {
         if (!user) {
             throw new Error('Not Found: Fail to get interest as user DNE');
         }
-        
+
         const interestsNames = await exports.getUserInterestsMiddleware(user._id);
 
         res.status(200).json({ interests: interestsNames });
@@ -217,6 +217,12 @@ exports.getUserInterests = async (req,res) => {
                 message: err.message,
                 description: `Not Found: Fail to get interest as ${req.session.email} DNE`,
             });
+        } else if (err.message.includes('Unauthorized')) {
+            res.status(401).json({
+                status: "fail",
+                message: err.message,
+                description: `Unauthorized: Failed to be logged in`,
+            });
         }
         else {
             res.status(500).json({
@@ -225,18 +231,18 @@ exports.getUserInterests = async (req,res) => {
                 description: `Bad Request: Server Error`
             });
         }
-        
+
         console.log(`${req.sessionID} - Request Failed: ${err.message}`);
     }
-}  
+}
 
 // Edit user interests
 exports.editUserInterests = async (req,res) => {
     try {
         console.log(`${req.sessionID} - ${req.session.email} is requesting to edit user Intrests`);
 
-        if(!req.session.email) {
-            throw new Error('Need to be logged in to edit user interests');
+        if (!req.session.email) {
+            throw new Error('Unauthorized: Need to be logged in to edit user interests');
         }
 
         const user = await User.findOne({ email: req.session.email });
@@ -260,7 +266,7 @@ exports.editUserInterests = async (req,res) => {
         }
 
         //Delete old interests
-        const deleteStatus = await UserInterest.deleteMany({user: user._id});
+        const deleteStatus = await UserInterest.deleteMany({ user: user._id });
         if (!deleteStatus.acknowledged) {
             throw err;
         }
@@ -284,6 +290,12 @@ exports.editUserInterests = async (req,res) => {
                 message: err.message,
                 description: `Bad Request: Some interests do not exist`
             });
+        } else if (err.message.includes('Unauthorized')) {
+            res.status(401).json({
+                status: "fail",
+                message: err.message,
+                description: `Unauthorized: Failed to be logged in`,
+            });
         }
         else {
             res.status(500).json({
@@ -292,7 +304,7 @@ exports.editUserInterests = async (req,res) => {
                 description: `Bad Request: Server Error`
             });
         }
-        
+
         console.log(`${req.sessionID} - Request Failed: ${err.message}`);
     }
 }

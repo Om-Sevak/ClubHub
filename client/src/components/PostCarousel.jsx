@@ -55,7 +55,8 @@ const PostCarousel = () => {
                                     postId={data._id}
                                     clubname={data.clubName}
                                     contents={data.content}
-                                    img={data.imgUrl}
+                                    img={data.clubIconImgUrl}
+                                    isPoster={data.imgUrl}
                                     dateString={data.date}
                                     />
                                 </div>
