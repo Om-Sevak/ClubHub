@@ -168,87 +168,126 @@ exports.getClub = async(req, res) => {
     }
 };
 
-exports.editClub = async(req, res) => {
+exports.editClub = async (req, res) => {
     try {
-        console.log(`${req.sessionID} - ${req.session.email} is requesting to edit club ${ req.params.name}. Changes: ${JSON.stringify(req.body)}`);
-        const { name, description, email, interest } = req.body;
+        console.log(`${req.sessionID} - ${req.session.email} is requesting to edit club ${req.params.name}. Changes: ${JSON.stringify(req.body)}`);
 
-        // Validate email format
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!emailRegex.test(email)) {
-            throw new Error('Bad Request: Invalid email format');
-        }
 
-        if (name !== req.params.name) {
-            const newClub = await Club.findOne({ name: name });
-            if (newClub) {
-                throw new Error(`Bad Request: club with name ${name} already exists`);
+        upload.single('image')(req, res, async (err) => {
+
+            const body = JSON.parse(JSON.stringify(req.body));
+            const { name, description, email, interest } = body;
+
+            if (err) {
+                console.error('Error uploading profile picture:', err);
+                return res.status(500).json({ message: 'Internal server error' });
             }
-        }
-        
-        // Checking if club exists first as we need a valid club to get possible role
-        const club = await Club.findOne({ name: req.params.name });  
-        if (!club) {
-            throw new Error('Not Found: Fail to edit club as DNE');
-        }
+            try {
+                // Validate email format
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                if (!emailRegex.test(email)) {
+                    throw new Error('Bad Request: Invalid email format');
+                }
 
-        if (!req.session.isLoggedIn) {
-            throw new Error('Unauthorized: Must sign in to edit a club');
-        }
-        
-        const isAdmin = await clubRole.isClubAdminMiddleware(req.session.email, req.params.name);
-        if (!isAdmin) {
-            throw new Error('Unauthorized: Only admins can modify the club.');
-        }
+                if (name !== req.params.name) {
+                    const newClub = await Club.findOne({ name: name });
+                    if (newClub) {
+                        throw new Error(`Bad Request: club with name ${name} already exists`);
+                    }
+                }
 
-        if (interest.length < 3){
-            throw new Error('Bad Request: Please select at least 3 interests');
-        }
-        
-        
-        const updateStatus = await Club.updateOne({ name: req.params.name },req.body);
-        if (!updateStatus.acknowledged) {
-            throw err;
-        }
+                // Checking if club exists first as we need a valid club to get possible role
+                const club = await Club.findOne({ name: req.params.name });
+                if (!club) {
+                    throw new Error('Not Found: Fail to edit club as DNE');
+                }
 
-        const clubInterests = await interests.editClubInterestsMiddleware(interest, name);
+                if (!req.session.isLoggedIn) {
+                    throw new Error('Unauthorized: Must sign in to edit a club');
+                }
 
-        res.status(201).json({
-            status: "success",
-            message: "club modified",
-            data: {
-                club: club,
-            },
+                const isAdmin = await clubRole.isClubAdminMiddleware(req.session.email, req.params.name);
+                if (!isAdmin) {
+                    throw new Error('Unauthorized: Only admins can modify the club.');
+                }
+
+                if (interest.length < 3) {
+                    throw new Error('Bad Request: Please select at least 3 interests');
+                }
+
+                 // Handle image upload
+                 //If image is uploaded, upload to Azure Blob Storage
+                 //If not, use default image
+                 if (req.file){
+                     //Azure Blob Storage configuration
+                     const AZURE_STORAGE_CONNECTION_STRING = process.env.AZURE_STORAGE_CONNECTION_STRING;
+                     const CONTAINER_NAME = process.env.CONTAINER_NAME;
+                     //getting image buffer and type
+                     const imageBuffer = req.file.buffer;
+                     const imageType = req.file.mimetype;
+                    
+                     body["imgUrl"] = await uploadImage(imageBuffer, imageType, AZURE_STORAGE_CONNECTION_STRING, CONTAINER_NAME);
+                 } else if (!club.imgUrl) {
+                    body["imgUrl"]  = process.env.DEFAULT_LOGO_URL; 
+                 }
+
+
+                const updateStatus = await Club.updateOne({ name: req.params.name }, body);
+                if (!updateStatus.acknowledged) {
+                    throw err;
+                }
+
+                const clubInterests = await interests.editClubInterestsMiddleware(interest, name);
+
+                res.status(201).json({
+                    status: "success",
+                    message: "club modified",
+                    data: {
+                        club: club,
+                    },
+                });
+                console.log(`${req.sessionID} - Request Success: ${req.method}  ${req.originalUrl}`);
+
+
+            } catch (err) {
+                if (err.message.includes('Unauthorized')) {
+                    res.status(403).json({
+                        status: "fail",
+                        message: err.message,
+                        description: `Unauthorized: ${req.session.email} is not and admin of club ${req.params.name}`,
+                    });
+                } else if (err.message.includes('Bad Request')) {
+                    res.status(400).json({
+                        status: "fail",
+                        message: err.message,
+                        description: `Bad Request: Failed to edit club`
+                    });
+                } else if (err.message.includes('Not Found')) {
+                    res.status(404).json({
+                        status: "fail",
+                        message: err.message,
+                        description: `Not Found: Fail to edit club as ${req.params.name} DNE`,
+                    });
+                } else {
+                    res.status(500).json({
+                        status: "fail",
+                        message: err.message,
+                        description: `Bad Request: Server Error`,
+                    });
+                    console.log(`${req.sessionID} - Server Error: ${err}`)
+                }
+            }
+
         });
-        console.log(`${req.sessionID} - Request Success: ${req.method}  ${req.originalUrl}`);
-
     } catch (err) {
-        if (err.message.includes('Unauthorized')) {
-            res.status(403).json({
-                status: "fail",
-                message: err.message,
-                description: `Unauthorized: ${req.session.email} is not and admin of club ${req.params.name}`,
-            });
-        } else if (err.message.includes('Bad Request')) {
-            res.status(400).json({
-                status: "fail",
-                message: err.message,
-                description: `Bad Request: Failed to edit club`
-            });
-        } else if (err.message.includes('Not Found')) {
-            res.status(404).json({
-                status: "fail",
-                message: err.message,
-                description: `Not Found: Fail to edit club as ${req.params.name} DNE`,
-            });
-        } else {
-            res.status(500).json({
-                status: "fail",
-                message: err.message,
-                description: `Bad Request: Server Error`,
-            });
-            console.log(`${req.sessionID} - Server Error: ${err}`)
-        }
+
+        res.status(500).json({
+            status: "fail",
+            message: err.message,
+            description: `Bad Request: Server Error`
+        });
+        console.log(`${req.sessionID} - Server Error: ${err}`)
+
         console.log(`${req.sessionID} - Request Failed: ${err.message}`);
     }
 };
