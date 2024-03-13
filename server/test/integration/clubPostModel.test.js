@@ -10,7 +10,7 @@ const ClubMembership = require("../../models/clubMembershipsModel");
 const ClubPost = require("../../models/clubPostModel");
 
 // Loading in environment variables
-dotenv.config({path:'../../config/.env'})
+// dotenv.config({path:'../../config/.env'})
 
 let testSession = null;
 let postID = null;

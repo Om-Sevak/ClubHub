@@ -7,7 +7,7 @@ const bcrypt = require('bcryptjs');
 const User = require("../../models/userModel");
 
 // Loading in environment variables
-dotenv.config({path:'../../config/.env'})
+// dotenv.config({path:'../../config/.env'})
 
 let testSession = null;
 

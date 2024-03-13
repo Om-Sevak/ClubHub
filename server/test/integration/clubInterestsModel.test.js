@@ -10,7 +10,7 @@ const ClubInterest = require("../../models/clubInterestsModel");
 const Interest = require("../../models/interestModel");
 
 // Loading in environment variables
-dotenv.config({path:'../../config/.env'})
+// dotenv.config({path:'../../config/.env'})
 
 let testSession = null;
 let clubId = null

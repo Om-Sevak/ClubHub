@@ -9,8 +9,8 @@ const Club = require("../../models/clubModel");
 const ClubMembership = require("../../models/clubMembershipsModel");
 const ClubEvent = require("../../models/clubEventModel");
 
-// Loading in environment variables
-dotenv.config({path:'../../config/.env'})
+// // Loading in environment variables
+// dotenv.config({path:'../../config/.env'})
 
 let testSession = null;
 let eventID = null;

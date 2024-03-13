@@ -8,7 +8,7 @@ const User = require("../../models/userModel");
 const Club = require("../../models/clubModel");
 
 // Loading in environment variables
-dotenv.config({path:'../../config/.env'})
+// dotenv.config({path:'../../config/.env'})
 
 let testSession = null;
 
