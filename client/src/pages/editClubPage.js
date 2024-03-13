@@ -6,6 +6,7 @@ import logo from '../assets/logoIMG.jpeg'; // Import your logo image
 import clubApi from '../api/clubs';
 import interestsApi from '../api/interests';
 import InterestMultiSelect from '../components/InterestMultiSelect';
+import LoadingSpinner from '../components/LoadingSpinner'; // Import the LoadingSpinner component
 import Header from '../components/Header';
 
 
@@ -15,7 +16,9 @@ const EditClubPage = () => {
     const [clubdescription, setClubDescription] = useState('');
     const [clubinterest, setClubInterest] = useState([]);
     const [clubemail, setClubEmail] = useState('');
+    const [clubImage, setClubImage] = useState(null);
     const [errorMessage, setErrorMessage] = useState('');
+    const [isLoading, setIsLoading] = useState(false);
     const navigate = useNavigate();
     
     useEffect(() => {
@@ -64,24 +67,33 @@ const EditClubPage = () => {
 
     const handleclubEdit = async (e) => {
         e.preventDefault(); // Prevent default form submission behavior
+        setIsLoading(true);
 
         const interestNames  = [];
         clubinterest.forEach(interest => {
           interestNames.push(interest.value)
         });
         try {
-            const response = await clubApi.editClub(clubName, { name: clubname, description: clubdescription, email: clubemail, interest: interestNames});
-            if(response.status === 201){
-                navigate(`/club/${clubname}`);
-            } else if(response.status === 400){
-                setErrorMessage(response.error);
-            }
-            else if(response.status === 403){
-                setErrorMessage('Only an admin can edit the club');
-            }
+          const formData = new FormData();
+          formData.append('name', clubname);
+          formData.append('description', clubdescription);
+          formData.append('interest', interestNames);
+          formData.append('email', clubemail);
+          formData.append('image', clubImage);
+
+          const response = await clubApi.editClub(clubName, formData);
+          if(response.status === 201){
+              navigate(`/club/${clubname}`);
+          } else if(response.status === 400){
+              setErrorMessage(response.error);
+          }
+          else if(response.status === 403){
+              setErrorMessage('Only an admin can edit the club');
+          }
         } catch (error) {
             console.error('club creation failed: ', error);
-            
+        } finally {
+          setIsLoading(false);
         }
     };
     return (
@@ -123,7 +135,19 @@ const EditClubPage = () => {
 
                     <InterestMultiSelect selectedOptions={clubinterest} setSelectedOptions={setClubInterest}/>
 
-                    <button type="submit">Save</button>
+                    <label htmlFor="clubimage">
+                        Club Image:
+                        <input
+                          id="clubimage"
+                          type="file"
+                          accept="image/*"
+                          onChange={(e) => setClubImage(e.target.files[0])}
+                        />
+                      </label>
+            
+                      {/* Conditionally render the loading spinner */}
+                      {isLoading && <LoadingSpinner />}
+                      {!isLoading && <button type="submit">Create</button>}
                 </form>
                 {errorMessage && <p className="error-message">{errorMessage}</p>}
             </div>

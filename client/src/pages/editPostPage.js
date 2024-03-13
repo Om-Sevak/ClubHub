@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
+
 import Calendar from 'react-calendar';
 
 import './editPostPage.css'; // Import CSS file for styling
 import postApi from '../api/posts';
 import Header from '../components/Header';
+import LoadingSpinner from '../components/LoadingSpinner';
 
 
 const EditPostPage = () => {
@@ -13,6 +15,7 @@ const EditPostPage = () => {
     const [postImage, setPostImage] = useState(null);
     const { clubName, postId } = useParams();
     const [errorMessage, setErrorMessage] = useState('');
+    const [isLoading, setIsLoading] = useState(false);
     const navigate = useNavigate();
     
     useEffect(() => {
@@ -40,7 +43,12 @@ const EditPostPage = () => {
     const handlePostEdit = async (e) => {
         e.preventDefault(); // Prevent default form submission behavior
         try {
-            const response = await postApi.editPost(clubName, postId, { title: postTitle, content: postContents, img: postImage });
+            const formData = new FormData();
+            formData.append('title', postTitle);
+            formData.append('contents', postContents);
+            formData.append('image', postImage);
+            const response = await postApi.editPost(clubName, postId, formData);
+            
             if(response.status === 201){
                 navigate(`/club/${clubName}`);
             } else if(response.status === 400){
@@ -52,6 +60,8 @@ const EditPostPage = () => {
         } catch (error) {
             console.error('post update failed: ', error);
             
+        } finally {
+            setIsLoading(false)
         }
     };
 
@@ -90,7 +100,9 @@ const EditPostPage = () => {
                         <br />
                         <button type="submit">Save</button>
                     </form>
-                    <button onClick={handleCancel}>Cancel</button>
+                     {/* Conditionally render the loading spinner */}
+                     {isLoading && <LoadingSpinner />}
+                      {!isLoading && <button type="submit">Create</button>}
                     {errorMessage && <p className="error-message">{errorMessage}</p>}
                 </div>
             </div>

@@ -183,67 +183,108 @@ exports.getPost = async (req, res) => {
     }
 }
 
-exports.editPost = async(req, res) => {
+exports.editPost = async (req, res) => {
+
     try {
-        console.log(`${req.sessionID} - ${req.session.email} is requesting to edit post ${ req.params.post}. Changes: ${JSON.stringify(req.body)}`);
-        const { title, contents, date} = req.body;
-        
-        // Checking if club exists first as we need a valid club to get possible role
-        const post = await Post.findOne({ _id: req.params.post });  
-        if (!post) {
-            throw new Error('Not Found: Fail to edit club as DNE');
-        }
+        console.log(`${req.sessionID} - ${req.session.email} is requesting to edit an post. Changes: ${JSON.stringify(req.body)}`);
 
-        if (!req.session.isLoggedIn) {
-            throw new Error('Unauthorized: Must sign in to edit a club');
-        }
-        
-        const isAdmin = await clubRole.isClubAdminMiddleware(req.session.email, req.params.name);
-        if (!isAdmin) {
-            throw new Error('Unauthorized: Only admins can modify the club.');
-        }
-        
-        const updateStatus = await Post.updateOne({ _id: req.params.post },req.body);
-        if (!updateStatus.acknowledged) {
-            throw err;
-        }
+        upload.single('image')(req, res, async (err) => {
+            
+            if (err) {
+                console.error('Error uploading profile picture:', err);
+                return res.status(500).json({ message: 'Internal server error' });
+            }
 
-        res.status(201).json({
-            status: "success",
-            message: "post modified",
-            data: {
-                post: post,
-            },
+            try {
+                console.log(`${req.sessionID} - ${req.session.email} is requesting to edit post ${req.params.post}. Changes: ${JSON.stringify(req.body)}`);
+                
+                const body = JSON.parse(JSON.stringify(req.body));
+                const { title, contents, date} = body;
+
+                // Checking if club exists first as we need a valid club to get possible role
+                
+                const post = await Post.findOne({ _id: req.params.post });
+                if (!post) {
+                    throw new Error('Not Found: Fail to edit club as DNE');
+                }
+
+                if (!req.session.isLoggedIn) {
+                    throw new Error('Unauthorized: Must sign in to edit a club');
+                }
+
+                const isAdmin = await clubRole.isClubAdminMiddleware(req.session.email, req.params.name);
+                if (!isAdmin) {
+                    throw new Error('Unauthorized: Only admins can modify the club.');
+                }
+
+                // Handle image upload
+                 //If image is uploaded, upload to Azure Blob Storage
+                 //If not, use default image
+                 if (req.file){
+                    //Azure Blob Storage configuration
+                    const AZURE_STORAGE_CONNECTION_STRING = process.env.AZURE_STORAGE_CONNECTION_STRING;
+                    const CONTAINER_NAME = process.env.CONTAINER_NAME;
+                    //getting image buffer and type
+                    const imageBuffer = req.file.buffer;
+                    const imageType = req.file.mimetype;
+                   
+                    body["imgUrl"] = await uploadImage(imageBuffer, imageType, AZURE_STORAGE_CONNECTION_STRING, CONTAINER_NAME);
+                }
+
+                const updateStatus = await Post.updateOne({ _id: req.params.post }, body);
+                if (!updateStatus.acknowledged) {
+                    throw err;
+                }
+
+                res.status(201).json({
+                    status: "success",
+                    message: "post modified",
+                    data: {
+                        post: post,
+                    },
+                });
+                console.log(`${req.sessionID} - Request Success: ${req.method}  ${req.originalUrl}`);
+
+            } catch (err) {
+                if (err.message.includes('Unauthorized')) {
+                    res.status(403).json({
+                        status: "fail",
+                        message: err.message,
+                        description: `Unauthorized: ${req.session.email} is not and admin of club ${req.params.name}`,
+                    });
+                } else if (err.message.includes('Bad Request')) {
+                    res.status(400).json({
+                        status: "fail",
+                        message: err.message,
+                        description: `Bad Request: Failed to edit post`
+                    });
+                } else if (err.message.includes('Not Found')) {
+                    res.status(404).json({
+                        status: "fail",
+                        message: err.message,
+                        description: `Not Found: Fail to edit post as ${req.params.post} DNE`,
+                    });
+                } else {
+                    res.status(500).json({
+                        status: "fail",
+                        message: err.message,
+                        description: `Bad Request: Server Error`,
+                    });
+                    console.log(`${req.sessionID} - Server Error: ${err}`)
+                }
+                console.log(`${req.sessionID} - Request Failed: ${err.message}`);
+            }
         });
-        console.log(`${req.sessionID} - Request Success: ${req.method}  ${req.originalUrl}`);
 
     } catch (err) {
-        if (err.message.includes('Unauthorized')) {
-            res.status(403).json({
-                status: "fail",
-                message: err.message,
-                description: `Unauthorized: ${req.session.email} is not and admin of club ${req.params.name}`,
-            });
-        } else if (err.message.includes('Bad Request')) {
-            res.status(400).json({
-                status: "fail",
-                message: err.message,
-                description: `Bad Request: Failed to edit post`
-            });
-        } else if (err.message.includes('Not Found')) {
-            res.status(404).json({
-                status: "fail",
-                message: err.message,
-                description: `Not Found: Fail to edit post as ${req.params.post} DNE`,
-            });
-        } else {
-            res.status(500).json({
-                status: "fail",
-                message: err.message,
-                description: `Bad Request: Server Error`,
-            });
-            console.log(`${req.sessionID} - Server Error: ${err}`)
-        }
+
+        res.status(500).json({
+            status: "fail",
+            message: err.message,
+            description: `Bad Request: Server Error`
+        });
+        console.log(`${req.sessionID} - Server Error: ${err}`)
+
         console.log(`${req.sessionID} - Request Failed: ${err.message}`);
     }
 };
