@@ -424,7 +424,7 @@ exports.getClubsBrowse = async (req, res) => {
 
                 // calculate percentage match and the required number of non matching interests to fill the required amount
                 const requiredOtherInterests = MAX_INTERESTS_PER_CLUB - sameInterests.length;
-                const matchingPercent = club.interests.length > 0 ? sameInterests.length / club.interests.length : 0;
+                const matchingPercent = club.interests.length > 0 ? sameInterests.length / userInterestsStringList.length : 0;
 
                 // randomized the matching interests, but also cut off some if needed
                 var finalInterests = utils.getRandomElements(

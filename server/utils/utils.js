@@ -31,7 +31,7 @@ exports.orderClubs = async (clubItems, userObjectId, includeJoined) => {
             }
 
             // ternary operation to prevent nan
-            const matchingPercent = item.interests.length > 0 ? sameInterests / item.interests.length : 0;
+            const matchingPercent = item.interests.length > 0 ? sameInterests / userInterestsStringList.length : 0;
 
             item["percentMatch"] = Math.floor(matchingPercent * 100); // percentage
         })
