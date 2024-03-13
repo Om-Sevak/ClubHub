@@ -15,6 +15,7 @@ const ClubCreatePage = () => {
     const [errorMessage, setErrorMessage] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const navigate = useNavigate();
+    const minRequiredInterests = 5;
     
     const handleclubcreate = async (e) => {
         e.preventDefault();
@@ -24,6 +25,12 @@ const ClubCreatePage = () => {
         clubinterest.forEach(interest => {
           interestNames.push(interest.value)
         });
+
+        if(interestNames.length < minRequiredInterests){
+            setIsLoading(false);
+            setErrorMessage('Please select at least '+  minRequiredInterests +' interests.')
+            return;
+        }
 
         try {
             const formData = new FormData();
@@ -89,7 +96,7 @@ const ClubCreatePage = () => {
                   />
                 </label>
 
-                <InterestMultiSelect selectedOptions={clubinterest} setSelectedOptions={setClubInterest}/>
+                <InterestMultiSelect selectedOptions={clubinterest} setSelectedOptions={setClubInterest} minRquired={minRequiredInterests}/>
 
                 <label htmlFor="clubimage">
                   Club Image:
