@@ -1,8 +1,8 @@
 const request = require("supertest");
-const app = require('../app');
+const app = require('../../app');
 const { MongoMemoryServer } = require('mongodb-memory-server');
 const mongoose = require('mongoose');
-const User = require('../models/userModel');
+const User = require('../../models/userModel');
 const bcrypt = require('bcryptjs');
 
 let mongoServer;
