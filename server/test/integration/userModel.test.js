@@ -11,21 +11,20 @@ const User = require("../../models/userModel");
 
 let testSession = null;
 
+// Connecting to the database before each test
+beforeAll(async () => {
+  await mongoose.connect(process.env.MONGO_URI_TEST);
+});
+
+// Closing database connection after each test
+afterAll(async () => {
+    const user = await User.deleteOne({email: "alice@example.com"});
+    await mongoose.connection.close();
+});
 
 // Example test
 describe("Testing User Mongo Model", () => {
     
-    // Connecting to the database before each test
-    beforeAll(async () => {
-        await mongoose.connect(process.env.MONGO_URI_TEST);
-    });
-    
-    // Closing database connection after each test
-    afterAll(async () => {
-        const user = await User.deleteOne({email: "alice@example.com"});
-        await mongoose.connection.close();
-    });
-  
     test('Should create a new user succesfully', async () => {
 
         const response = await request(app)

@@ -15,30 +15,28 @@ const ClubEvent = require("../../models/clubEventModel");
 let testSession = null;
 let eventID = null;
 
+//Connecting to the database before each test
+beforeAll(async () => {
+  await mongoose.connect(process.env.MONGO_URI_TEST);
 
+  const user = new User({
+    firstName: 'John',
+    lastName: 'Doe',
+    email: 'john3@example.com',
+    passwordHash: await bcrypt.hash('password', 12)
+  });
+
+  await user.save();
+});
+
+// Closing database connection after each test
+afterAll(async () => {
+    await User.deleteOne({email: "john3@example.com"});
+    await Club.deleteOne({name: "testingg"});
+    await mongoose.connection.close();
+});
 
 describe("Testing ClubMembership Mongo Model", () => {
-
-        //Connecting to the database before each test
-    beforeAll(async () => {
-        await mongoose.connect(process.env.MONGO_URI_TEST);
-    
-        const user = new User({
-        firstName: 'John',
-        lastName: 'Doe',
-        email: 'john3@example.com',
-        passwordHash: await bcrypt.hash('password', 12)
-        });
-    
-        await user.save();
-    });
-    
-    // Closing database connection after each test
-    afterAll(async () => {
-        await User.deleteOne({email: "john3@example.com"});
-        await Club.deleteOne({name: "testingg"});
-        await mongoose.connection.close();
-  });
     
     test('Should create a new club event succesfully', async () => {
 

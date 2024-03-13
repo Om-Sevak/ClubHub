@@ -15,63 +15,63 @@ const Interest = require("../../models/interestModel");
 let testSession = null;
 let clubId = null
 
+// Connecting to the database before each test
+beforeAll(async () => {
+  await mongoose.connect(process.env.MONGO_URI_TEST);
+
+  const user = new User({
+    firstName: 'John',
+    lastName: 'Doe',
+    email: 'john5@example.com',
+    passwordHash: await bcrypt.hash('password', 12)
+  });
+
+  const interest = new Interest({
+    name: "Coding"
+  })
+  const interest1 = new Interest({
+    name: "Sports"
+  })
+  const interest2 = new Interest({
+    name: "Technology"
+  })
+  const interest3 = new Interest({
+    name: "Art"
+  })
+  const interest4 = new Interest({
+    name: "Science"
+  })
+  const interest5 = new Interest({
+    name: "Business"
+  })
+
+  await user.save();
+  await interest.save();
+  await interest1.save();
+  await interest2.save();
+  await interest3.save();
+  await interest4.save();
+  await interest5.save();
+});
+
+// Closing database connection after each test
+afterAll(async () => {
+    await User.deleteOne({email: "john5@example.com"});
+    await Interest.deleteOne({name: "Coding"})
+    await Interest.deleteOne({name: "Sports"})
+    await Interest.deleteOne({name: "Technology"})
+    await Interest.deleteOne({name: "Art"})
+    await Interest.deleteOne({name: "Science"})
+    await Interest.deleteOne({name: "Business"})
+    await ClubInterest.deleteMany({club: clubId});
+    await Club.deleteOne({name: "testingggg"})
+    await mongoose.connection.close();
+});
+
 // Example test
 describe("Testing Club Mongo Model", () => {
     
     test('Should create a new club succesfully', async () => {
-
-        // Connecting to the database before each test
-    beforeAll(async () => {
-        await mongoose.connect(process.env.MONGO_URI_TEST);
-    
-        const user = new User({
-        firstName: 'John',
-        lastName: 'Doe',
-        email: 'john5@example.com',
-        passwordHash: await bcrypt.hash('password', 12)
-        });
-    
-        const interest = new Interest({
-        name: "Coding"
-        })
-        const interest1 = new Interest({
-        name: "Sports"
-        })
-        const interest2 = new Interest({
-        name: "Technology"
-        })
-        const interest3 = new Interest({
-        name: "Art"
-        })
-        const interest4 = new Interest({
-        name: "Science"
-        })
-        const interest5 = new Interest({
-        name: "Business"
-        })
-    
-        await user.save();
-        await interest.save();
-        await interest1.save();
-        await interest2.save();
-        await interest3.save();
-        await interest4.save();
-        await interest5.save();
-    });
-    
-    // Closing database connection after each test
-    afterAll(async () => {
-        await User.deleteOne({email: "john5@example.com"});
-        await Interest.deleteOne({name: "Coding"})
-        await Interest.deleteOne({name: "Sports"})
-        await Interest.deleteOne({name: "Technology"})
-        await Interest.deleteOne({name: "Art"})
-        await Interest.deleteOne({name: "Science"})
-        await Interest.deleteOne({name: "Business"})
-        await ClubInterest.deleteMany({club: clubId});
-        await Club.deleteOne({name: "testingggg"})
-        await mongoose.connection.close();
-    });
 
         testSession = session(app);
 
