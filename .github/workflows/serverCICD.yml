@@ -6,7 +6,7 @@ name: Build and deploy Node.js app to Azure Web App - Clubhub-Server
 on:
   push:
     branches:
-      - Dev
+      - main
   workflow_dispatch:
 
 jobs:
