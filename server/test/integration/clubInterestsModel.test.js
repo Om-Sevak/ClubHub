@@ -105,7 +105,7 @@ describe("Testing Club Mongo Model", () => {
             .expect(201);
         
         const club = await Club.findOne({name: "test club"});
-        const clubInterest = await ClubInterest.find({club: club._id})
+        const clubInterest = await ClubInterest.find({club: clubId})
         expect(clubInterest.length).toBe(3);
     });
 
