@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useParams } from 'react-router-dom';
 import Header from '../components/Header';
+import LoadingSpinner from '../components/LoadingSpinner';
 
 import './createPostPage.css'; // Import CSS file for styling
 
@@ -13,10 +14,12 @@ const PostCreatePage = () => {
     const [postImage, setPostImage] = useState(null);
     const { clubName } = useParams();
     const [errorMessage, setErrorMessage] = useState('');
+    const [isLoading, setIsLoading] = useState(false);
     const navigate = useNavigate();
 
     const handlepostcreate = async (e) => {
         e.preventDefault(); // Prevent default form submission behavior
+        setIsLoading(true);
 
         const postDate = new Date();
         try {
@@ -36,6 +39,8 @@ const PostCreatePage = () => {
         } catch (error) {
             console.error('post creation failed: ', error);
 
+        } finally {
+            setIsLoading(false);
         }
     };
 
@@ -74,7 +79,9 @@ const PostCreatePage = () => {
                             />
                         </label>
                         <br />
-                        <button type="submit">Create</button>
+                         {/* Conditionally render the loading spinner */}
+                        {isLoading && <LoadingSpinner />}
+                        {!isLoading && <button type="submit">Create</button>}
                     </form>
                     <button onClick={handleBack}>Back</button>
                     {errorMessage && <p className="error-message">{errorMessage}</p>}
