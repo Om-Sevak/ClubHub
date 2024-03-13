@@ -120,7 +120,7 @@ const Header = () => {
         <div className="header-icon">
           <button className="header-nav-button" 
             data-tooltip-id="header-club-page-tooltip"
-            data-tooltip-content="My Clubs"
+            data-tooltip-content="Clubs"
             onClick={handleClubsClick}>
             <FontAwesomeIcon icon={faPeopleGroup} />
           </button>

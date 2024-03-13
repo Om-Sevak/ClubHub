@@ -18,7 +18,6 @@ const RegisterPage = () => {
     const [userInterests, setUserInterests] = useState([]);
     const navigate = useNavigate();
     const { showToast } = useToast();
-    const minRequiredInterest = 3;
 
     const handleRegister = async (e) => {
         e.preventDefault(); // Prevent default form submission behavior
@@ -36,7 +35,7 @@ const RegisterPage = () => {
             });
 
             if(interest.length < 3){
-                setErrorMessage(`Please select at least ${minRequiredInterest} interests`);
+                setErrorMessage('Please select at least 3 interests');
                 return;
             }
 
@@ -100,7 +99,7 @@ const RegisterPage = () => {
                         onChange={(e) => setConfirmPassword(e.target.value)}
                     />
 
-                    <InterestMultiSelect selectedOptions={userInterests} setSelectedOptions={setUserInterests} minRequired={minRequiredInterest} />
+                    <InterestMultiSelect selectedOptions={userInterests} setSelectedOptions={setUserInterests} />
                     
                     <button type="submit">Register</button>
                 </form>
