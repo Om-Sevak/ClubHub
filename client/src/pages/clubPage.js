@@ -15,6 +15,7 @@ import { faPlus } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import PostCard from '../components/PostCard';
 import ConfirmationPopup from '../components/ConfirmationPopup';
+import { useToast } from '../components/ToastContext';
 
 // Header component
 const ClubPage = () => {
@@ -30,6 +31,8 @@ const ClubPage = () => {
   const [clubPosts, setClubPosts] = useState([])
   const [errorMessage, setErrorMessage] = useState('');
   const [showConfirmationPopup, setShowConfirmationPopup] = useState(false);
+  const { showToast } = useToast();
+
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -142,7 +145,9 @@ const ClubPage = () => {
     try {
       const response = await clubRoleApi.createClubRole(clubName, { role: "member" });
       if (response.status === 200) {
-        window.location.reload();
+        //window.location.reload();
+        setIsMember(true);
+        showToast('Joined ' + clubName + '!');
       } else if (response.status === 400) {
         setErrorMessage(response.error);
       }
@@ -159,7 +164,9 @@ const ClubPage = () => {
     try {
       const response = await clubRoleApi.deleteClubRole(clubName);
       if (response.status === 200) {
-        window.location.reload();
+        //window.location.reload();
+        setIsMember(false);
+        showToast('Left ' + clubName + '!');
       } else if (response.status === 400) {
         setErrorMessage(response.error);
       }
@@ -184,6 +191,7 @@ const ClubPage = () => {
         const response = await clubApi.deleteClub(clubName);
         if (response.status === 200) {
             navigate(`/`);
+            showToast( clubName + 'deleted successfully');
         } else if (response.status === 403) {
             setErrorMessage('Only an admin can delete the club');
         } else if (response.status === 404) {
