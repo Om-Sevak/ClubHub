@@ -32,6 +32,11 @@ afterAll(async () => {
     await mongoose.connection.close();
 });
 
+beforeEach(() => {
+  jest.setTimeout(100000);
+});
+
+
 // Example test
 describe("Testing Club Mongo Model", () => {
     
