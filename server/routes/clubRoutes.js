@@ -34,6 +34,7 @@ router.route("/clubs/:query").get(clubController.getClubs);
 
 router.route("/:name/event").post(eventController.createEvent);
 router.route("/:name/event").get(eventController.getEventsForClub);
+router.route("/event/user/:user").get(eventController.getEventsForUser);
 router.route("/:name/event/:event").get(eventController.getEvent);
 router.route("/:name/event/:event").put(eventController.editEvent);
 router.route("/:name/event/:event").delete(eventController.deleteEvent);

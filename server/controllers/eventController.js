@@ -1,6 +1,7 @@
 const Club = require("../models/clubModel");
 const Event = require("../models/clubEventModel");
 const User = require("../models/userModel");
+const ClubMembership = require("../models/clubMembershipsModel");
 const utils = require("../utils/utils");
 const clubRole = require("./clubroleController");
 
@@ -363,11 +364,16 @@ exports.getEventsBrowse = async (req, res) => {
 exports.getAllEvents = async (req, res) => {
     try {
       console.log(`${req.sessionID} - ${req.session.email} is requesting to get all events`);
-  
-      const events = await Event.find().populate({
+      const currentDate = new Date();
+
+      const events = await Event.find({ 
+        date: { $gte: currentDate } 
+    })
+    .populate({
         path: 'club',
         select: 'name imgUrl', 
-    });
+    })
+    .sort({ date: 'asc' });
     
   
       res.status(200).json({
@@ -385,3 +391,41 @@ exports.getAllEvents = async (req, res) => {
       console.log(`${req.sessionID} - Server Error: ${err}`);
     }
   };
+
+exports.getEventsForUser = async (req, res) => {
+    try {
+        console.log(`${req.sessionID} - ${req.session.email} requesting GET clubs and events for user with ID: ${req.params.userId}`);
+
+        const user = await User.findOne({ email: req.session.email });
+        const clubMemberships = await ClubMembership.find({ user: user }).populate('club');
+
+        const clubIds = clubMemberships.map(membership => membership.club._id);
+
+        const currentDate = new Date();
+        const events = await Event.find({ 
+            club: { $in: clubIds },
+            date: { $gte: currentDate } 
+        })
+        .populate({
+            path: 'club',
+            select: 'name imgUrl', 
+        })
+        .sort({ date: 'asc' });
+
+
+        res.status(200).json({
+            events: events,
+            message: "events found successfully"
+        });
+
+        console.log(`${req.sessionID} - Request Success: ${req.method}  ${req.originalUrl}`);
+    } catch (err) {
+        console.error(`${req.sessionID} - Request Failed: ${err.message}`);
+
+        res.status(500).json({
+            status: "fail",
+            message: err.message,
+            description: `Bad Request: Server Error`
+        });
+    }
+};

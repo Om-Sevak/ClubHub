@@ -24,35 +24,6 @@
     max-width: 100%;
   }
   
-  .pagination-container {
-    display: flex;
-    justify-content: center;
-    margin-top: 20px;
+  .pagination button{
+    background-image: none;
   }
-
-  .pagination-container .MuiPaginationItem-root {
-  border-radius: 75%;
-  border: 1px solid #062b54;
-  color: #062b54;
-  min-width: 40px;
-  min-height: 40px;
-  margin: 0 5px;
-}
-
-.pagination-container button {
-  background-color: #429b4e !important; 
-  color: #fff; 
-  border: none; 
-  border-radius: 5px; 
-  padding: 8px 16px; 
-  margin: 0 4px; 
-}
-
-.pagination-container button.Mui-selected {
-  background-color: #55b67a; 
-  color: #fff; 
-}
-
-.pagination-container button:hover {
-  background-color: #3f0abb; 
-}
