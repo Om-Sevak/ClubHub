@@ -4,7 +4,7 @@ import interestsApi from '../api/interests';
 import './InterestMultiSelect.css'
 
 
-const InterestMultiSelect = ({selectedOptions, setSelectedOptions}) => {
+const InterestMultiSelect = ({selectedOptions, setSelectedOptions, minRequired}) => {
   const [options, setOptions] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -33,12 +33,14 @@ const InterestMultiSelect = ({selectedOptions, setSelectedOptions}) => {
     setSelectedOptions(selectedItems);
   };
 
+  const minRequiredText = minRequired ? `Select at least ${minRequired} Interests` : 'Select Interests';
+
   return (
     <label className="interests-select"  htmlFor="clubInterests">
       <Select
         isMulti
         options={options}
-        placeholder="Select at least 3 Interests"
+        placeholder={minRequiredText}
         value={selectedOptions}
         onChange={handleChange}
         isLoading={isLoading}
