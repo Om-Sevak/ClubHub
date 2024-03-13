@@ -4,6 +4,7 @@ import Grid from '@mui/material/Grid';
 import ClubCard from '../components/ClubCard';
 import clubApi from '../api/clubs';
 import Pagination from '@mui/material/Pagination'; 
+import authApi from '../api/auth';
 import './clubsPage.css';
 
 const ClubsPage = () => {
@@ -11,9 +12,23 @@ const ClubsPage = () => {
   const [page, setPage] = useState(1);
   const [pageCount, setPageCount] = useState(0);
   const clubsPerPage = 12; // Adjust this value as needed
+  const [loggedIn, setLoggedIn] = useState();
 
   useEffect(() => {
     const fetchData = async () => {
+
+      try {
+        const { status: reqStatus, data: reqData } = await authApi.loginStatus();
+     
+        if (reqStatus === 200) {
+          setLoggedIn(reqData.loggedInStatus);
+        } else {
+          throw new Error("Server Error");
+        }
+      } catch (error) {
+        console.error('Auth Error', error);
+      }
+
       try {
         const body = {
           "includeJoined": true,
@@ -22,9 +37,15 @@ const ClubsPage = () => {
         const { status: reqStatus, data: reqData } = await clubApi.getClubsBrowse(body);
         if (reqStatus === 200) {
           // Filter clubs based on the isJoined property
-          const filteredClubs = reqData.clubs.filter(club => club.isJoined);
-          setClubs(filteredClubs);
-          setPageCount(Math.ceil(filteredClubs.length / clubsPerPage));
+          if(loggedIn){
+            const filteredClubs = reqData.clubs.filter(club => club.isJoined);
+            setClubs(filteredClubs);
+            setPageCount(Math.ceil(filteredClubs.length / clubsPerPage));
+          } else{
+            setClubs(reqData.clubs);
+            setPageCount(Math.ceil(reqData.clubs.length / clubsPerPage));
+          }
+
         } else {
           throw new Error("Server Error");
         }
@@ -48,7 +69,8 @@ const ClubsPage = () => {
   <Header />
   <div className='clubsPage-container'>
     <div className='clubsPage-title'>
-      <h1 id='clubsPage-title'>My Clubs</h1>
+      {/* Show My Clubs if logged in else Discover Clubs */}
+      <h1 id='clubsPage-title'> {loggedIn === false ? 'Discover Clubs' : 'My Clubs'} </h1>
     </div>
     
     <div className='clubsPage-clubs'>
