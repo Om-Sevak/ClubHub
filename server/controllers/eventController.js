@@ -1,6 +1,7 @@
 const Club = require("../models/clubModel");
 const Event = require("../models/clubEventModel");
 const User = require("../models/userModel");
+const ClubMembership = require("../models/clubMembershipsModel");
 const utils = require("../utils/utils");
 const clubRole = require("./clubroleController");
 
@@ -145,7 +146,7 @@ exports.editEvent = async (req, res) => {
         // Checking if club exists first as we need a valid club to get possible role
         const event = await Event.findOne({ _id: req.params.event });
         if (!event) {
-            throw new Error('Not Found: Fail to edit club as DNE');
+            throw new Error('Not Found: Fail to edit event as DNE');
         }
 
         if (!req.session.isLoggedIn) {
@@ -357,5 +358,74 @@ exports.getEventsBrowse = async (req, res) => {
         });
         console.log(`${req.sessionID} - Server Error: ${err}`)
         console.log(`${req.sessionID} - Request Failed: ${err.message}`);
+    }
+};
+
+exports.getAllEvents = async (req, res) => {
+    try {
+      console.log(`${req.sessionID} - ${req.session.email} is requesting to get all events`);
+      const currentDate = new Date();
+
+      const events = await Event.find({ 
+        date: { $gte: currentDate } 
+    })
+    .populate({
+        path: 'club',
+        select: 'name imgUrl', 
+    })
+    .sort({ date: 'asc' });
+    
+  
+      res.status(200).json({
+        events: events,
+        message: "Events found successfully"
+      });
+  
+      console.log(`${req.sessionID} - Request Success: ${req.method}  ${req.originalUrl}`);
+    } catch (err) {
+      res.status(500).json({
+        status: "fail",
+        message: err.message,
+        description: `Bad Request: Server Error`,
+      });
+      console.log(`${req.sessionID} - Server Error: ${err}`);
+    }
+  };
+
+exports.getEventsForUser = async (req, res) => {
+    try {
+        console.log(`${req.sessionID} - ${req.session.email} requesting GET clubs and events for user with ID: ${req.params.userId}`);
+
+        const user = await User.findOne({ email: req.session.email });
+        const clubMemberships = await ClubMembership.find({ user: user }).populate('club');
+
+        const clubIds = clubMemberships.map(membership => membership.club._id);
+
+        const currentDate = new Date();
+        const events = await Event.find({ 
+            club: { $in: clubIds },
+            date: { $gte: currentDate } 
+        })
+        .populate({
+            path: 'club',
+            select: 'name imgUrl', 
+        })
+        .sort({ date: 'asc' });
+
+
+        res.status(200).json({
+            events: events,
+            message: "events found successfully"
+        });
+
+        console.log(`${req.sessionID} - Request Success: ${req.method}  ${req.originalUrl}`);
+    } catch (err) {
+        console.error(`${req.sessionID} - Request Failed: ${err.message}`);
+
+        res.status(500).json({
+            status: "fail",
+            message: err.message,
+            description: `Bad Request: Server Error`
+        });
     }
 };

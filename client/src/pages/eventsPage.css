@@ -1,29 +1,29 @@
-.eventsPage {
-    display: grid;
-    position: absolute;
-    width: 100%;
-    top: 0px;
-    left: 0px;
-    text-align: center;
-}
-
-.eventsPage-container {
+.container {
+    margin: 0 auto;
+    padding: 20px;
+    max-width: 1200px; 
+  }
+  
+  .event-card-container {
     display: flex;
-    flex-direction: column;
+    flex-wrap: wrap;
+    justify-content: space-between;
+  }
+
+  .event-grid-item {
+    display: flex;
     justify-content: center;
-    align-items: center;
-    height: 100%;
-    width: 100%;
-    position: fixed;
-}
-
-.eventsPage-icon {
-    font-size: 40px;
-    color: #062b54;
-    cursor: default;
-}
-
-.eventsPage-message {
-    text-align: center;
-    font-size: 24px;
-}
+  }
+  
+  .events-grid {
+    margin-left: auto;
+    margin-right: auto;
+  }
+  
+  .event-card {
+    max-width: 100%;
+  }
+  
+  .pagination button{
+    background-image: none;
+  }
