@@ -1,6 +1,5 @@
 const request = require("supertest");
 var session = require('supertest-session');
-const chiSquaredTest = require('chi-squared-test');
 const app = require('../app');
 const { MongoMemoryServer } = require('mongodb-memory-server');
 const mongoose = require('mongoose');
