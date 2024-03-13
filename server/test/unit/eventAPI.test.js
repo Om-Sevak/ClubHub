@@ -1,9 +1,9 @@
 const request = require('supertest');
-const app = require('../app');
-const Club = require('../models/clubModel');
-const User = require('../models/userModel');
-const ClubEvent = require('../models/clubEventModel');
-const ClubMemberships = require('../models/clubMembershipsModel');
+const app = require('../../app');
+const Club = require('../../models/clubModel');
+const User = require('../../models/userModel');
+const ClubEvent = require('../../models/clubEventModel');
+const ClubMemberships = require('../../models/clubMembershipsModel');
 const { MongoMemoryServer } = require('mongodb-memory-server');
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');

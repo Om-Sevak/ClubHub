@@ -1,0 +1,78 @@
+.event-page {
+    display:grid;
+    position: absolute;
+    width: 100%;
+    top: 0px;
+    left: 0px;
+}
+
+.event-page-col {
+    margin: 0;
+    height: 100vh - 50px;
+    display: grid;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh- 50px;
+    background-color: #f5f5f5;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.event-page-header {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    background-color: #F2EAD0;
+    border-radius: 20px;
+    margin-bottom: 20px;
+}
+
+.event-page-details {
+    width: 100%;
+}
+
+.header-h1{
+    font-size: xx-large;
+    text-align: center;
+    padding: 20px;
+    width: 100%;
+}
+
+.about {
+    text-align: center;
+    background-color: #DFF5FF;
+    border-radius: 20px;
+}
+
+.about-h2 {
+    color: black;
+    text-shadow: black 1px 1px 1px;
+}
+
+button {
+    background: linear-gradient(45deg, #0C3559, #7EADBF);
+    color: #F2EAD0;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    display: block;
+    width: 100%;
+    margin-bottom: 20px;
+    padding: 14px 24px;
+    font-size: 16px;
+    font-weight: 600;
+    text-transform: uppercase;
+    transition: background 0.3s ease;
+    box-sizing: border-box;
+    outline: none;
+}
+
+button:hover {
+    background: linear-gradient(45deg, #F26A4B, #F26052);
+}
+
+.bold-text {
+    font-weight: bold;
+}

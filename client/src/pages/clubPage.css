@@ -1,89 +1,113 @@
 .club-page {
-    display:grid;
+    display: grid;
     position: absolute;
     width: 100%;
-    top: 0px;
-    left: 0px;
+    top: 0;
+    left: 0;
+    overflow: hidden;
+    background-image: url('https://www.transparenttextures.com/patterns/geometry.png');
 }
 
 .club-page-col {
-    margin: 0;
-    height: 100vh;
-    display: grid;
+    display: flex;
     flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    background-color: #f5f5f5;
+    background-color: white; /* Soften the inner background */
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08); /* Lighter shadow */
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    border-radius: 20px;
+    margin: 50px auto;
+    width: fit-content;
+    max-width: 60%;
+    min-width: 800px;
+    z-index: 1; /* Ensure club page content is above geometric shapes */
 }
 
 
+
+
 .clubLogo {
-    max-width: 80%;
-    margin: 0 auto;
-    margin-bottom: 20px;
+    max-width: 60%; 
     border-radius: 10%;
-    width: 100vh ;
-    height: 40vh;
-    padding-top: 2em;
+    width: 30vh; 
+    height: 20vh; 
     
 }
 
 .club-page-header {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-    background-color: #F2EAD0;
-    border-radius: 20px;
-    margin-bottom: 20px;
-}
-
-.club-page-details {
-    width: 100%;
+    display: flex; /* Make this a flex container */
+    margin-top: 40px;
+    border: none;
+    text-align: left;
+    margin-left: 50px;
+    width: 80%;
 }
 
 .header-h1{
-    font-size: xx-large;
-    text-align: center;
-    padding: 20px;
-    width: 100%;
-}
-
-.banner {
-    display: flex;
-    align-items: flex-start;
-    width: 100%;   
-    padding: auto;
-}
-
-.banner-h2{
+    font-size: x-large;
+    color: black;
+    text-shadow: 1px 1px 1px black;
     text-align: left;
-    color: black;
-    text-shadow: black 1px 1px 1px;
+    justify-content: left;
+    text-decoration: underline;
+    text-decoration-color: #7EADBF;  /* Example: Use your secondary blue */ 
+    text-decoration-thickness: 3px;
 }
 
-.about {
+
+
+.about{
+    padding-top: 10px;
+    padding-bottom: 10px;
+    margin-top: 50px;
+    overflow-wrap: normal;
     text-align: center;
-    background-color: #F2EAD0;
     border-radius: 20px;
+    margin-bottom: 40px;
+    background-color: #DFF5FF;
 }
 
-.about-h2 {
+.about p{
+    font-weight: 600;
+}
+
+.interest {
+    font-weight: bold;
+}
+
+.club-email {
     color: black;
-    text-shadow: black 1px 1px 1px;
+    font-size: medium;
+}
+.posts h2,.events h2{
+    color: black;
+    text-shadow: 1px 1px 1px black;
+    text-decoration: dashed;
+    text-align: left;
+    padding-top: 5px;
+    padding-left: 5px;
+    font-size: 1.5rem;
+    font-weight: bolder;
+    display: inline-block;
 }
 
-.events {
-    background-color: #F26A4B;
+
+
+.events,
+.posts {
+    
+    text-align: center;
+    align-items: center;
     border-radius: 20px;
+    margin-bottom: 10px;
+    
+    
+}
+.posts {
+    background-color: #DFF5FF;
 }
 
-button {
+.button {
     background: linear-gradient(45deg, #0C3559, #7EADBF);
-    color: #F2EAD0;
     border: none;
     border-radius: 6px;
     cursor: pointer;
@@ -97,11 +121,40 @@ button {
     transition: background 0.3s ease;
     box-sizing: border-box;
     outline: none;
+    font-size: 5rem;
 }
 
-button:hover {
+.button:hover {
     background: linear-gradient(45deg, #F26A4B, #F26052);
 }
 
+.events h3 {
+    color: blue; 
+    cursor: pointer; 
+}
 
-  
+.events h3:hover {
+    text-decoration: underline; 
+}
+
+.add-event-icon,
+.add-post-icon {
+    font-size: 30px;
+    cursor: pointer;
+    color:#062b54;
+    margin-left: 20px;
+    float: right; 
+    margin-right: 20px; 
+    border: 3px solid #062b54; 
+    padding: 5px; 
+    border-radius: 5px;
+    display: in;
+}
+
+
+.about, .events, .posts {
+    border: 5px solid #f0f0f0; /* Soften the border */
+  }
+
+
+

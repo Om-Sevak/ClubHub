@@ -1,0 +1,96 @@
+.card-post-content {
+    display: flex;
+    flex-direction: column;
+}
+
+.card-post-top {
+    display: flex;
+    align-items: center;
+}
+
+.card-post-bottom {
+    display: flex;
+    justify-content: flex-end;
+    position: absolute;
+    bottom: 0;
+    width: 85%; 
+    padding: 16px; 
+    
+}
+
+.card-post-logo {
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+}
+
+.card-post-title-container {
+    display: flex;
+    flex-direction: column;
+}
+
+.card-post-name {
+    color: black !important;
+    font-size: x-large !important;
+    font-family: 'Trebuchet MS', sans-serif !important;
+    font-weight: 600;
+    margin-top: 3px;
+    margin-left: 10px;
+    vertical-align: top;
+    text-align: left;
+
+}
+
+.card-post-club-name {
+    color: #062b54 !important;
+    font-size: large !important;
+    font-family: 'Trebuchet MS', sans-serif !important;
+    font-weight: 600;
+    vertical-align: top;
+    text-align: left;
+    padding-top: 10px;
+}
+
+.card-post-club-date {
+    color: #062b54 !important;
+    font-size: x-large !important;
+    font-family: 'Trebuchet MS', sans-serif !important;
+    font-weight: 600;
+    margin-right: 10px;
+    vertical-align: top;
+    font-style: italic;
+    align-self: center;
+}
+
+.card-post-desc {
+    text-align: left;
+}
+
+.card-post-edit-icon {
+    position: relative;
+    font-size: 30px;
+    cursor: pointer;
+    color:#062b54;
+    cursor: default;
+    margin-left: 20px;
+    cursor: pointer;
+  }
+
+.card-post-delete-icon {
+    position: relative;
+    font-size: 30px;
+    cursor: pointer;
+    color:#062b54;
+    cursor: default;
+    margin-left: 20px;
+    cursor: pointer;
+  }
+
+  .card-post-poster-icon {
+    position: relative;
+    font-size: 30px;
+    cursor: pointer;
+    color:#062b54;
+    cursor: default;
+    cursor: pointer;
+  }

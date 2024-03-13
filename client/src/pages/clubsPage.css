@@ -1,20 +1,13 @@
 .clubsPage {
-    display: grid;
     position: absolute;
     width: 100%;
     top: 0px;
     left: 0px;
-    text-align: center;
 }
 
 .clubsPage-container {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
     height: 100%;
     width: 100%;
-    position: fixed;
 }
 
 .clubsPage-icon {
@@ -26,4 +19,20 @@
 .clubsPage-message {
     text-align: center;
     font-size: 24px;
+}
+
+.clubsPage-title {
+    margin-left: 100px;
+    width: fit-content;
+}
+
+.clubsPage-clubs{
+    margin-left: 100px;
+    margin-right: auto;
+    height: 100%; 
+    max-width: 80%;
+}
+
+.pagination button{
+    background-image: none;
 }

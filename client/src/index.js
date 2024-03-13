@@ -14,11 +14,19 @@ import HomePage from './pages/homePage';
 import ClubsPage from './pages/clubsPage';
 import EventsPage from './pages/eventsPage';
 import FindClubPage from './pages/findClubPage';
+import SingleEventPage from './pages/singleEventPage';
+import EditEventPage from './pages/editEventPage';
+import PostCreatePage from './pages/createPostPage';
+
+import { ToastProvider } from './components/ToastContext';
+import EditPostPage from './pages/editPostPage';
+import PosterPage from './pages/PosterPage';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
     <Router>
+    <ToastProvider>
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/homePage" element={<HomePage />} />
@@ -32,7 +40,14 @@ root.render(
         <Route path="/club/:clubName" element={<ClubPage />} />
         <Route path="/club/edit/:clubName" element={<EditClubPage />} />
         <Route path="/club/createEvent/:clubName" element={<EventCreatePage />} />
+        <Route path="/club/:clubName/event/:eventId" element={<SingleEventPage />} />
+        <Route path="/club/:clubName/event/edit/:eventId" element={<EditEventPage />} />
+        <Route path="/club/createPost/:clubName" element={<PostCreatePage />} />
+        <Route path="/club/:clubName/post/:postId" element={<PosterPage />} />
+        <Route path="/club/:clubName/post/edit/:postId" element={<EditPostPage />} />
+        
       </Routes>
+     </ToastProvider>
     </Router>
   </React.StrictMode>
 );

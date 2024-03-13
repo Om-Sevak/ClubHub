@@ -39,8 +39,8 @@ ClubHub aims to foster a dynamic and cohesive University of Manitoba community b
 
 ## Technologies
 ReactJS: Front end development \
-MySql: Database management system\
+MongoDB: Database management system\
 Node.js + Express.js: Server-side processing and back-end development\
 GitHub: Managing source code, documents as well as dev issues\
-Docker: Used to automate CCD pipeline, consistent environment across development\
+Docker: Used to automate CI/CD pipeline, consistent environment across development
 

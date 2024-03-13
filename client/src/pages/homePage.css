@@ -1,29 +1,106 @@
 .homePage {
-display:grid;
   position: absolute;
+  display: grid;
   width: 100%;
+  text-align: center;
+  
+  background-size: cover;
+
   top: 0px;
   left: 0px;
+}
+.homePage-top-msg-row {
+  display: flex;
+  justify-content: center;
+  padding-top: 50px;
+  padding-bottom: 30px;
+}
+
+.homePage-top-msg-row-text {
+  color: black !important;
+  background-size: cover; 
+
+  background-image: linear-gradient(to right, #86B6F6, #7fb2c7);
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.15);
+  padding: 20px;
+  font-size: xxx-large !important;
+  font-family: 'Trebuchet MS', sans-serif !important;
+  font-weight: 600;
+  background-color: white;
+  border-radius: 20px;
+  width: 65%;
+  cursor: default;
+}
+
+
+.homePage-carousel-header-row {
+  display: flex;
+  justify-content: center;
+  padding-top: 50px;
+}
+
+.homePage-carousel-header-row-container-first {
+  max-width: 75vw;
+  width: 90%;
+  display: flex;
+  justify-content: center;
+  padding-bottom: 20px;
+}
+
+.homePage-carousel-header-row-container {
+  max-width: 75vw;
+  width: 90%;
+  display: flex;
+  justify-content: center;
+  padding-top: 30px;
+  padding-bottom: 20px;
+}
+
+.homePage-carousel-header-row-text {
+  color: #062b54 !important;
+  font-size: xx-large !important;
+  background-color: #f0f8ff; /* Adjust the color as needed */ 
+  font-family: 'Roboto', sans-serif !important; /* Or your chosen modern font */
+  font-weight: 600;
   text-align: center;
+  padding: 15px;
+  border-radius: 20px;
+  border: none; 
+  width: 60%;
+  cursor: default;
+  box-shadow: 2px 4px 6px rgba(0, 0, 0, 0.1); 
 }
 
-.homePage-container {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    height: 100%;
-    width: 100%;
-    position: fixed;
+
+.geometry-shape {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #80BCBD; /* Adjust the color as needed */
+  clip-path: polygon(0 0, 100% 0, 100% 70%, 0 100%);
+  z-index: -1;
 }
 
-.homePage-icon {
-    font-size: 40px;
-    color:#062b54;
-    cursor: default;
-  }
+.geometry-shape-1 {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 50%;
+  background-color: #0F1035; /* Adjust the color as needed */
+  clip-path: polygon(0 0, 100% 0, 100% 70%, 0 100%);
+  z-index: -1;
+}
 
-.homePage-message {
-    text-align: center;
-    font-size: 24px;
+.geometry-shape-2 {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 50%;
+  background-color: #f0f8ff; /* Adjust the color as needed */
+  clip-path: polygon(0 30%, 100% 0, 100% 100%, 0 100%);
+  z-index: -1;
 }
