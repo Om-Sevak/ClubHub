@@ -1,53 +1,56 @@
 .club-page {
-    display:grid;
-    position: absolute;
+    display: grid;
+    position: relative;
     width: 100%;
-    top: 0px;
-    left: 0px;
+    top: 0;
+    left: 0;
+    overflow: hidden;
+    background-image: url('https://www.transparenttextures.com/patterns/geometry.png');
 }
 
 .club-page-col {
-    display: flexbox; 
-    justify-content: flex-start;
-    align-items: center;
-    
-    background-image: linear-gradient(to right, #09203F,#537895);
+    display: flex;
+    flex-direction: column;
+    background-color: white; /* Soften the inner background */
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08); /* Lighter shadow */
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    
+    border-radius: 20px;
+    margin: 50px auto;
+    width: fit-content;
+    max-width: 60%;
+    min-width: 800px;
+    z-index: 1; /* Ensure club page content is above geometric shapes */
 }
+
+
+
 
 .clubLogo {
-    position: absolute;
-    top: 50px;
-    max-width: 80%;
+    max-width: 60%; 
     border-radius: 10%;
-    width: 30vh ;
-    height: 20vh;
-    margin-left: 0px;
-    margin-top: 20px;
-    border: 10px ridge #F26052 ;
-    margin-bottom: 0;
+    width: 30vh; 
+    height: 20vh; 
+    
 }
 
-
-
 .club-page-header {
-    display: flex;
-    justify-content: center;
-    align-items: flex-start;
-    border-radius: 20px;
+    display: flex; /* Make this a flex container */
     margin-top: 40px;
-    border: 10px ridge antiquewhite;
+    border: none;
+    text-align: left;
+    margin-left: 50px;
+    width: 80%;
 }
 
 .header-h1{
     font-size: x-large;
     color: black;
     text-shadow: 1px 1px 1px black;
-    background-color: antiquewhite;
-    display: inline-block;
-    
-   
+    text-align: left;
+    justify-content: left;
+    text-decoration: underline;
+    text-decoration-color: #7EADBF;  /* Example: Use your secondary blue */ 
+    text-decoration-thickness: 3px;
 }
 
 
@@ -56,14 +59,11 @@
     padding-top: 10px;
     padding-bottom: 10px;
     margin-top: 50px;
-
     overflow-wrap: normal;
     text-align: center;
-    border: 10px ridge antiquewhite;
-    
     border-radius: 20px;
     margin-bottom: 40px;
-    
+    background-color: #DFF5FF;
 }
 
 .about p{
@@ -86,9 +86,7 @@
     padding-top: 5px;
     padding-left: 5px;
     font-size: 1.5rem;
-    border: 10px ridge antiquewhite;
     font-weight: bolder;
-    background-color: antiquewhite;
     display: inline-block;
 }
 
@@ -99,15 +97,17 @@
     
     text-align: center;
     align-items: center;
-    border: 10px ridge antiquewhite;
     border-radius: 20px;
     margin-bottom: 10px;
     
+    
+}
+.posts {
+    background-color: #DFF5FF;
 }
 
 .button {
     background: linear-gradient(45deg, #0C3559, #7EADBF);
-    color: #F2EAD0;
     border: none;
     border-radius: 6px;
     cursor: pointer;
@@ -152,4 +152,9 @@
 }
 
 
-  
+.about, .events, .posts {
+    border: 5px solid #f0f0f0; /* Soften the border */
+  }
+
+
+

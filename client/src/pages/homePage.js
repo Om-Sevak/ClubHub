@@ -10,6 +10,8 @@ import PostCarousel from '../components/PostCarousel';
 const HomePage = () => {
   return (
     <div className='homePage'>
+        <div className="geometry-shape-1"></div>
+        <div className="geometry-shape-2"></div>
         <Header/>
         <div className='homePage-top-msg-row'>
           <span className='homePage-top-msg-row-text'>Welcome to ClubHUB for the University of Manitoba</span>

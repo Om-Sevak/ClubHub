@@ -212,6 +212,7 @@ const ClubPage = () => {
   function Name_Header() {
     return (
       <header className='club-page-header'>
+        <img src={clubImage} alt="Logo" className="clubLogo" /> 
         <h1 className='header-h1'>{clubName}</h1>
       </header>
     );
@@ -322,35 +323,38 @@ const ClubPage = () => {
 
   return (
     <div className='club-page'>
-        <Header />
-    <img src={clubImage} alt="Logo" className="clubLogo" /> 
-    <div className='club-page-col'>
-      <Name_Header />
-      
-      <main>
-        
-        <About />
+      <Header />
 
-        <div className='postsevents'>
-        <Events />
-        <Posts />
-       
-        {isAdmin &&<button onClick={handleEdit}>Edit Club</button>}
-        {isAdmin ? <button onClick={handleDelete}>Delete Club</button> : <button onClick={isMember ? handleLeave : handleJoin}>{isMember ? 'Leave Club' : 'Join Club'}</button>}
-        {errorMessage && <p className="error-message">{errorMessage}</p>}
+
+      <div className='club-page-col'>
+
+          <Name_Header />
+
+          <main>
+              <About />
+              <div className='postsevents'>
+                  <Events />
+                  <Posts />
+
+                  {isAdmin && <button onClick={handleEdit}>Edit Club</button>}
+                  {isAdmin ? <button onClick={handleDelete}>Delete Club</button> : <button onClick={isMember ? handleLeave : handleJoin}>{isMember ? 'Leave Club' : 'Join Club'}</button>}
+                  {errorMessage && <p className="error-message">{errorMessage}</p>}
+              </div>
+          </main>
+
       </div>
-      </main>
-      
+
+
+      {showConfirmationPopup && (
+          <ConfirmationPopup
+              message="Are you sure you want to delete this club?"
+              onConfirm={confirmDelete}
+              onCancel={cancelDelete}
+          />
+      )}
     </div>
-    
-    {showConfirmationPopup && (
-            <ConfirmationPopup
-                message="Are you sure you want to delete this club?"
-                onConfirm={confirmDelete}
-                onCancel={cancelDelete}
-            />
-        )}
-    </div>
+
+
   );
 };
 
