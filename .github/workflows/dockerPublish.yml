@@ -3,7 +3,7 @@ name: Release to Docker Hub
 on:
   push:
     branches:
-      - Dev
+      - [ "Dev","docker_cd" ]
 
 env:
   MONGO_URI: ${{ secrets.MONGO_URI }}  
