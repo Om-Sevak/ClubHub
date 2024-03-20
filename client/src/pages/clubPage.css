@@ -11,7 +11,7 @@
 .club-page-col {
     display: flex;
     flex-direction: column;
-    background-color: white; /* Soften the inner background */
+    background-color: white; 
     box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08); /* Lighter shadow */
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     border-radius: 20px;
@@ -19,7 +19,6 @@
     width: fit-content;
     max-width: 60%;
     min-width: 800px;
-    z-index: 1; /* Ensure club page content is above geometric shapes */
 }
 
 
