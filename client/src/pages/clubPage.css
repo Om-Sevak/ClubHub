@@ -19,10 +19,8 @@
     width: fit-content;
     max-width: 60%;
     min-width: 800px;
+    z-index: 0;
 }
-
-
-
 
 .clubLogo {
     max-width: 60%; 
@@ -51,8 +49,6 @@
     text-decoration-color: #7EADBF;  /* Example: Use your secondary blue */ 
     text-decoration-thickness: 3px;
 }
-
-
 
 .about{
     padding-top: 10px;
@@ -89,8 +85,6 @@
     display: inline-block;
 }
 
-
-
 .events,
 .posts {
     
@@ -98,7 +92,7 @@
     align-items: center;
     border-radius: 20px;
     margin-bottom: 10px;
-    
+    z-index: 0;
     
 }
 .posts {
@@ -123,14 +117,6 @@
     font-size: 5rem;
 }
 
-.button:hover {
-    background: linear-gradient(45deg, #F26A4B, #F26052);
-}
-
-.events h3 {
-    color: blue; 
-    cursor: pointer; 
-}
 
 .events h3:hover {
     text-decoration: underline; 
