@@ -87,7 +87,7 @@ export default function PostCard({ clubname, postname, postId, contents, isAdmin
                             </div>}
                         {isAdmin &&
                             <div className='card-post-delete-icon' onClick={handleDeleteClick}>
-                                <FontAwesomeIcon icon={faTrash}  />
+                                <FontAwesomeIcon icon={faTrash} />
                             </div>}
                     </div>
                     {showConfirmationPopup && (
