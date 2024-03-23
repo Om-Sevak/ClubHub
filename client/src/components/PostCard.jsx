@@ -25,7 +25,8 @@ export default function PostCard({ clubname, postname, postId, contents, isAdmin
 
     const handlePosterClick = (e) => {
         e.stopPropagation();
-        navigate(`/club/${clubname}/post/${postId}`);
+        const url = `${window.location.origin}/club/${clubname}/post/${postId}`;
+        window.open(url, '_blank');
     }
 
     const handleDeleteClick = (e) => {
