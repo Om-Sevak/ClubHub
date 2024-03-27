@@ -98,11 +98,10 @@ const EditPostPage = () => {
                             />
                         </label>
                         <br />
-                        <button type="submit">Save</button>
+                        {isLoading && <LoadingSpinner />}
+                        {!isLoading && <button type="submit">Save</button>}
                     </form>
                      {/* Conditionally render the loading spinner */}
-                     {isLoading && <LoadingSpinner />}
-                      {!isLoading && <button type="submit">Create</button>}
                     {errorMessage && <p className="error-message">{errorMessage}</p>}
                 </div>
             </div>
