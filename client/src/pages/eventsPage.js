@@ -90,7 +90,7 @@ const EventsPage = () => {
 
 
   return (
-    <div>
+    <div className='eventsPage'>
       <Header/>
       <h2>Events Page</h2>
       {loggedIn && (

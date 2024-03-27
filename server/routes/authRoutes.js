@@ -7,6 +7,8 @@ router.post('/', authController.login);
 
 router.post('/logout', authController.logout);
 
+router.post('/changePassword', authController.changePassword);
+
 router.put('/', authController.register);
 
 router.get('/loginStatus', authController.isLoggedIn);

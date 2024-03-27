@@ -25,7 +25,8 @@ export default function PostCard({ clubname, postname, postId, contents, isAdmin
 
     const handlePosterClick = (e) => {
         e.stopPropagation();
-        navigate(`/club/${clubname}/post/${postId}`);
+        const url = `${window.location.origin}/club/${clubname}/post/${postId}`;
+        window.open(url, '_blank');
     }
 
     const handleDeleteClick = (e) => {
@@ -87,7 +88,7 @@ export default function PostCard({ clubname, postname, postId, contents, isAdmin
                             </div>}
                         {isAdmin &&
                             <div className='card-post-delete-icon' onClick={handleDeleteClick}>
-                                <FontAwesomeIcon icon={faTrash}  />
+                                <FontAwesomeIcon icon={faTrash} />
                             </div>}
                     </div>
                     {showConfirmationPopup && (
