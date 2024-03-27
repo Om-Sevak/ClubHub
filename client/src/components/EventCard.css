@@ -40,6 +40,9 @@
     font-weight: 600;
     vertical-align: top;
     text-align: left;
+    overflow: hidden; 
+    white-space: nowrap;  
+    text-overflow: ellipsis; 
 }
 
 .card-event-right-col {
