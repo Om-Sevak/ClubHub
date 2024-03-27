@@ -23,6 +23,7 @@
     border-radius: 10px; /* Rounded border */
     padding: 20px;
     width: 25%;
+    min-width: 350px;
   }
 
   .user-profile-input{
