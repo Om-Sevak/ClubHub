@@ -3,11 +3,11 @@ name: Azure Static Web Apps CI/CD
 on:
   push:
     branches:
-      - main
+      - Dev
   pull_request:
     types: [opened, synchronize, reopened, closed]
     branches:
-      - main
+      - Dev
 env:
   CI: false
   REACT_APP_API_BASE_URL: ${{ secrets.REACT_APP_API_BASE_URL }}
