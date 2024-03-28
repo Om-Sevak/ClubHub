@@ -136,9 +136,9 @@ const SingleEventPage = () => {
             <Title_Header />
             <main>
                 <About />
-                {isAdmin &&<button onClick={handleEdit}>Edit Event</button>}
-                {isAdmin &&<button onClick={handleDelete}>Delete Event</button>}
-                <button onClick={handleBack}>Back</button>
+                {isAdmin &&<button className='single-event-page-buttons' onClick={handleEdit}>Edit Event</button>}
+                {isAdmin &&<button className='single-event-page-buttons' onClick={handleDelete}>Delete Event</button>}
+                <button className='single-event-page-buttons' onClick={handleBack}>Back</button>
                 {errorMessage && <p className="error-message">{errorMessage}</p>}
             </main>
         </div>

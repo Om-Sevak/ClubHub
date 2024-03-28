@@ -2,6 +2,7 @@
   position:absolute;
   top: 0px;
   left: 0px;
+  width: 100%;
 }
 .container {
     margin: 0 auto;
