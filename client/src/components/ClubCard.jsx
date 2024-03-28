@@ -4,12 +4,21 @@ import Chip from '@mui/joy/Chip';
 import './ClubCard.css'
 import { useNavigate } from 'react-router-dom';
 
-const DESC_LIMIT = 200;
+const DESC_LIMIT = 150;
 
 export default function ClubCard({ name, desc, img, followed, interests, match }) {
     const navigate = useNavigate();
 
-    const shortdesc = desc ? (desc.length > DESC_LIMIT ? `${desc.substring(0, DESC_LIMIT)} . . .` : desc) : "";
+    let shortDesc = "";
+    if (desc) {
+        if (desc.length > DESC_LIMIT) {
+            const shortenedLine = desc.substring(0, DESC_LIMIT);
+            const lastSpace = shortenedLine.lastIndexOf(" ");
+            shortDesc = `${shortenedLine.substring(0, lastSpace)}...`;
+        } else {
+            shortDesc = desc;
+        }
+    }
     // Determine the color based on match percentage
     let matchColor;
     if (match >= 80) {
@@ -54,7 +63,7 @@ export default function ClubCard({ name, desc, img, followed, interests, match }
                             </div>
                         </div>
                     </div>
-                    <span className='card-club-desc'> {shortdesc}</span>
+                    <span className='card-club-desc'> {shortDesc}</span>
                 </div>
                 <div className='card-club-interests'>
                     {interests.map((item, key) =>  {return (<div className='card-club-interest' key={key}>
