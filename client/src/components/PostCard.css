@@ -49,6 +49,11 @@
     vertical-align: top;
     text-align: left;
     padding-top: 10px;
+    overflow: hidden; 
+    white-space: nowrap;  
+    text-overflow: ellipsis; 
+   
+    max-width: 300px;
 }
 
 .card-post-club-date {
