@@ -72,9 +72,9 @@ export default function PostCard({ clubname, postname, postId, contents, isAdmin
                         <img src={img} alt="Company Logo" className="card-post-logo" />
                         <div className='card-post-title-container'>
                             <span className='card-post-name'> {postname} </span>
+                            <span className='card-post-club-date'>{formatedDate}</span>
                         </div>
                     </div>
-                    <span className='card-post-club-date'>{formatedDate}</span>
                     <span className='card-post-club-name'> Post from {clubname}:</span>
                     <span className='card-post-desc'> {shortdesc}</span>
                     <div className='card-post-bottom'>

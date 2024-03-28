@@ -60,7 +60,7 @@ const FindClubPage = () => {
     try {
       const body = {
         "includeJoined": false,
-        "limit": 10,
+        "limit": 8,
       }
       const { status: reqStatus, data: reqData } = await clubApi.getClubsBrowse(body);
       if (reqStatus === 200) {
