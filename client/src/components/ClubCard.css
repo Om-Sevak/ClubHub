@@ -29,6 +29,11 @@
     margin-left: 10px;
     vertical-align: top;
     text-align: left;
+    overflow: hidden; 
+    text-overflow: ellipsis; 
+    max-width: 200px;
+    max-height: 90px;
+    line-height: 30px;
 
 }
 
@@ -62,6 +67,10 @@
 .card-club-desc {
     margin-top: 5%;
     text-align: left;
+    overflow: hidden; 
+    text-overflow: ellipsis; 
+    max-height: 100px;
+    max-width: 300px;
 }
 
 .card-club-interests {
