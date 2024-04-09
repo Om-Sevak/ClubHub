@@ -1,34 +1,8 @@
-/*
-----
-Core Feature(s): Uploads an image to Azure Blob Storage.
-Expected Input Type: (body or URL)
-Expected Input: 
-  - imageBuffer: Buffer containing the image data.
-  - imageType: MIME type of the image.
-  - AZURE_STORAGE_CONNECTION_STRING: Azure Storage connection string.
-  - CONTAINER_NAME: Name of the container in Azure Blob Storage.
-Expected Output Structure: 
-  - URL of the uploaded image.
-Expected Errors: 
-  - Throws an error for internal server errors.
-Purpose: To provide a function for uploading images to Azure Blob Storage.
-----
-*/
+const azure = require('@azure/storage-blob');
+const BlobServiceClient = azure.BlobServiceClient;
+const { v1: uuidv1 } = require("uuid");
 
 
-
-const azure = require('@azure/storage-blob'); // Import Azure Blob Storage SDK
-const BlobServiceClient = azure.BlobServiceClient; // BlobServiceClient class from SDK
-const { v1: uuidv1 } = require("uuid"); // Import uuidv1 function from uuid package
-
-/**
- * Function to upload an image to Azure Blob Storage.
- * @param {Buffer} imageBuffer - Buffer containing the image data.
- * @param {string} imageType - MIME type of the image.
- * @param {string} AZURE_STORAGE_CONNECTION_STRING - Azure Storage connection string.
- * @param {string} CONTAINER_NAME - Name of the container in Azure Blob Storage.
- * @returns {string} - URL of the uploaded image.
- */
 const uploadImage = async (imageBuffer, imageType, AZURE_STORAGE_CONNECTION_STRING, CONTAINER_NAME) => {
     try {
         // Create the BlobServiceClient object with connection string
@@ -57,4 +31,4 @@ const uploadImage = async (imageBuffer, imageType, AZURE_STORAGE_CONNECTION_STRI
     }
 };
 
-module.exports = uploadImage; // Export the uploadImage function
+module.exports = uploadImage;
