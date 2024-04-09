@@ -177,6 +177,7 @@ exports.editClub = async (req, res) => {
 
             const body = JSON.parse(JSON.stringify(req.body));
             const { name, description, email, interest } = body;
+            const interestsArray = interest.split(",");
 
             if (err) {
                 console.error('Error uploading profile picture:', err);
@@ -211,8 +212,8 @@ exports.editClub = async (req, res) => {
                     throw new Error('Unauthorized: Only admins can modify the club.');
                 }
 
-                if (interest.length < 3) {
-                    throw new Error('Bad Request: Please select at least 3 interests');
+                if (interestsArray.length < 5) {
+                    throw new Error('Bad Request: Please select at least 5 interests');
                 }
 
                  // Handle image upload
@@ -236,8 +237,10 @@ exports.editClub = async (req, res) => {
                 if (!updateStatus.acknowledged) {
                     throw err;
                 }
-
-                const clubInterests = await interests.editClubInterestsMiddleware(interest, name);
+                if(updateStatus.acknowledged){
+                    const editClubInterest = await interests.editClubInterestsMiddleware(interestsArray, req.params.name);
+                }
+                
 
                 res.status(201).json({
                     status: "success",

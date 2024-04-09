@@ -44,10 +44,8 @@ const EditClubPage = () => {
         const fetchClubInterests = async () => {
             try {
               const { status: reqStatus, data: interestData } = await interestsApi.getClubInterests(clubName);
-              console.log(interestData);
               if (reqStatus === 200) {
                 const interests = interestData.interests;
-                console.log(interests);
                 const formattedOptions = interests.map(interest => ({ value: interest, label: interest}));
                 setClubInterest(formattedOptions);
               }
@@ -73,6 +71,13 @@ const EditClubPage = () => {
         clubinterest.forEach(interest => {
           interestNames.push(interest.value)
         });
+
+        if(interestNames.length < 5){
+            setErrorMessage('Please select at least 5 interests');
+            setIsLoading(false);
+            return;
+        }
+
         try {
           const formData = new FormData();
           formData.append('name', clubname);
