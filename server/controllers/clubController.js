@@ -1,3 +1,26 @@
+/*
+----
+Core Feature(s): Manage clubs and related operations.
+Expected Input Type: HTTP requests (body or URL)
+Expected Input: 
+    - For createClub: JSON body containing club details (name, description, email, interest) and optional image upload.
+    - For getClub, editClub, deleteClub: Club name provided as a parameter in the URL.
+    - For getClubs: Query string parameter specifying search query.
+    - For getClubsBrowse: JSON body containing limit and includeJoined options.
+Expected Output Structure: 
+    - JSON responses with status, message, and data where applicable.
+Expected Errors: 
+    - Unauthorized: When user is not logged in or lacks permissions.
+    - Bad Request: When input data is invalid or operation cannot be completed.
+    - Not Found: When requested resource does not exist.
+    - Server Error: When an unexpected error occurs on the server.
+Purpose: 
+    - To handle CRUD operations for clubs, including creation, retrieval, modification, and deletion.
+    - To browse and recommend clubs based on user interests.
+    - To manage user memberships and roles within clubs.
+----
+*/
+
 const Club = require("../models/clubModel");
 const User = require("../models/userModel")
 const ClubMembership = require('../models/clubMembershipsModel');
@@ -16,6 +39,7 @@ const upload = multer({ storage: storage });
 
 const MAX_INTERESTS_PER_CLUB = 5
 
+// Controller function to create a new club
 exports.createClub = async(req, res) => {
     try {
         console.log(`${req.sessionID} - ${req.session.email} is requesting to create club. Changes: ${JSON.stringify(req.body)}`);
@@ -129,6 +153,7 @@ exports.createClub = async(req, res) => {
     }
 };
 
+// Controller function to get club details
 exports.getClub = async(req, res) => {
     try {
         console.log(`${req.sessionID} - Request Get on ${ req.params.name}`);
@@ -168,6 +193,7 @@ exports.getClub = async(req, res) => {
     }
 };
 
+// Controller function to edit club details
 exports.editClub = async (req, res) => {
     try {
         console.log(`${req.sessionID} - ${req.session.email} is requesting to edit club ${req.params.name}. Changes: ${JSON.stringify(req.body)}`);
@@ -298,6 +324,7 @@ exports.editClub = async (req, res) => {
     }
 };
 
+// Controller function to delete a club
 exports.deleteClub = async(req, res) => {
     try {
         console.log(`${req.sessionID} - ${req.session.email} is requesting to delete club ${ req.params.name}`);
@@ -357,6 +384,7 @@ exports.deleteClub = async(req, res) => {
     }
 };
 
+// Controller function to get club names based on a query
 exports.getClubs = async(req, res) => {
     try {
         console.log(`${req.sessionID} - Request Get on ${ req.params.query}`);
@@ -382,6 +410,7 @@ exports.getClubs = async(req, res) => {
     }
 };
 
+// Controller function to browse clubs with interests
 exports.getClubsBrowse = async (req, res) => {
     try {
         console.log(`${req.sessionID} - Request for Clubs to browse on ${JSON.stringify(req.body)}`);
