@@ -29,8 +29,6 @@
     text-align: left;
     overflow: hidden;
     max-height: 35px;
-
-
 }
 
 .card-event-club-name {
@@ -40,6 +38,11 @@
     font-weight: 600;
     vertical-align: top;
     text-align: left;
+    overflow: hidden; 
+    white-space: nowrap;  
+    text-overflow: ellipsis; 
+   
+    max-width: 300px;
 }
 
 .card-event-right-col {
@@ -77,6 +80,7 @@
     color:#062b54;
     cursor: default;
     cursor: pointer;
+    border-radius: 20%;
   }
 
 .card-event-delete-icon {
@@ -87,4 +91,9 @@
     cursor: default;
     margin-left: 20px;
     cursor: pointer;
+    border-radius: 20%;
+  }
+
+  .card-event-edit-icon:hover, .card-event-delete-icon:hover {
+    background: linear-gradient(45deg, #F26A4B, #F26052);
   }

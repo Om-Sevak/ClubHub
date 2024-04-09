@@ -25,7 +25,8 @@ export default function PostCard({ clubname, postname, postId, contents, isAdmin
 
     const handlePosterClick = (e) => {
         e.stopPropagation();
-        navigate(`/club/${clubname}/post/${postId}`);
+        const url = `${window.location.origin}/club/${clubname}/post/${postId}`;
+        window.open(url, '_blank');
     }
 
     const handleDeleteClick = (e) => {
@@ -71,9 +72,9 @@ export default function PostCard({ clubname, postname, postId, contents, isAdmin
                         <img src={img} alt="Company Logo" className="card-post-logo" />
                         <div className='card-post-title-container'>
                             <span className='card-post-name'> {postname} </span>
+                            <span className='card-post-club-date'>{formatedDate}</span>
                         </div>
                     </div>
-                    <span className='card-post-club-date'>{formatedDate}</span>
                     <span className='card-post-club-name'> Post from {clubname}:</span>
                     <span className='card-post-desc'> {shortdesc}</span>
                     <div className='card-post-bottom'>
@@ -87,7 +88,7 @@ export default function PostCard({ clubname, postname, postId, contents, isAdmin
                             </div>}
                         {isAdmin &&
                             <div className='card-post-delete-icon' onClick={handleDeleteClick}>
-                                <FontAwesomeIcon icon={faTrash}  />
+                                <FontAwesomeIcon icon={faTrash} />
                             </div>}
                     </div>
                     {showConfirmationPopup && (

@@ -7,7 +7,7 @@ const ToastContext = createContext();
 
 export const ToastProvider = ({ children }) => {
   const showToast = (message) => {
-    toast.success(message, {position: "bottom-center", autoClose: 1000, closeButton: false, pauseOnHover: false});
+    toast.success(message, {position: "bottom-center", autoClose: 1500, closeButton: false, pauseOnHover: false});
   };
 
   return (

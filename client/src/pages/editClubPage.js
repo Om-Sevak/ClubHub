@@ -147,7 +147,7 @@ const EditClubPage = () => {
             
                       {/* Conditionally render the loading spinner */}
                       {isLoading && <LoadingSpinner />}
-                      {!isLoading && <button type="submit">Create</button>}
+                      {!isLoading && <button type="submit">Save</button>}
                 </form>
                 {errorMessage && <p className="error-message">{errorMessage}</p>}
             </div>

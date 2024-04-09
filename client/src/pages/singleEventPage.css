@@ -7,7 +7,8 @@
 }
 
 .event-page-col {
-    margin: 0;
+    margin-left: auto;
+    margin-right: auto;
     height: 100vh - 50px;
     display: grid;
     flex-direction: column;
@@ -16,6 +17,9 @@
     height: 100vh- 50px;
     background-color: #f5f5f5;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    width: fit-content;
+    max-width: 60%;
+    min-width: 800px;
 }
 
 .event-page-header {
@@ -51,26 +55,10 @@
     text-shadow: black 1px 1px 1px;
 }
 
-button {
-    background: linear-gradient(45deg, #0C3559, #7EADBF);
-    color: #F2EAD0;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    display: block;
-    width: 100%;
-    margin-bottom: 20px;
-    padding: 14px 24px;
-    font-size: 16px;
-    font-weight: 600;
-    text-transform: uppercase;
-    transition: background 0.3s ease;
-    box-sizing: border-box;
-    outline: none;
-}
-
-button:hover {
-    background: linear-gradient(45deg, #F26A4B, #F26052);
+.single-event-page-buttons{
+ width: fit-content;
+ display: inline;
+ margin: 10px;
 }
 
 .bold-text {

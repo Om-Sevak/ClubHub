@@ -117,21 +117,26 @@ exports.isLoggedIn = async(req, res) => {
         
         const loggedInStatus = req.session.isLoggedIn ? true : false;
 
-        let userName = "";
+        let firstName = "";
+        let lastName = "";
 
         if(loggedInStatus){
             // Get user's name
             const user = await User.findOne({ email: req.session.email });
             if(user){
-                userName = user.firstName;
+                firstName = user.firstName;
+                lastName = user.lastName;
                 //make sure its camel case
-                userName = userName.charAt(0).toUpperCase() + userName.slice(1);
+                firstName = firstName.charAt(0).toUpperCase() + firstName.slice(1);
+                lastName = lastName.charAt(0).toUpperCase() + lastName.slice(1);
             }
         }
 
         res.status(200).json({
             loggedInStatus: loggedInStatus,
-            userName: userName,
+            firstName: firstName,
+            lastName: lastName,
+            email: req.session.email,
             message: "Login Status Found"
         });
         
@@ -170,6 +175,61 @@ exports.logout = async(req, res) => {
                 status: "fail",
                 message: err.message,
                 description: `Bad Request: Failed to logout`,
+            });
+        } else {
+            res.status(500).json({
+                status: "fail",
+                message: err.message,
+                description: `Bad Request: Server Error`,
+            });
+            console.log(`${req.sessionID} - Server Error: ${err}`)
+        }
+        console.log(`${req.sessionID} - Request Failed: ${err.message}`);
+    }
+};
+
+exports.changePassword = async(req, res) => {
+    try {
+        console.log(`${req.sessionID} - Request To Change Password`);
+        const { currentPassword, newPassword } = req.body;
+
+        if (!req.session.isLoggedIn) {
+            throw new Error('Bad Request: Must be logged in to change password');
+        }
+
+        // Find the user by email
+        const user = await User.findOne({ email: req.session.email });
+        if (!user) {
+            throw new Error('Bad Request: User not found');
+        }
+
+        // Compare the provided password with the hashed password stored in the database
+        const isPasswordValid = await bcrypt.compare(currentPassword, user.passwordHash);
+        if (!isPasswordValid) {
+            throw new Error('Bad Request: Invalid current password');
+        }
+
+        //validate password, min length 8
+        if (newPassword.length < 8) {
+            throw new Error('Bad Request: Password must be at least 8 characters long');
+        }
+
+        // Hash the password
+        const passwordHash = await bcrypt.hash(newPassword, 12);
+
+        // Update the user's password
+        user.passwordHash = passwordHash;
+        await user.save();
+
+        res.status(200).json({ message: 'Password changed successfully' });
+        console.log(`${req.sessionID} - Request Success: ${req.method}  ${req.originalUrl}`);
+
+    } catch (err) {
+        if (err.message.includes('Bad Request')) {
+            res.status(400).json({
+                status: "fail",
+                message: err.message,
+                description: `Bad Request: Failed to change password`,
             });
         } else {
             res.status(500).json({
