@@ -94,7 +94,7 @@ const SingleEventPage = () => {
     }
 
     const handleEdit = async() => {
-        navigate(`/club/${clubName}/edit/${eventId}`);
+        navigate(`/club/${clubName}/event/edit/${eventId}`);
       }
       //TODO
     const handleDelete = async () => {

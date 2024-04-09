@@ -50,7 +50,7 @@ const EditPostPage = () => {
             const response = await postApi.editPost(clubName, postId, formData);
             
             if(response.status === 201){
-                navigate(`/club/${clubName}`);
+                navigate(-1);
             } else if(response.status === 400){
                 setErrorMessage(response.error);
             }

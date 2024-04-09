@@ -44,7 +44,7 @@ const EditEventPage = () => {
         try {
             const response = await eventApi.editEvent(clubName, eventId, { title: eventTitle, description: eventDescription, date: eventDate, locaiton: eventLocation});
             if(response.status === 201){
-                navigate(`/club/${clubName}/${eventId}`);
+                navigate(-1);
             } else if(response.status === 400){
                 setErrorMessage(response.error);
             }
@@ -65,7 +65,7 @@ const EditEventPage = () => {
         <div className="edit-event-page">
             <div className="login-container">
                 <h2>Edit Event</h2>
-                <form onSubmit={handleEventEdit}>
+                <form>
                     <input
                         type="text"
                         placeholder="Enter the title of the event"
@@ -88,7 +88,7 @@ const EditEventPage = () => {
                         value={eventLocation}
                         onChange={(e) => setEventLocation(e.target.value)}
                     />
-                    <button type="submit">Save</button>
+                    <button onClick={handleEventEdit} type="submit">Save</button>
                 </form>
                 <button onClick={handleCancel}>Cancel</button>
                 {errorMessage && <p className="error-message">{errorMessage}</p>}
