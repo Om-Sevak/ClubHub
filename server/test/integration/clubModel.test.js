@@ -72,7 +72,7 @@ describe("Testing Club Mongo Model", () => {
           .send({ email: "john@example.com", password: 'password' });
 
         const editClubRes = await testSession.put('/club/test')
-            .send({name: 'test club', descirption: 'testing editing', email: 'johnny@example.ca', interest: ["Coding","Sports","Business"]})
+            .send({name: 'test club', descirption: 'testing editing', email: 'johnny@example.ca', interest: "Coding,Sports,Business,Technology,Art"})
             .expect(201);
         
         const club = await Club.findOne({name: "test club"});

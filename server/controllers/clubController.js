@@ -50,7 +50,7 @@ exports.createClub = async(req, res) => {
 
                 const interestArray = interest.split(",");
                 if (interestArray.length < MAX_INTERESTS_PER_CLUB){
-                    throw new Error('Bad Request: Please select at least 3 interests');
+                    throw new Error('Bad Request: Please select at least 5 interests');
                 }
         
                 const userEmail = req.session.email
@@ -178,6 +178,7 @@ exports.editClub = async (req, res) => {
             const body = JSON.parse(JSON.stringify(req.body));
             const { name, description, email, interest } = body;
             const interestsArray = interest.split(",");
+            
 
             if (err) {
                 console.error('Error uploading profile picture:', err);

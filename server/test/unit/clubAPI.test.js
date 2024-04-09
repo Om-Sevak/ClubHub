@@ -135,7 +135,7 @@ describe('Club Endpoints', () => {
                 .expect(200);
 
             const editClubRes = await testSession.put('/club/test club')
-                .send({name: 'test club', descirption: 'testing editing', email: 'johnny@example.ca', interest: ["Coding","Sports","Business"]})
+                .send({name: 'test club', descirption: 'testing editing', email: 'johnny@example.ca', interest: "Coding,Sports,Business,Technology,Art"})
                 .expect(201);
         });
 
@@ -213,7 +213,7 @@ describe('Club Endpoints', () => {
                 .expect(200);
 
                 const editClubRes = await testSession.put('/club/test club')
-                .send({name: 'test club', descirption: 'testing editing', email: 'johnny@example.com', interest: ["Coding","Sports"]})
+                .send({name: 'test club', descirption: 'testing editing', email: 'johnny@example.com', interest: "Coding,Sports"})
                 .expect(400);
         });
     })
