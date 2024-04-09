@@ -45,7 +45,7 @@ const EditPostPage = () => {
         try {
             const formData = new FormData();
             formData.append('title', postTitle);
-            formData.append('contents', postContents);
+            formData.append('content', postContents);
             formData.append('image', postImage);
             const response = await postApi.editPost(clubName, postId, formData);
             
