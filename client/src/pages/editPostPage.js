@@ -65,7 +65,8 @@ const EditPostPage = () => {
         }
     };
 
-    const handleCancel = () => {
+    const handleCancel = async (e) => {
+        e.preventDefault();
         navigate(-1);
     };
 
@@ -75,7 +76,7 @@ const EditPostPage = () => {
             <div className="edit-post-col">
                 <div className="edit-post-container">
                     <h2>Edit Post</h2>
-                    <form onSubmit={handlePostEdit}>
+                    <form>
                         <input
                             type="text"
                             placeholder="Enter the title of the post"
@@ -99,7 +100,8 @@ const EditPostPage = () => {
                         </label>
                         <br />
                         {isLoading && <LoadingSpinner />}
-                        {!isLoading && <button type="submit">Save</button>}
+                        {!isLoading && <button onClick={handlePostEdit}>Save</button>}
+                        {!isLoading && <button onClick={handleCancel}>Cancel</button>}
                     </form>
                      {/* Conditionally render the loading spinner */}
                     {errorMessage && <p className="error-message">{errorMessage}</p>}
