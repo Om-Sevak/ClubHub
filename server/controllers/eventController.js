@@ -1,3 +1,17 @@
+/*
+Core Feature(s): Event Management
+Expected Input Type: (body or URL)
+Expected Input: (req.body)
+    - title: String (Title of the event)
+    - description: String (Description of the event)
+    - date: Date (Date of the event)
+    - location: String (Location of the event)
+    - clubName: String (Name of the club associated with the event)
+Expected Output Structure: JSON response with appropriate status code and message
+Expected Errors: Error message if there is an issue creating, getting, editing, or deleting events
+Purpose: Allows users to create, get, edit, and delete events associated with clubs.
+*/
+
 const Club = require("../models/clubModel");
 const Event = require("../models/clubEventModel");
 const User = require("../models/userModel");
@@ -5,6 +19,7 @@ const ClubMembership = require("../models/clubMembershipsModel");
 const utils = require("../utils/utils");
 const clubRole = require("./clubroleController");
 
+//// Function to create a new event
 exports.createEvent = async (req, res) => {
     try {
         console.log(`${req.sessionID} - ${req.session.email} is requesting to create an event. Changes: ${JSON.stringify(req.body)}`);
@@ -62,6 +77,7 @@ exports.createEvent = async (req, res) => {
     }
 };
 
+//Function to retrieve all events for a club
 exports.getEventsForClub = async (req, res) => {
     try {
         // Find all events for the given clubId
@@ -99,6 +115,7 @@ exports.getEventsForClub = async (req, res) => {
     }
 };
 
+// Function to retrieve a specific event
 exports.getEvent = async (req, res) => {
     try {
         console.log(`${req.sessionID} - ${req.session.email} requesting GET on ${req.params.event}`);
@@ -138,6 +155,7 @@ exports.getEvent = async (req, res) => {
     }
 }
 
+//Function to edit an event
 exports.editEvent = async (req, res) => {
     try {
         console.log(`${req.sessionID} - ${req.session.email} is requesting to edit event ${req.params.event}. Changes: ${JSON.stringify(req.body)}`);
@@ -203,6 +221,7 @@ exports.editEvent = async (req, res) => {
     }
 };
 
+//Function to delete an event
 exports.deleteEvent = async (req, res) => {
     try {
         console.log(`${req.sessionID} - ${req.session.email} is requesting to delete event ${req.params.event}`);
@@ -257,6 +276,7 @@ exports.deleteEvent = async (req, res) => {
     }
 };
 
+//Function to retrieve events for browsing
 exports.getEventsBrowse = async (req, res) => {
     try {
         console.log(`${req.sessionID} - Request for Events to browse on ${JSON.stringify(req.body)}`);
@@ -361,6 +381,7 @@ exports.getEventsBrowse = async (req, res) => {
     }
 };
 
+//// Function to retrieve all upcoming events
 exports.getAllEvents = async (req, res) => {
     try {
       console.log(`${req.sessionID} - ${req.session.email} is requesting to get all events`);
@@ -392,6 +413,7 @@ exports.getAllEvents = async (req, res) => {
     }
   };
 
+  //// Function to retrieve events for a specific user
 exports.getEventsForUser = async (req, res) => {
     try {
         console.log(`${req.sessionID} - ${req.session.email} requesting GET clubs and events for user with ID: ${req.params.userId}`);
