@@ -1,3 +1,25 @@
+/*
+
+**Core Feature: User Registration**
+
+- **Expected Input Type:** Body
+- **Expected Input:** `{ firstName: string, lastName: string, email: string, password: string, interest?: string[] }`
+- **Expected Output Structure:** `{ message: string }`
+- **Expected Errors:**
+  - Bad Request: Invalid email format
+  - Bad Request: User already exists
+  - Bad Request: Password must be at least 8 characters long
+  - Bad Request: Please select at least 3 interests (if provided)
+  - Server Error
+- **Purpose:** To create a new user account with provided information, including optional interests, ensuring the validity of inputs and handling errors appropriately.
+
+*/
+
+
+
+
+
+
 // authController.js
 const User = require('../models/userModel');
 const bcrypt = require('bcryptjs');
