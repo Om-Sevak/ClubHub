@@ -1,4 +1,4 @@
-```plaintext
+
 /*
 ----
 Core Feature(s): Create/Edit Club
@@ -22,7 +22,7 @@ Expected Errors:
 Purpose: This feature allows users to create a new club with a name, description, email, and interests.
 ----
 */
-```
+
 
 
 const Club = require("../models/clubModel");
