@@ -101,6 +101,10 @@ const EditClubPage = () => {
           setIsLoading(false);
         }
     };
+
+    const handleCancel = () => {
+      navigate(-1);
+    }
     return (
         <div className="edit-club-page">
           <Header />
@@ -153,6 +157,7 @@ const EditClubPage = () => {
                       {/* Conditionally render the loading spinner */}
                       {isLoading && <LoadingSpinner />}
                       {!isLoading && <button type="submit">Save</button>}
+                      {!isLoading && <button type="button" onClick={handleCancel}>Cancel</button>}
                 </form>
                 {errorMessage && <p className="error-message">{errorMessage}</p>}
             </div>

@@ -177,8 +177,10 @@ exports.editClub = async (req, res) => {
 
             const body = JSON.parse(JSON.stringify(req.body));
             const { name, description, email, interest } = body;
-            const interestsArray = interest.split(",");
-            
+            let interestsArray = [];
+            if(interest){
+                interestsArray = interest.split(",");
+            }
 
             if (err) {
                 console.error('Error uploading profile picture:', err);
