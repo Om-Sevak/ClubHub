@@ -12,7 +12,8 @@
   display: grid; /* Allow content to be centered vertically */
 }
 
-.create-club-col {
+
+.create-club-col { 
     display: flex;
     justify-content: center;
     align-items: flex-start;
