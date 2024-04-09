@@ -44,10 +44,8 @@ const EditClubPage = () => {
         const fetchClubInterests = async () => {
             try {
               const { status: reqStatus, data: interestData } = await interestsApi.getClubInterests(clubName);
-              console.log(interestData);
               if (reqStatus === 200) {
                 const interests = interestData.interests;
-                console.log(interests);
                 const formattedOptions = interests.map(interest => ({ value: interest, label: interest}));
                 setClubInterest(formattedOptions);
               }
@@ -73,6 +71,13 @@ const EditClubPage = () => {
         clubinterest.forEach(interest => {
           interestNames.push(interest.value)
         });
+
+        if(interestNames.length < 5){
+            setErrorMessage('Please select at least 5 interests');
+            setIsLoading(false);
+            return;
+        }
+
         try {
           const formData = new FormData();
           formData.append('name', clubname);
@@ -96,6 +101,10 @@ const EditClubPage = () => {
           setIsLoading(false);
         }
     };
+
+    const handleCancel = () => {
+      navigate(-1);
+    }
     return (
         <div className="edit-club-page">
           <Header />
@@ -148,6 +157,7 @@ const EditClubPage = () => {
                       {/* Conditionally render the loading spinner */}
                       {isLoading && <LoadingSpinner />}
                       {!isLoading && <button type="submit">Save</button>}
+                      {!isLoading && <button type="button" onClick={handleCancel}>Cancel</button>}
                 </form>
                 {errorMessage && <p className="error-message">{errorMessage}</p>}
             </div>
