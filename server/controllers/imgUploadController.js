@@ -1,3 +1,12 @@
+/*
+Core Feature(s): Image Upload to Azure Blob Storage
+Expected Input Type: Binary image data (imageBuffer), string (imageType), string (AZURE_STORAGE_CONNECTION_STRING), string (CONTAINER_NAME)
+Expected Input: Image buffer, image type (e.g., "image/jpeg"), Azure storage connection string, container name
+Expected Output Structure: String (URL of the uploaded image)
+Expected Errors: Error message if there is an issue uploading the image or if there is a server error
+Purpose: Uploads an image to Azure Blob Storage and returns the URL of the uploaded image.
+*/
+
 const azure = require('@azure/storage-blob');
 const BlobServiceClient = azure.BlobServiceClient;
 const { v1: uuidv1 } = require("uuid");
