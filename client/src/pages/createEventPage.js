@@ -1,3 +1,11 @@
+ /*
+    FileName: createEventPage.js
+    FileVersion: 1
+    Core Feature(s): Have a page for each club, including calendar and general info 
+        Login as guest/user or admin
+    Purpose: (1-3 sentances): let admin create an event
+    */
+
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Calendar from 'react-calendar';

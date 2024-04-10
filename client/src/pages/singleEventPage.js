@@ -1,3 +1,10 @@
+ /*
+    FileName: singleEventPage.js
+    FileVersion: 1
+    Core Feature(s): Have a page for each club, including calendar and general info 
+    Purpose: (1-3 sentances): show the event in a single page with detailed information
+    */
+
 import React, {useEffect, useState} from 'react';
 import './singleEventPage.css';
 import { useParams } from 'react-router-dom';
