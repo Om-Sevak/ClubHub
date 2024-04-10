@@ -2,7 +2,7 @@
 
 .edit-club-page {
   /* Existing styles */
-  background-image: linear-gradient(to right, #0B3559, #7EADBF);
+  background-image: url('https://www.transparenttextures.com/patterns/geometry.png');
   background-size: cover;
   height: 100%; /* Set full viewport height */
   width: 100%; /* Set full viewport width */

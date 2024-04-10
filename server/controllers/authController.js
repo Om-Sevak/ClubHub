@@ -1,10 +1,26 @@
-// authController.js
+/*********************************************************************************
+	FileName: authController.js
+	FileVersion: 1.0
+	Core Feature(s): User Authentication, Registration, Session Management, Password Change
+	Purpose: This file contains functions related to user authentication, registration, session management, and password change in a web application. It handles user login, registration, logout, checking login status, and changing passwords securely using bcrypt for password hashing. Each function handles specific user-related tasks and interacts with the database to perform necessary operations.
+*********************************************************************************/
+
 const User = require('../models/userModel');
 const HttpError = require('../error/HttpError');
 const handleError = require('../error/handleErrors');
 const bcrypt = require('bcryptjs');
 const interestsController = require('./interestController');
 
+/*
+----
+Core Feature(s): User Authentication - Login
+Expected Input Type: (body)
+Expected Input: Email and password
+Expected Output Structure: JSON object with message
+Expected Errors: Unauthorized if invalid credentials, Server Error if database operation fails
+Purpose: To authenticate user login
+----
+*/
 exports.login = async (req, res) => {
     try {
         console.log(`${req.sessionID} - Is attempting login with credentials: ${JSON.stringify(req.body)}`);
@@ -36,6 +52,17 @@ exports.login = async (req, res) => {
         handleError.returnError(err, req.sessionID, res);
     }
 };
+
+/*
+----
+Core Feature(s): User Registration
+Expected Input Type: (body)
+Expected Input: User details including first name, last name, email, password, and interests (optional)
+Expected Output Structure: JSON object with message
+Expected Errors: Bad Request if input data is invalid, Server Error if database operation fails
+Purpose: To register a new user
+----
+*/
 
 exports.register = async (req, res) => {
     try {
@@ -85,6 +112,17 @@ exports.register = async (req, res) => {
     }
 };
 
+/*
+----
+Core Feature(s): Check Login Status
+Expected Input Type: (none)
+Expected Input: None
+Expected Output Structure: JSON object with login status, user's first name, last name, and email
+Expected Errors: Server Error if database operation fails
+Purpose: To check if user is logged in and retrieve user details if logged in
+----
+*/
+
 exports.isLoggedIn = async(req, res) => {
     try {
         console.log(`${req.sessionID} - Request To Check if logged in`);
@@ -121,6 +159,17 @@ exports.isLoggedIn = async(req, res) => {
     }
 };
 
+/*
+----
+Core Feature(s): User Logout
+Expected Input Type: (none)
+Expected Input: None
+Expected Output Structure: JSON object with message
+Expected Errors: Bad Request if not logged in, Server Error if database operation fails
+Purpose: To log out user
+----
+*/
+
 exports.logout = async(req, res) => {
     try {
         console.log(`${req.sessionID} - Request To Check if Logged in on`);
@@ -142,6 +191,16 @@ exports.logout = async(req, res) => {
     }
 };
 
+/*
+----
+Core Feature(s): Change User Password
+Expected Input Type: (body)
+Expected Input: Current password and new password
+Expected Output Structure: JSON object with message
+Expected Errors: Bad Request if not logged in, Unauthorized if current password is incorrect, Server Error if database operation fails
+Purpose: To allow user to change their password
+----
+*/
 exports.changePassword = async(req, res) => {
     try {
         console.log(`${req.sessionID} - Request To Change Password`);

@@ -1,3 +1,11 @@
+/*********************************************************************************
+	FileName: eventController.js
+	FileVersion: 1.0
+	Core Feature(s): Event Management, Session Management
+	Purpose: This file contains functions related to event management, including creating, editing, deleting, and retrieving events. It also includes functions for retrieving events for a specific club, user, or for browsing. Each function performs specific tasks related to event management, such as checking user authentication, club membership, and admin privileges before allowing actions like event creation or modification. The file also handles session management for authenticated users.
+*********************************************************************************/
+
+
 const Club = require("../models/clubModel");
 const Event = require("../models/clubEventModel");
 const User = require("../models/userModel");
@@ -6,6 +14,17 @@ const HttpError = require('../error/HttpError');
 const handleError = require('../error/handleErrors');
 const utils = require("../utils/utils");
 const clubRole = require("./clubroleController");
+
+/*
+----
+Core Feature(s): Event Creation
+Expected Input Type: (body)
+Expected Input: Event details including title, description, date, location, and clubName
+Expected Output Structure: JSON object with message confirming event creation
+Expected Errors: Not Found, Unauthorized, Server Error
+Purpose: This function creates a new event for a specified club. It validates the user's authentication status, checks if the user is an admin of the club, and then creates the event if all conditions are met.
+----
+*/
 
 exports.createEvent = async (req, res) => {
     try {
@@ -44,6 +63,17 @@ exports.createEvent = async (req, res) => {
     }
 };
 
+/*
+----
+Core Feature(s): Event Retrieval
+Expected Input Type: (URL parameters)
+Expected Input: Club name
+Expected Output Structure: JSON object with events for the specified club
+Expected Errors: Not Found, Server Error
+Purpose: This function retrieves all events associated with a specific club. It checks if the club exists, then fetches the events belonging to that club.
+----
+*/
+
 exports.getEventsForClub = async (req, res) => {
     try {
         // Find all events for the given clubId
@@ -67,6 +97,16 @@ exports.getEventsForClub = async (req, res) => {
     }
 };
 
+/*
+----
+Core Feature(s): Event Retrieval
+Expected Input Type: (URL parameters)
+Expected Input: Event ID
+Expected Output Structure: JSON object with event details
+Expected Errors: Not Found, Server Error
+Purpose: This function retrieves details of a specific event using its ID.
+----
+*/
 exports.getEvent = async (req, res) => {
     try {
         console.log(`${req.sessionID} - ${req.session.email} requesting GET on ${req.params.event}`);
@@ -91,6 +131,16 @@ exports.getEvent = async (req, res) => {
         handleError.returnError(err, req.sessionID, res);
     }
 }
+/*
+----
+Core Feature(s): Event Editing
+Expected Input Type: (body, URL parameters)
+Expected Input: Event ID, updated event details (title, description, date, location)
+Expected Output Structure: JSON object with message confirming event modification
+Expected Errors: Not Found, Unauthorized, Bad Request, Server Error
+Purpose: This function allows an admin user to edit the details of an existing event. It verifies the user's admin status for the club and updates the event details accordingly.
+----
+*/
 
 exports.editEvent = async (req, res) => {
     try {
@@ -131,6 +181,16 @@ exports.editEvent = async (req, res) => {
     }
 };
 
+/*
+----
+Core Feature(s): Event Deletion
+Expected Input Type: (URL parameters)
+Expected Input: Event ID
+Expected Output Structure: JSON object with message confirming event deletion
+Expected Errors: Not Found, Unauthorized, Server Error
+Purpose: This function allows an admin user to delete an existing event. It verifies the user's admin status for the club and deletes the event if authorized.
+----
+*/
 exports.deleteEvent = async (req, res) => {
     try {
         console.log(`${req.sessionID} - ${req.session.email} is requesting to delete event ${req.params.event}`);
@@ -164,7 +224,16 @@ exports.deleteEvent = async (req, res) => {
         handleError.returnError(err, req.sessionID, res);
     }
 };
-
+/*
+----
+Core Feature(s): Event Browsing
+Expected Input Type: (body)
+Expected Input: Object with properties like limit (optional) and includeJoined (optional)
+Expected Output Structure: JSON object with events for browsing
+Expected Errors: Server Error
+Purpose: This function retrieves events for browsing, possibly with a limit and considering the user's joined clubs if available.
+----
+*/
 exports.getEventsBrowse = async (req, res) => {
     try {
         console.log(`${req.sessionID} - Request for Events to browse on ${JSON.stringify(req.body)}`);
@@ -263,6 +332,16 @@ exports.getEventsBrowse = async (req, res) => {
     }
 };
 
+/*
+----
+Core Feature(s): Event Retrieval
+Expected Input Type: (None)
+Expected Input: None
+Expected Output Structure: JSON object with all upcoming events
+Expected Errors: Server Error
+Purpose: This function retrieves all upcoming events, regardless of club or user, sorted by date.
+----
+*/
 exports.getAllEvents = async (req, res) => {
     try {
       console.log(`${req.sessionID} - ${req.session.email} is requesting to get all events`);
@@ -289,6 +368,16 @@ exports.getAllEvents = async (req, res) => {
     }
   };
 
+  /*
+----
+Core Feature(s): Event Retrieval
+Expected Input Type: (URL parameters)
+Expected Input: User ID
+Expected Output Structure: JSON object with events associated with the user's clubs
+Expected Errors: Server Error
+Purpose: This function retrieves events associated with clubs that the specified user is a member of.
+----
+*/
 exports.getEventsForUser = async (req, res) => {
     try {
         console.log(`${req.sessionID} - ${req.session.email} requesting GET clubs and events for user with ID: ${req.params.userId}`);
