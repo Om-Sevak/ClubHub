@@ -1,4 +1,10 @@
-// ToastContext.js
+/*********************************************************************************
+  FileName: ToastContext.jsx
+  FileVersion: 1.0
+  Core Feature(s): Toast notifications provider and hook
+  Purpose: This file defines a context for managing toast notifications and provides a hook for accessing the toast functionality.
+*********************************************************************************/
+
 import React, { createContext, useContext } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';

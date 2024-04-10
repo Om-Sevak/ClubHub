@@ -1,3 +1,10 @@
+/*********************************************************************************
+	FileName: ConfirmationPopup.jsx
+	FileVersion: 1.0
+	Core Feature(s): Display confirmation dialog with message and buttons
+	Purpose: This component renders a confirmation dialog with a message and two buttons: "Yes" and "No". It provides callbacks for handling user confirmation and cancellation actions.
+*********************************************************************************/
+
 import React from 'react';
 import './ConfirmationPopup.css'
 

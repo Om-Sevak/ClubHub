@@ -1,3 +1,10 @@
+/*********************************************************************************
+	FileName: EventCarousel.jsx
+	FileVersion: 1.0
+	Core Feature(s): Displaying a carousel of events
+	Purpose: This component renders a carousel of events. It fetches events from the API and displays them in a carousel format. The carousel can be navigated vertically and includes arrows for navigation.
+*********************************************************************************/
+
 import Slider from "react-slick";
 import EventCard from "./EventCard";
 import { useRef, useEffect, useState } from "react";

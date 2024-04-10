@@ -1,3 +1,10 @@
+/*********************************************************************************
+	FileName: ClubCarousel.jsx
+	FileVersion: 1.0
+	Core Feature(s): Display carousel of club cards, navigation buttons
+	Purpose: This component renders a carousel of club cards, allowing users to browse through clubs. It fetches clubs from the API, sets up settings for the Slider component, and provides navigation buttons for users to scroll through the carousel.
+*********************************************************************************/
+
 import Slider from "react-slick";
 import ClubCard from "./ClubCard";
 import { useRef, useEffect, useState } from "react";
