@@ -1,3 +1,10 @@
+/*********************************************************************************
+    FileName: editClubPage.js
+    FileVersion: 1.0
+    Core Feature(s): Edit Club Page UI and Logic
+    Purpose: This file defines the EditClubPage component, which allows users to edit the details of an existing club. Users can modify the club name, description, email, interests, and upload a new image for the club. The component handles form submission, validates input fields, communicates with the server to update the club information, and provides feedback to the user through error messages and a loading spinner while processing the update request. It also allows users to cancel the editing process and navigate back to the previous page.
+*********************************************************************************/
+
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 

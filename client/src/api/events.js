@@ -1,3 +1,10 @@
+/*********************************************************************************
+    FileName: events.js
+    FileVersion: 1.0
+    Core Feature(s): HTTP Request Handling
+    Purpose: This file provides API functions for interacting with event-related endpoints. It includes functions to retrieve all events, retrieve events for a specific club, retrieve a specific event, browse events, retrieve events for a specific user, create a new event, edit an existing event, and delete an event. These functions utilize the `sendRequest` function imported from the client module to make HTTP requests to the corresponding endpoints.
+*********************************************************************************/
+
 import sendRequest from "./client";
 
 const eventApi = {

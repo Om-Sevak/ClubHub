@@ -1,3 +1,11 @@
+/*********************************************************************************
+    FileName: registerPage.js
+    FileVersion: 1.0
+    Core Feature(s): User Registration
+    Purpose: This file defines the RegisterPage component, which is responsible for rendering the user registration form. It allows users to enter their first name, last name, email, password, and confirm password. Additionally, users can select their interests from a multi-select dropdown component. Upon submission, the form data is validated, and if successful, an API request is made to register the user. Success or error messages are displayed accordingly.
+*********************************************************************************/
+
+
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useToast } from '../components/ToastContext';

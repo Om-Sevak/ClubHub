@@ -1,3 +1,10 @@
+/*********************************************************************************
+    FileName: createPostPage.js
+    FileVersion: 1.0
+    Core Feature(s): Post Creation Page UI and Logic
+    Purpose: This file defines the PostCreatePage component, which allows users to create a new post for a specific club. Users can provide a title, contents, and an optional image for the post. The component handles form submission, validates input fields, and communicates with the server to create the post. It also handles navigation back to the club page and displays error messages and a loading spinner while processing the post creation request.
+*********************************************************************************/
+
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useParams } from 'react-router-dom';

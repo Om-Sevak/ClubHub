@@ -1,3 +1,10 @@
+/*********************************************************************************
+    FileName: interestAPI.test.js
+    FileVersion: 1.0
+    Core Feature(s): Unit Testing
+    Purpose: This file contains unit tests for the interest controller of the application. It tests functionalities such as retrieving interests for users and clubs, creating and editing interests for users and clubs, and handling various edge cases like invalid inputs and unauthorized access.
+*********************************************************************************/
+
 const request = require("supertest");
 var session = require('supertest-session');
 const app = require('../../app');
