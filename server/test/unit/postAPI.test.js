@@ -61,7 +61,7 @@ describe('Club Post Routes', () => {
   describe('POST /:name/post', () => {
     it('should create a new post for the club', async () => {
       const res = await testsession
-        .post(`/club/${club.name}/post`)
+        .post(`/post/${club.name}`)
         .send({
           title: 'New Post',
           contents: 'This is a new post',
@@ -76,7 +76,7 @@ describe('Club Post Routes', () => {
       it('should return 404 if the club does not exist', async () => {
   
         const res = await testsession
-          .post('/club/doesnotexist/post')
+          .post('/post/doesnotexist')
           .send({ title: 'Test Post', contents: 'This is a test post', date: new Date(), imgUrl: 'https://example.com/test-image.jpg' });
   
         expect(res.status).toBe(404);
@@ -90,7 +90,7 @@ describe('Club Post Routes', () => {
     describe('GET /:name/post', () => {
         it('should return all posts for the club', async () => {
           const res = await request(app)
-            .get(`/club/${club.name}/post`);
+            .get(`/post/${club.name}`);
       
           expect(res.status).toBe(200);
           expect(res.body.message).toBe('Posts found successfully');
@@ -100,7 +100,7 @@ describe('Club Post Routes', () => {
       
         it('should return 404 if the club does not exist', async () => {
           const res = await request(app)
-            .get('/club/nonexistentclub/post');
+            .get('/post/nonexistentclub');
       
           expect(res.status).toBe(404);
           expect(res.body.status).toBe('fail');
@@ -111,7 +111,7 @@ describe('Club Post Routes', () => {
           await ClubPost.deleteMany({});
       
           const res = await request(app)
-            .get(`/club/${club.name}/post`);
+            .get(`/post/${club.name}`);
       
           expect(res.status).toBe(200);
           expect(res.body.message).toBe('Posts found successfully');
@@ -124,7 +124,7 @@ describe('Club Post Routes', () => {
           const postId = post._id;
       
           const res = await testsession
-            .get(`/club/${club.name}/post/${postId}`);
+            .get(`/post/${club.name}/${postId}`);
       
           expect(res.status).toBe(200);
           expect(res.body.message).toBe('Post Found Succesfully');
@@ -137,7 +137,7 @@ describe('Club Post Routes', () => {
           const postId = post._id;
       
           const res = await testsession
-            .put(`/club/${club.name}/post/${postId}`)
+            .put(`/post/${club.name}/${postId}`)
             .send({
               title: 'Updated Post',
               contents: 'This is an updated post'
@@ -155,7 +155,7 @@ describe('Club Post Routes', () => {
           const postId = post._id;
       
           const res = await testsession
-            .delete(`/club/${club.name}/post/${postId}`);
+            .delete(`/post/${club.name}/${postId}`);
       
           expect(res.status).toBe(200);
           expect(res.body.status).toBe('success');

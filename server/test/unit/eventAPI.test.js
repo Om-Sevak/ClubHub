@@ -56,7 +56,7 @@ describe('Club Event Routes', () => {
     it('should create a new event for the club', async () => {
 
       const res = await testsession
-        .post(`/club/${club.name}/event`)
+        .post(`event/${club.name}`)
         .send({
           title: 'New Event',
           description: 'This is a new Event',
@@ -70,7 +70,7 @@ describe('Club Event Routes', () => {
 
     it('should return 403 if user is not logged in', async () => {
       const res = await request(app)
-        .post(`/club/${club.name}/event`)
+        .post(`/event/${club.name}`)
         .send({ title: 'Test Event', description: 'This is a test event', date: new Date(), location: 'Test Location' });
 
       expect(res.status).toBe(403);
@@ -80,7 +80,7 @@ describe('Club Event Routes', () => {
 
     it('should return 404 if the club does not exist', async () => {
       const res = await request(app)
-        .post('/club/doesnotexist/event')
+        .post('/event/doesnotexist')
         .send({ title: 'Test Event', description: 'This is a test event', date: new Date(), location: 'Test Location' });
 
       expect(res.status).toBe(404);
@@ -96,7 +96,7 @@ describe('Club Event Routes', () => {
       await ClubEvent.create({ title: 'Test Event', description: 'This is a test event', date: new Date(), location: 'Test Location', club: club._id });
 
       const res = await request(app)
-        .get(`/club/${club.name}/event`);
+        .get(`/event/${club.name}`);
 
       expect(res.status).toBe(200);
       expect(res.body.events.length).toBe(1);
@@ -105,7 +105,7 @@ describe('Club Event Routes', () => {
 
     it('should return 404 if the club does not exist', async () => {
       const res = await request(app)
-        .get('/club/doesnotexist/event');
+        .get('/event/doesnotexist');
 
       expect(res.status).toBe(404);
       expect(res.body.message).toContain('Not Found');
@@ -113,7 +113,7 @@ describe('Club Event Routes', () => {
 
     it('should return an empty array if there are no events', async () => {
       const res = await request(app)
-        .get(`/club/${club.name}/event`);
+        .get(`/event/${club.name}`);
 
       expect(res.status).toBe(200);
       expect(res.body.events.length).toBe(0);
@@ -128,7 +128,7 @@ describe('Club Event Routes', () => {
       const clubEvent = await ClubEvent.create({ title: 'Test Event', description: 'This is a test event', date: new Date(), location: 'Test Location', club: club._id });
   
       const res = await request(app)
-        .get(`/club/${club.name}/event/${clubEvent._id}`);
+        .get(`/event/${club.name}/${clubEvent._id}`);
   
       expect(res.status).toBe(200);
       expect(res.body.title).toBe('Test Event');
@@ -145,7 +145,7 @@ describe('Club Event Routes', () => {
       const clubEvent = await ClubEvent.create({ title: 'Test Event', description: 'This is a test event', date: new Date(), location: 'Test Location', club: club._id });
   
       const res = await testsession
-        .put(`/club/${club.name}/event/${clubEvent._id}`)
+        .put(`/event/${club.name}/${clubEvent._id}`)
         .send({
           title: 'Updated Event',
           description: 'This is an updated event',
@@ -164,7 +164,7 @@ describe('Club Event Routes', () => {
       const clubEvent = await ClubEvent.create({ title: 'Test Event', description: 'This is a test event', date: new Date(), location: 'Test Location', club: club._id });
   
       const res = await testsession
-        .delete(`/club/${club.name}/event/${clubEvent._id}`)
+        .delete(`/event/${club.name}/${clubEvent._id}`)
         .send({ email: 'test@example.com', password: 'password' });
   
       expect(res.status).toBe(200);
