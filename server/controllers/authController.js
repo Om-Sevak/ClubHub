@@ -1,13 +1,9 @@
-/*
-----
-Core Feature(s): User Authentication, Registration, Session Management, Password Change
-Expected Input Type: (body)
-Expected Input: Depending on the function, input varies (e.g., login requires email and password, register requires user details including first name, last name, email, password, and optional interests)
-Expected Output Structure: JSON object with message, login status, user's first name, last name, and email
-Expected Errors: Various error responses including Bad Request, Unauthorized, Not Found, Server Error
-Purpose: This file contains functions related to user authentication, registration, session management, and password change in a web application. It handles user login, registration, logout, checking login status, and changing passwords securely using bcrypt for password hashing. Each function handles specific user-related tasks and interacts with the database to perform necessary operations.
-----
-*/
+/*********************************************************************************
+	FileName: authController.js
+	FileVersion: 1.0
+	Core Feature(s): User Authentication, Registration, Session Management, Password Change
+	Purpose: This file contains functions related to user authentication, registration, session management, and password change in a web application. It handles user login, registration, logout, checking login status, and changing passwords securely using bcrypt for password hashing. Each function handles specific user-related tasks and interacts with the database to perform necessary operations.
+*********************************************************************************/
 
 const User = require('../models/userModel');
 const HttpError = require('../error/HttpError');

@@ -1,13 +1,9 @@
-/*
-----
-Core Feature(s): Image Upload to Azure Blob Storage
-Expected Input Type: Buffer containing image data, string specifying image MIME type, Azure storage connection string, container name
-Expected Input: Image buffer, image type, connection string, container name
-Expected Output Structure: String representing the URL of the uploaded image
-Expected Errors: Internal server error
-Purpose: This function facilitates the upload of images to Azure Blob Storage. It accepts an image buffer, MIME type, Azure storage connection string, and container name as input parameters. The function then creates a BlobServiceClient object, retrieves the container client, generates a unique blob name, and uploads the image to the specified container. Finally, it constructs and returns the URL for the uploaded image.
-----
-*/
+/*********************************************************************************
+	FileName: imgUploadController.js
+	FileVersion: 1.0
+	Core Feature(s): Image Upload to Azure Blob Storage
+	Purpose: This module provides a function for uploading images to Azure Blob Storage. It accepts an image buffer, image type, Azure Storage connection string, and container name as inputs. The function generates a unique blob name, uploads the image to the specified container, and returns the URL for the uploaded image. In case of errors during the upload process, it throws an internal server error.
+*********************************************************************************/
 
 
 const azure = require('@azure/storage-blob');

@@ -1,13 +1,11 @@
-/*
-----
-Core Feature(s): Club Posts Management
-Expected Input Type: Body (JSON), File (Image), URL (string)
-Expected Input: Title (string), Contents (string), Date (date), Image (file), Club Name (string), Post ID (string), Limit (number), Include Joined (boolean)
-Expected Output Structure: JSON objects with various fields depending on the function
-Expected Errors: Throws errors with appropriate messages for various scenarios
-Purpose: This module handles the management of posts within clubs. It allows users to create, retrieve, edit, and delete posts, as well as browse posts across multiple clubs. It includes features such as image upload to Azure Blob Storage, access control for post modification, and aggregation of posts for browsing with optional filtering. Functions are designed to interact with the database models for clubs, posts, and users, ensuring data integrity and security.
-----
-*/
+/*********************************************************************************
+	FileName: postController.js
+	FileVersion: 1.0
+	Core Feature(s): Club Posts Management
+	Purpose: This module handles the management of posts within clubs.
+     It allows users to create, retrieve, edit, and delete posts, as well as browse posts across multiple clubs.
+      It includes features such as image upload to Azure Blob Storage, access control for post modification, and aggregation of posts for browsing with optional filtering. Functions are designed to interact with the database models for clubs, posts, and users, ensuring data integrity and security.
+*********************************************************************************/
 
 
 

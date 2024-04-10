@@ -1,13 +1,9 @@
-/*
-----
-Core Feature(s): Event Management, Club Authentication, Session Management
-Expected Input Type: (body)
-Expected Input: Depending on the function, input varies (e.g., createEvent requires event details like title, description, date, location, and clubName)
-Expected Output Structure: JSON object with message and event details
-Expected Errors: Various error responses including Bad Request, Unauthorized, Not Found, Server Error
-Purpose: This file contains functions related to event management, including creating, editing, deleting, and retrieving events. It also includes functions for retrieving events for a specific club, user, or for browsing. Each function performs specific tasks related to event management, such as checking user authentication, club membership, and admin privileges before allowing actions like event creation or modification. The file also handles session management for authenticated users.
-----
-*/
+/*********************************************************************************
+	FileName: eventController.js
+	FileVersion: 1.0
+	Core Feature(s): Event Management, Session Management
+	Purpose: This file contains functions related to event management, including creating, editing, deleting, and retrieving events. It also includes functions for retrieving events for a specific club, user, or for browsing. Each function performs specific tasks related to event management, such as checking user authentication, club membership, and admin privileges before allowing actions like event creation or modification. The file also handles session management for authenticated users.
+*********************************************************************************/
 
 
 const Club = require("../models/clubModel");

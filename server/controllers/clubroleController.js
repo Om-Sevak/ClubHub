@@ -1,18 +1,14 @@
-/*
-----
-Core Feature(s): Club Role Management
-Expected Input Type: (HTTP request and response objects)
-Expected Input: HTTP requests containing session email, club name, and role details (for createRole) as URL parameters and request body
-Expected Output Structure: JSON responses indicating success messages or error details
-Expected Errors: Unauthorized, Bad Request, Not Found
-Purpose: This file contains controller and middleware functions to manage user roles within clubs. It allows users to fetch their roles in clubs, create new roles, and delete existing roles. These functions interact with the database to retrieve user and club information and handle role-related operations accordingly.
-----
-*/
+/*********************************************************************************
+	FileName: clubroleController.js
+	FileVersion: 1.0
+	Core Feature(s): Club Role Management
+	Purpose: This file contains controller and middleware functions to manage user roles within clubs. It allows users to fetch their roles in clubs, create new roles, and delete existing roles. These functions interact with the database to retrieve user and club information and handle role-related operations accordingly.
+*********************************************************************************/
 
 
 const Club = require('../models/clubModel');
 const User = require('../models/userModel');
-const ClubMemberships = require('../models/clubMembershipsModel');
+const ClubMemberships = require('../modles/clubMembershipsModel');
 const HttpError = require('../error/HttpError');
 const handleError = require('../error/handleErrors');
 

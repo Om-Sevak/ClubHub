@@ -1,13 +1,9 @@
-/*
-----
-Core Feature(s): Club Management
-Expected Input Type: (body, file, URL parameters)
-Expected Input: Club details, including name, description, email, interest, and optional club logo image, for creation, editing, deletion; Club name for retrieval; Search query for searching; Body parameters for browsing
-Expected Output Structure: JSON objects with relevant club details, messages confirming actions, or error details
-Expected Errors: Unauthorized, Bad Request, Not Found, Internal Server Error
-Purpose: This file contains controller functions for managing clubs, including creation, retrieval, editing, deletion, searching, and browsing. It handles user authentication, input validation, file uploads, and database operations related to clubs and their associated data.
-----
-*/
+/*********************************************************************************
+	FileName: clubController.js
+	FileVersion: 1.0
+	Core Feature(s): Club Management
+	Purpose: This file contains controller functions for managing clubs, including creation, retrieval, editing, deletion, searching, and browsing. It handles user authentication, input validation, file uploads, and database operations related to clubs and their associated data.
+*********************************************************************************/
 
 
 

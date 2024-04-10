@@ -1,13 +1,9 @@
-/*
-----
-Core Feature(s): Interests Management Middleware
-Expected Input Type: Body (JSON), URL (string)
-Expected Input: Interests (array of strings), Club Name (string), User Object ID (string), Email (string)
-Expected Output Structure: Array of strings (interest names) or None
-Expected Errors: Throws an error with appropriate message
-Purpose: This file contains middleware functions for managing interests related to clubs and users. It includes functions for creating, editing, and retrieving interests associated with clubs and users. Additionally, it provides functionality for uploading images to Azure Blob Storage.
-----
-*/
+/*********************************************************************************
+	FileName: interestsController.js
+	FileVersion: 1.0
+	Core Feature(s): Interests Management Middleware
+	Purpose: This file contains middleware functions for managing interests related to clubs and users. It includes functions for creating, editing, and retrieving interests associated with clubs and users. Additionally, it provides functionality for uploading images to Azure Blob Storage.
+*********************************************************************************/
 
 
 const Club = require('../models/clubModel');
