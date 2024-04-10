@@ -1,3 +1,12 @@
+```javascript
+/*********************************************************************************
+    FileName: loginPage.js
+    FileVersion: 1.0
+    Core Feature(s): User Authentication
+    Purpose: This file defines the LoginPage component, which allows users to log in to their accounts. It includes input fields for email and password, a form for submission, error message display, and a button to navigate to the registration page. The component utilizes state hooks to manage form inputs, error messages, and loading state. It also communicates with the authentication API to handle user login requests.
+*********************************************************************************/
+```
+
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './registerPage.css'; // Import CSS file for styling

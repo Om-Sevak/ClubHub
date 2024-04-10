@@ -1,3 +1,11 @@
+/*********************************************************************************
+    FileName: createClubPage.js
+    FileVersion: 1.0
+    Core Feature(s): Club Creation Page UI and Logic
+    Purpose: This file defines the ClubCreatePage component, which allows users to create a new club by providing club name, description, email, interests, and an optional club image. It handles form submission, validates input fields, and communicates with the server to create the club. The component displays error messages and a loading spinner while processing the club creation request.
+*********************************************************************************/
+
+
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './createClubPage.css'; // Import CSS file for styling

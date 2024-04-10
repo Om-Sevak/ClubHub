@@ -1,3 +1,10 @@
+/*********************************************************************************
+    FileName: PosterPage.js
+    FileVersion: 1.0
+    Core Feature(s): Displaying Post Image
+    Purpose: This file defines the PosterPage component, which is responsible for displaying the image associated with a specific post. It receives the clubName and postId parameters from the URL and uses them to fetch the post data, including the image URL, from the API. The component then renders the Poster component, passing the image URL as a prop.
+*********************************************************************************/
+
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import Calendar from 'react-calendar';

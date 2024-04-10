@@ -1,3 +1,10 @@
+/*********************************************************************************
+    FileName: editPostPage.js
+    FileVersion: 1.0
+    Core Feature(s): Edit Post Page UI and Logic
+    Purpose: This file defines the EditPostPage component, which allows users to edit the details of an existing post within a specific club. Users can modify the post title, content, and upload a new image for the post. The component handles form submission, validates input fields, communicates with the server to update the post information, and provides feedback to the user through error messages and a loading spinner while processing the update request. It also allows users to cancel the editing process and navigate back to the previous page.
+*********************************************************************************/
+
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
