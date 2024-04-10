@@ -7,6 +7,8 @@ const cors = require('cors');
 
 // Routing Endpoints
 const clubRouter = require("./routes/clubRoutes");
+const eventRouter = require("./routes/eventRoutes");
+const postRouter = require("./routes/postRoutes");
 const authRouter = require("./routes/authRoutes");
 const clubroleRouter = require("./routes/clubroleRoutes");
 const interestRouter = require("./routes/interestRoutes");
@@ -46,6 +48,10 @@ app.use(cors({
 
 // defining routes
 app.use('/club', clubRouter);
+
+app.use('/event', eventRouter);
+
+app.use('/post', postRouter);
 
 app.use('/login', authRouter);
 
