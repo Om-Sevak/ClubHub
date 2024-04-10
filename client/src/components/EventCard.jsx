@@ -1,3 +1,11 @@
+/*********************************************************************************
+	FileName: EventCard.jsx
+	FileVersion: 1.0
+	Core Feature(s): Display event details with options for editing and deletion
+	Purpose: This component renders a card displaying event details, including event name, club name, date, and icons for editing and deleting events. It also provides a confirmation popup for deleting events.
+*********************************************************************************/
+
+
 import Card from '@mui/joy/Card';
 import CardContent from '@mui/joy/CardContent';
 import logoIMG from '../assets/logoIMG.jpeg'

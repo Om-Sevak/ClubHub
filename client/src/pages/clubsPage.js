@@ -1,3 +1,10 @@
+/*********************************************************************************
+    FileName: clubsPage.js
+    FileVersion: 1.0
+    Core Feature(s): Clubs Page UI and Logic
+    Purpose: This file defines the ClubsPage component, which displays a paginated list of clubs fetched from the server. It allows users to browse through clubs, view club details, and navigate between pages using pagination. The component fetches club data from the API and handles error cases.
+*********************************************************************************/
+
 import { React, useEffect, useState } from 'react';
 import Header from '../components/Header';
 import Grid from '@mui/material/Grid';

@@ -1,3 +1,11 @@
+/*********************************************************************************
+  FileName: Poster.jsx
+  FileVersion: 1.0
+  Core Feature(s): Displaying a poster image
+  Purpose: This component renders a poster image in full size, centered on the screen.
+*********************************************************************************/
+
+
 import React from 'react';
 
 const Poster = ({ imageUrl }) => {

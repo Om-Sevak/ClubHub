@@ -1,3 +1,11 @@
+/*********************************************************************************
+  FileName: PostCard.jsx
+  FileVersion: 1.0
+  Core Feature(s): Displaying a post card with options for editing and deleting
+  Purpose: This component renders a post card with various options like editing, deleting, and viewing the post.
+*********************************************************************************/
+
+
 import { useState } from 'react';
 import Card from '@mui/joy/Card';
 import CardContent from '@mui/joy/CardContent';

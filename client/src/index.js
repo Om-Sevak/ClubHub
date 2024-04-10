@@ -1,3 +1,11 @@
+/*********************************************************************************
+    FileName: index.js
+    FileVersion: 1.0
+    Core Feature(s): Routing, Rendering
+    Purpose: This file serves as the entry point for the application. It renders the root component of the application using ReactDOM. The root component is wrapped inside a Router component from react-router-dom to enable client-side routing. The Routes component is used to define the routing configuration for different paths in the application. Each route is mapped to a specific page component, which is rendered when the corresponding URL is accessed. The ToastProvider component is used to provide toast notifications context to the entire application.
+*********************************************************************************/
+
+
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';

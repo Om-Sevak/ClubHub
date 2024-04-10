@@ -1,3 +1,11 @@
+/*********************************************************************************
+  FileName: LoadingSpinner.jsx
+  FileVersion: 1.0
+  Core Feature(s): Loading spinner component
+  Purpose: This component displays a loading spinner while content is being loaded or processed.
+*********************************************************************************/
+
+
 import React from 'react';
 import './LoadingSpinner.css'; // Import CSS file for styling
 

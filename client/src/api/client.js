@@ -1,3 +1,10 @@
+/*********************************************************************************
+    FileName: client.js
+    FileVersion: 1.0
+    Core Feature(s): HTTP Request Handling, Interceptors
+    Purpose: This file defines a generic Axios-based API client for making HTTP requests to a specified base URL. It includes interceptors for handling request and response configurations, ensuring requests are sent with credentials and error responses are appropriately handled. The `sendRequest` function allows for sending HTTP requests with different methods (GET, POST, PUT, etc.) to various endpoints.
+*********************************************************************************/
+
 import axios from 'axios';
 
 const baseURL = process.env.REACT_APP_API_BASE_URL;

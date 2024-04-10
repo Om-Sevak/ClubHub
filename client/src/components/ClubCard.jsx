@@ -1,3 +1,10 @@
+/*********************************************************************************
+	FileName: ClubCard.jsx
+	FileVersion: 1.0
+	Core Feature(s): Display club information and interests, handle click events for navigation
+	Purpose: This component renders a card representing a club. It displays the club's name, description, logo, followed status, match percentage, and interests. It also handles click events to navigate to a specific club page.
+*********************************************************************************/
+
 import Card from '@mui/joy/Card';
 import CardContent from '@mui/joy/CardContent';
 import Chip from '@mui/joy/Chip';

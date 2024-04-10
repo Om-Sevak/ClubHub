@@ -1,3 +1,11 @@
+/*********************************************************************************
+    FileName: eventAPI.test.js
+    FileVersion: 1.0
+    Core Feature(s): Unit Testing
+    Purpose: This file contains unit tests for club event-related routes of the webpage. It tests functionalities such as creating events for clubs and retrieving events belonging to a club. The tests cover scenarios like successful event creation, retrieval of events, handling unauthorized access, and handling non-existing clubs.
+*********************************************************************************/
+
+
 const request = require('supertest');
 const app = require('../../app');
 const Club = require('../../models/clubModel');

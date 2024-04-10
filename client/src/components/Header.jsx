@@ -1,3 +1,13 @@
+
+/*********************************************************************************
+  FileName: Header.jsx
+  FileVersion: 1.0
+  Core Feature(s): Navigation, User Authentication, Search
+  Purpose: This component renders the header of the application. It includes navigation links, search functionality, and user authentication options.
+*********************************************************************************/
+
+
+
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus, faHouse, faPeopleGroup, faCalendarDays, faUsersViewfinder, faArrowRightFromBracket } from "@fortawesome/free-solid-svg-icons";
 import { Tooltip } from 'react-tooltip';
