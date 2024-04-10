@@ -1,3 +1,15 @@
+/*
+----
+Core Feature(s): Interests Management Middleware
+Expected Input Type: Body (JSON), URL (string)
+Expected Input: Interests (array of strings), Club Name (string), User Object ID (string), Email (string)
+Expected Output Structure: Array of strings (interest names) or None
+Expected Errors: Throws an error with appropriate message
+Purpose: This file contains middleware functions for managing interests related to clubs and users. It includes functions for creating, editing, and retrieving interests associated with clubs and users. Additionally, it provides functionality for uploading images to Azure Blob Storage.
+----
+*/
+
+
 const Club = require('../models/clubModel');
 const Interest = require('../models/interestModel');
 const ClubInterest = require('../models/clubInterestsModel');
@@ -5,6 +17,17 @@ const UserInterest = require('../models/userInterestsModel');
 const User = require('../models/userModel');
 const HttpError = require('../error/HttpError');
 const handleError = require('../error/handleErrors');
+
+/*
+----
+Core Feature(s): Create Club Interests Middleware
+Expected Input Type: Body (JSON)
+Expected Input: Interests (array of strings), Club Name (string)
+Expected Output Structure: None
+Expected Errors: Throws an error with appropriate message
+Purpose: This middleware creates club interests by associating interests with a specific club.
+----
+*/
 
 exports.createClubInterestsMiddleware = async (interests, clubName) => {
     try {
@@ -34,6 +57,17 @@ exports.createClubInterestsMiddleware = async (interests, clubName) => {
     }
 }
 
+/*
+----
+Core Feature(s): Get User Interests Middleware
+Expected Input Type: URL (string)
+Expected Input: User Object ID (string)
+Expected Output Structure: Array of strings (interest names)
+Expected Errors: Throws an error with appropriate message
+Purpose: This middleware retrieves the interests of a user based on their user object ID.
+----
+*/
+
 
 exports.getUserInterestsMiddleware = async (userObjectId) => {
     try {
@@ -48,6 +82,18 @@ exports.getUserInterestsMiddleware = async (userObjectId) => {
         return;
     }
 }
+
+/*
+----
+Core Feature(s): Create User Interests Middleware
+Expected Input Type: Body (JSON)
+Expected Input: Interests (array of strings), Email (string)
+Expected Output Structure: None
+Expected Errors: Throws an error with appropriate message
+Purpose: This middleware creates user interests by associating interests with a specific user.
+----
+*/
+
 
 exports.createUserInterestsMiddleware = async (interests, email) => {
     try {
@@ -78,6 +124,16 @@ exports.createUserInterestsMiddleware = async (interests, email) => {
         return;
     }
 }
+/*
+----
+Core Feature(s): Edit Club Interests Middleware
+Expected Input Type: Body (JSON)
+Expected Input: New Interests (array of strings), Club Name (string)
+Expected Output Structure: None
+Expected Errors: Throws an error with appropriate message
+Purpose: This middleware edits club interests by adding new interests and removing existing ones.
+----
+*/
 
 exports.editClubInterestsMiddleware = async (newInterests, clubName) => {
     try {
@@ -126,6 +182,18 @@ exports.editClubInterestsMiddleware = async (newInterests, clubName) => {
     }
 }
 
+/*
+----
+Core Feature(s): Get All Interests
+Expected Input Type: None
+Expected Input: None
+Expected Output Structure: Array of strings (interest names)
+Expected Errors: Throws an error with appropriate message
+Purpose: This function retrieves all available interests.
+----
+*/
+
+
 exports.getAllInterests = async (req,res) => {
     try {
         console.log(`${req.sessionID} - ${req.session.email} is requesting to get all the available interests`);
@@ -144,6 +212,18 @@ exports.getAllInterests = async (req,res) => {
         handleError.returnError(err, req.sessionID, res);
     }
 }
+
+/*
+----
+Core Feature(s): Get Club Interests
+Expected Input Type: URL (string)
+Expected Input: Club Name (string)
+Expected Output Structure: Array of strings (interest names)
+Expected Errors: Throws an error with appropriate message
+Purpose: This function retrieves the interests associated with a specific club.
+----
+*/
+
 
 exports.getClubInterests = async (req,res) => {
     try {
@@ -171,6 +251,17 @@ exports.getClubInterests = async (req,res) => {
     }
 }
 
+/*
+----
+Core Feature(s): Get User Interests
+Expected Input Type: None
+Expected Input: None
+Expected Output Structure: Array of strings (interest names)
+Expected Errors: Throws an error with appropriate message
+Purpose: This function retrieves the interests of the current user.
+----
+*/
+
 exports.getUserInterests = async (req,res) => {
     try {
         console.log(`${req.sessionID} - ${req.session.email} is requesting to get user Intrests`);
@@ -195,7 +286,17 @@ exports.getUserInterests = async (req,res) => {
     }
 }
 
-// Edit user interests
+/*
+----
+Core Feature(s): Edit User Interests
+Expected Input Type: Body (JSON)
+Expected Input: Interests (array of strings)
+Expected Output Structure: None
+Expected Errors: Throws an error with appropriate message
+Purpose: This function allows the current user to edit their interests.
+----
+*/
+
 exports.editUserInterests = async (req,res) => {
     try {
         console.log(`${req.sessionID} - ${req.session.email} is requesting to edit user Intrests`);
