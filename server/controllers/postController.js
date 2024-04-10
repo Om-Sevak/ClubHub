@@ -1,3 +1,16 @@
+/*
+----
+Core Feature(s): Club Posts Management
+Expected Input Type: Body (JSON), File (Image), URL (string)
+Expected Input: Title (string), Contents (string), Date (date), Image (file), Club Name (string), Post ID (string), Limit (number), Include Joined (boolean)
+Expected Output Structure: JSON objects with various fields depending on the function
+Expected Errors: Throws errors with appropriate messages for various scenarios
+Purpose: This module handles the management of posts within clubs. It allows users to create, retrieve, edit, and delete posts, as well as browse posts across multiple clubs. It includes features such as image upload to Azure Blob Storage, access control for post modification, and aggregation of posts for browsing with optional filtering. Functions are designed to interact with the database models for clubs, posts, and users, ensuring data integrity and security.
+----
+*/
+
+
+
 const Club = require("../models/clubModel");
 const Post = require("../models/clubPostModel");
 const User = require("../models/userModel");
@@ -11,6 +24,17 @@ const multer = require('multer');
 // Multer storage configuration
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
+
+/*
+----
+Core Feature(s): Create Post
+Expected Input Type: Body (JSON), File (Image)
+Expected Input: Title (string), Contents (string), Date (date), Image (file)
+Expected Output Structure: JSON object with message field
+Expected Errors: Throws an error with appropriate message
+Purpose: Creates a new post for a club, allowing only club admins to perform this action. Handles image upload to Azure Blob Storage.
+----
+*/
 
 exports.createPost = async (req, res) => {
 
@@ -102,6 +126,17 @@ exports.createPost = async (req, res) => {
     }
 };
 
+/*
+----
+Core Feature(s): Get Posts for Club
+Expected Input Type: URL (string)
+Expected Input: Club Name (string)
+Expected Output Structure: JSON object with posts field
+Expected Errors: Throws an error with appropriate message
+Purpose: Retrieves all posts for a given club.
+----
+*/
+
 exports.getPostsForClub = async (req, res) => {
     try {
         // Find all posts for the given clubId
@@ -124,6 +159,18 @@ exports.getPostsForClub = async (req, res) => {
         handleError.returnError(err, req.sessionID, res);
     }
 };
+
+/*
+----
+Core Feature(s): Get Post
+Expected Input Type: URL (string)
+Expected Input: Post ID (string)
+Expected Output Structure: JSON object with title, content, imgUrl fields
+Expected Errors: Throws an error with appropriate message
+Purpose: Retrieves a single post by its ID.
+----
+*/
+
 
 exports.getPost = async (req, res) => {
     try {
@@ -148,6 +195,18 @@ exports.getPost = async (req, res) => {
         handleError.returnError(err, req.sessionID, res);
     }
 }
+
+/*
+----
+Core Feature(s): Edit Post
+Expected Input Type: Body (JSON), File (Image)
+Expected Input: Post ID (string), Title (string), Contents (string), Date (date), Image (file)
+Expected Output Structure: JSON object with status, message, and data fields
+Expected Errors: Throws an error with appropriate message
+Purpose: Allows club admins to edit an existing post, including updating the post content and image.
+----
+*/
+
 
 exports.editPost = async (req, res) => {
 
@@ -221,6 +280,17 @@ exports.editPost = async (req, res) => {
     }
 };
 
+/*
+----
+Core Feature(s): Delete Post
+Expected Input Type: URL (string)
+Expected Input: Post ID (string)
+Expected Output Structure: JSON object with status and message fields
+Expected Errors: Throws an error with appropriate message
+Purpose: Deletes a post by its ID, allowing only club admins to perform this action.
+----
+*/
+
 exports.deletePost = async (req, res) => {
     try {
         console.log(`${req.sessionID} - ${req.session.email} is requesting to delete post ${req.params.post}`);
@@ -254,6 +324,17 @@ exports.deletePost = async (req, res) => {
         handleError.returnError(err, req.sessionID, res);
     }
 };
+
+/*
+----
+Core Feature(s): Get Posts for Browsing
+Expected Input Type: Body (JSON)
+Expected Input: Limit (number), Include Joined (boolean)
+Expected Output Structure: JSON object with posts field
+Expected Errors: Throws an error with appropriate message
+Purpose: Retrieves posts for browsing, with optional filtering by limit and inclusion of posts from clubs that the user has joined.
+----
+*/
 
 exports.getPostsBrowse = async (req, res) => {
     try {
