@@ -1,3 +1,11 @@
+ /*
+    FileName: EditEventPage.js
+    FileVersion: 1
+    Core Feature(s): Have a page for each club, including calendar and general info 
+        Login as guest/user or admin
+    Purpose: (1-3 sentances): let admin edit an event
+    */
+
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import Calendar from 'react-calendar';
