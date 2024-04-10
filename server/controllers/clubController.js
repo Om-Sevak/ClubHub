@@ -1,3 +1,16 @@
+/*
+----
+Core Feature(s): Club Management
+Expected Input Type: (body, file, URL parameters)
+Expected Input: Club details, including name, description, email, interest, and optional club logo image, for creation, editing, deletion; Club name for retrieval; Search query for searching; Body parameters for browsing
+Expected Output Structure: JSON objects with relevant club details, messages confirming actions, or error details
+Expected Errors: Unauthorized, Bad Request, Not Found, Internal Server Error
+Purpose: This file contains controller functions for managing clubs, including creation, retrieval, editing, deletion, searching, and browsing. It handles user authentication, input validation, file uploads, and database operations related to clubs and their associated data.
+----
+*/
+
+
+
 const Club = require("../models/clubModel");
 const User = require("../models/userModel")
 const ClubMembership = require('../models/clubMembershipsModel');
@@ -17,6 +30,17 @@ const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
 
 const MAX_INTERESTS_PER_CLUB = 5
+
+/*
+----
+Core Feature(s): Club Creation
+Expected Input Type: (body, file)
+Expected Input: Club details including name, description, email, interest, and an optional club logo image
+Expected Output Structure: JSON object with message confirming club creation
+Expected Errors: Unauthorized, Bad Request, Internal Server Error
+Purpose: This function allows a logged-in user to create a new club. It validates user authentication, checks for existing clubs with the same name, validates email format, and ensures at least 5 interests are selected for the club. It also handles club logo image uploads.
+----
+*/
 
 exports.createClub = async(req, res) => {
     try {
@@ -102,6 +126,16 @@ exports.createClub = async(req, res) => {
         handleError.returnError(err, req.sessionID, res);
     }
 };
+/*
+----
+Core Feature(s): Club Retrieval
+Expected Input Type: (URL parameters)
+Expected Input: Club name
+Expected Output Structure: JSON object with club details
+Expected Errors: Not Found, Server Error
+Purpose: This function retrieves details of a specific club using its name.
+----
+*/
 
 exports.getClub = async(req, res) => {
     try {
@@ -127,6 +161,17 @@ exports.getClub = async(req, res) => {
         handleError.returnError(err, req.sessionID, res);
     }
 };
+
+/*
+----
+Core Feature(s): Club Editing
+Expected Input Type: (body, file, URL parameters)
+Expected Input: Club name, updated club details including name, description, email, interest, and an optional club logo image
+Expected Output Structure: JSON object with message confirming club modification
+Expected Errors: Unauthorized, Bad Request, Internal Server Error
+Purpose: This function allows an admin user to edit the details of an existing club. It validates user authentication, checks for existing clubs with the same name (if name is changed), ensures at least 5 interests are selected for the club, and handles club logo image uploads.
+----
+*/
 
 exports.editClub = async (req, res) => {
     try {
@@ -225,6 +270,17 @@ exports.editClub = async (req, res) => {
     }
 };
 
+/*
+----
+Core Feature(s): Club Deletion
+Expected Input Type: (URL parameters)
+Expected Input: Club name
+Expected Output Structure: JSON object with message confirming club deletion
+Expected Errors: Not Found, Unauthorized, Server Error
+Purpose: This function allows an admin user to delete an existing club. It validates user authentication and admin status, deletes associated data (membership, posts, events, interests), and then deletes the club.
+----
+*/
+
 exports.deleteClub = async(req, res) => {
     try {
         console.log(`${req.sessionID} - ${req.session.email} is requesting to delete club ${ req.params.name}`);
@@ -264,6 +320,17 @@ exports.deleteClub = async(req, res) => {
     }
 };
 
+/*
+----
+Core Feature(s): Club Search
+Expected Input Type: (URL parameters)
+Expected Input: Search query
+Expected Output Structure: JSON object with array of club names matching the search query
+Expected Errors: Server Error
+Purpose: This function retrieves club names that match a given search query.
+----
+*/
+
 exports.getClubs = async(req, res) => {
     try {
         console.log(`${req.sessionID} - Request Get on ${ req.params.query}`);
@@ -282,6 +349,17 @@ exports.getClubs = async(req, res) => {
         handleError.returnError(err, req.sessionID, res);
     }
 };
+
+/*
+----
+Core Feature(s): Club Browsing
+Expected Input Type: (body)
+Expected Input: Object with properties like limit (optional) and includeJoined (optional)
+Expected Output Structure: JSON object with array of clubs for browsing
+Expected Errors: Server Error
+Purpose: This function retrieves clubs for browsing, possibly with a limit and considering the user's joined clubs if available. It also calculates the percentage match of recommended clubs based on user interests.
+----
+*/
 
 exports.getClubsBrowse = async (req, res) => {
     try {
