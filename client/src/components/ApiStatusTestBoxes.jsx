@@ -1,3 +1,11 @@
+/*********************************************************************************
+    FileName: ApiRequestTestBoxes.jsx
+    FileVersion: 1.0
+    Core Feature(s): API Request Status Display
+    Purpose: This component fetches data from the server using different HTTP methods (GET, POST, PUT, DELETE) and displays the status of each request.
+*********************************************************************************/
+
+
 import { useEffect, useState } from "react";
 import clubApi from "../api/clubs";
 

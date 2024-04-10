@@ -1,3 +1,12 @@
+/*********************************************************************************
+  FileName: PostCarousel.jsx
+  FileVersion: 1.0
+  Core Feature(s): Displaying a carousel of post cards
+  Purpose: This component renders a carousel of post cards fetched from the server.
+           It dynamically adjusts the number of posts per row based on the screen width.
+*********************************************************************************/
+
+
 import Slider from "react-slick";
 import PostCard from "./PostCard";
 import { useRef, useEffect, useState } from "react";

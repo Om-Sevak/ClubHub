@@ -1,3 +1,10 @@
+/*********************************************************************************
+  FileName: UserProfile.jsx
+  FileVersion: 1.0
+  Core Feature(s): User profile modal with change password functionality
+  Purpose: This component renders a user profile modal with the option to change password.
+**********************************************************************************/
+
 import React, { useState } from 'react';
 import { Modal} from '@mui/material';
 import './UserProfile.css';

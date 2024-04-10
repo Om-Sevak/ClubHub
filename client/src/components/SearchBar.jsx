@@ -1,3 +1,11 @@
+/*********************************************************************************
+  FileName: SearchBar.jsx
+  FileVersion: 1.0
+  Core Feature(s): Searching for clubs
+  Purpose: This component provides a search bar to search for clubs.
+*********************************************************************************/
+
+
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons"
 import clubApi from "../api/clubs";
