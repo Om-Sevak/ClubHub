@@ -56,7 +56,7 @@ describe('Club Event Routes', () => {
     it('should create a new event for the club', async () => {
 
       const res = await testsession
-        .post(`event/${club.name}`)
+        .post(`/event/${club.name}`)
         .send({
           title: 'New Event',
           description: 'This is a new Event',
