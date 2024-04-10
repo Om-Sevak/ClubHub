@@ -54,7 +54,7 @@ describe("Testing ClubMembership Mongo Model", () => {
             .send({name: 'testingg', descirption: 'Test description', email: 'johnny@example.com', interest: "Coding,Sports,Technology,Art,Science"})
             .expect(200);
 
-        const req = await testSession.post('/club/testingg/event')
+        const req = await testSession.post('/event/testingg')
             .send({title: "test", description: "test", date: "2022-02-02", location: "test"})
             .expect(200);
         
@@ -70,7 +70,7 @@ describe("Testing ClubMembership Mongo Model", () => {
         await testSession.post('/login')
           .send({ email: "john3@example.com", password: 'password' });
 
-        const req = await testSession.put(`/club/testingg/event/${eventID}`)
+        const req = await testSession.put(`/event/testingg/${eventID}`)
             .send({title: "testing", description: "test", date: "2022-02-02", location: "test"})
             .expect(201);
         
@@ -85,7 +85,7 @@ describe("Testing ClubMembership Mongo Model", () => {
         await testSession.post('/login')
           .send({ email: "john3@example.com", password: 'password' });
 
-        const req = await testSession.delete(`/club/testingg/event/${eventID}`)
+        const req = await testSession.delete(`/event/testingg/${eventID}`)
             .expect(200);
         
         const event = await ClubEvent.findOne({title: "testing"});

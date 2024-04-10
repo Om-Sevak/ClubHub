@@ -1,6 +1,19 @@
+/*********************************************************************************
+	FileName: postController.js
+	FileVersion: 1.0
+	Core Feature(s): Club Posts Management
+	Purpose: This module handles the management of posts within clubs.
+     It allows users to create, retrieve, edit, and delete posts, as well as browse posts across multiple clubs.
+      It includes features such as image upload to Azure Blob Storage, access control for post modification, and aggregation of posts for browsing with optional filtering. Functions are designed to interact with the database models for clubs, posts, and users, ensuring data integrity and security.
+*********************************************************************************/
+
+
+
 const Club = require("../models/clubModel");
 const Post = require("../models/clubPostModel");
 const User = require("../models/userModel");
+const HttpError = require('../error/HttpError');
+const handleError = require('../error/handleErrors');
 const utils = require("../utils/utils");
 const clubRole = require("./clubroleController");
 const uploadImage = require("./imgUploadController");
@@ -9,6 +22,17 @@ const multer = require('multer');
 // Multer storage configuration
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
+
+/*
+----
+Core Feature(s): Create Post
+Expected Input Type: Body (JSON), File (Image)
+Expected Input: Title (string), Contents (string), Date (date), Image (file)
+Expected Output Structure: JSON object with message field
+Expected Errors: Throws an error with appropriate message
+Purpose: Creates a new post for a club, allowing only club admins to perform this action. Handles image upload to Azure Blob Storage.
+----
+*/
 
 exports.createPost = async (req, res) => {
 
@@ -28,16 +52,16 @@ exports.createPost = async (req, res) => {
             try {
                 const club = await Club.findOne({ name: req.params.name});
                 if (!club) {
-                    throw new Error('Not Found: Fail to create post as club DNE');
+                    throw new HttpError(404,'Not Found: Fail to create post as club DNE');
                 }
 
                 if (!req.session.isLoggedIn) {
-                    throw new Error('Unauthorized: Must sign in to add post');
+                    throw new HttpError(403,'Unauthorized: Must sign in to add post');
                 }
 
                 const isAdmin = await clubRole.isClubAdminMiddleware(req.session.email, req.params.name);
                 if (!isAdmin) {
-                    throw new Error('Unauthorized: Only admins can add posts');
+                    throw new HttpError(403,'Unauthorized: Only admins can add posts');
                 }
 
                 const clubObjectId = club._id;
@@ -96,17 +120,20 @@ exports.createPost = async (req, res) => {
         });
 
     } catch (err) {
-
-        res.status(500).json({
-            status: "fail",
-            message: err.message,
-            description: `Bad Request: Server Error`
-        });
-        console.log(`${req.sessionID} - Server Error: ${err}`)
-        
-        console.log(`${req.sessionID} - Request Failed: ${err.message}`);
+        handleError.returnError(err, req.sessionID, res);
     }
 };
+
+/*
+----
+Core Feature(s): Get Posts for Club
+Expected Input Type: URL (string)
+Expected Input: Club Name (string)
+Expected Output Structure: JSON object with posts field
+Expected Errors: Throws an error with appropriate message
+Purpose: Retrieves all posts for a given club.
+----
+*/
 
 exports.getPostsForClub = async (req, res) => {
     try {
@@ -115,7 +142,7 @@ exports.getPostsForClub = async (req, res) => {
         
         const club = await Club.findOne({ name: req.params.name});
         if (!club) {
-            throw new Error('Not Found: Fail to get posts as club DNE');
+            throw new HttpError(404,'Not Found: Fail to get posts as club DNE');
         }
         const clubObjectId = club._id;
         const posts = await Post.find({ club: clubObjectId }).sort({date: 'desc'});
@@ -127,23 +154,21 @@ exports.getPostsForClub = async (req, res) => {
 
         console.log(`${req.sessionID} - Request Success: ${req.method}  ${req.originalUrl}`);
     } catch (err) {
-        if (err.message.includes('Not Found')) {
-            res.status(404).json({
-                status: "fail",
-                message: err.message,
-                description: `Not Found: Fail to get posts as ${req.params.name} DNE`,
-            });
-        } else {
-            res.status(500).json({
-                status: "fail",
-                message: err.message,
-                description: `Bad Request: Server Error`,
-            });
-            console.log(`${req.sessionID} - Server Error: ${err}`)
-        }
-        console.log(`${req.sessionID} - Request Failed: ${err.message}`);
+        handleError.returnError(err, req.sessionID, res);
     }
 };
+
+/*
+----
+Core Feature(s): Get Post
+Expected Input Type: URL (string)
+Expected Input: Post ID (string)
+Expected Output Structure: JSON object with title, content, imgUrl fields
+Expected Errors: Throws an error with appropriate message
+Purpose: Retrieves a single post by its ID.
+----
+*/
+
 
 exports.getPost = async (req, res) => {
     try {
@@ -152,7 +177,7 @@ exports.getPost = async (req, res) => {
         const post = await Post.findOne({_id: req.params.post});
         
         if (!post) {
-            throw new Error('Not Found: Fail to get post as post DNE');
+            throw new HttpError(404,'Not Found: Fail to get post as post DNE');
         }
         
 
@@ -165,23 +190,21 @@ exports.getPost = async (req, res) => {
 
         console.log(`${req.sessionID} - Request Success: ${req.method}  ${req.originalUrl}`);
     } catch (err) {
-        if (err.message.includes('Not Found')) {
-            res.status(404).json({
-                status: "fail",
-                message: err.message,
-                description: `Not Found: Fail to get post as ${req.params.name} DNE`,
-            });
-        } else {
-            res.status(500).json({
-                status: "fail",
-                message: err.message,
-                description: `Bad Request: Server Error`,
-            });
-            console.log(`${req.sessionID} - Server Error: ${err}`)
-        }
-        console.log(`${req.sessionID} - Request Failed: ${err.message}`);
+        handleError.returnError(err, req.sessionID, res);
     }
 }
+
+/*
+----
+Core Feature(s): Edit Post
+Expected Input Type: Body (JSON), File (Image)
+Expected Input: Post ID (string), Title (string), Contents (string), Date (date), Image (file)
+Expected Output Structure: JSON object with status, message, and data fields
+Expected Errors: Throws an error with appropriate message
+Purpose: Allows club admins to edit an existing post, including updating the post content and image.
+----
+*/
+
 
 exports.editPost = async (req, res) => {
 
@@ -205,16 +228,16 @@ exports.editPost = async (req, res) => {
                 
                 const post = await Post.findOne({ _id: req.params.post });
                 if (!post) {
-                    throw new Error('Not Found: Fail to edit club as DNE');
+                    throw new HttpError(404,'Not Found: Fail to edit club as DNE');
                 }
 
                 if (!req.session.isLoggedIn) {
-                    throw new Error('Unauthorized: Must sign in to edit a club');
+                    throw new HttpError(403,'Unauthorized: Must sign in to edit a club');
                 }
 
                 const isAdmin = await clubRole.isClubAdminMiddleware(req.session.email, req.params.name);
                 if (!isAdmin) {
-                    throw new Error('Unauthorized: Only admins can modify the club.');
+                    throw new HttpError(403,'Unauthorized: Only admins can modify the club.');
                 }
 
                 // Handle image upload
@@ -233,7 +256,7 @@ exports.editPost = async (req, res) => {
 
                 const updateStatus = await Post.updateOne({ _id: req.params.post }, body);
                 if (!updateStatus.acknowledged) {
-                    throw err;
+                    throw new HttpError(400,'Bad Request: Failed to edit post.');
                 }
 
                 res.status(201).json({
@@ -246,48 +269,25 @@ exports.editPost = async (req, res) => {
                 console.log(`${req.sessionID} - Request Success: ${req.method}  ${req.originalUrl}`);
 
             } catch (err) {
-                if (err.message.includes('Unauthorized')) {
-                    res.status(403).json({
-                        status: "fail",
-                        message: err.message,
-                        description: `Unauthorized: ${req.session.email} is not and admin of club ${req.params.name}`,
-                    });
-                } else if (err.message.includes('Bad Request')) {
-                    res.status(400).json({
-                        status: "fail",
-                        message: err.message,
-                        description: `Bad Request: Failed to edit post`
-                    });
-                } else if (err.message.includes('Not Found')) {
-                    res.status(404).json({
-                        status: "fail",
-                        message: err.message,
-                        description: `Not Found: Fail to edit post as ${req.params.post} DNE`,
-                    });
-                } else {
-                    res.status(500).json({
-                        status: "fail",
-                        message: err.message,
-                        description: `Bad Request: Server Error`,
-                    });
-                    console.log(`${req.sessionID} - Server Error: ${err}`)
-                }
-                console.log(`${req.sessionID} - Request Failed: ${err.message}`);
+                handleError.returnError(err, req.sessionID, res);
             }
         });
 
     } catch (err) {
-
-        res.status(500).json({
-            status: "fail",
-            message: err.message,
-            description: `Bad Request: Server Error`
-        });
-        console.log(`${req.sessionID} - Server Error: ${err}`)
-
-        console.log(`${req.sessionID} - Request Failed: ${err.message}`);
+        handleError.returnError(err, req.sessionID, res);
     }
 };
+
+/*
+----
+Core Feature(s): Delete Post
+Expected Input Type: URL (string)
+Expected Input: Post ID (string)
+Expected Output Structure: JSON object with status and message fields
+Expected Errors: Throws an error with appropriate message
+Purpose: Deletes a post by its ID, allowing only club admins to perform this action.
+----
+*/
 
 exports.deletePost = async (req, res) => {
     try {
@@ -296,17 +296,17 @@ exports.deletePost = async (req, res) => {
         // Find the post by its ID
         const post = await Post.findOne({ _id: req.params.post });  
         if (!post) {
-            throw new Error('Not Found: Post does not exist');
+            throw new HttpError(404,'Not Found: Post does not exist');
         }
 
         // Check if the user is authorized to delete the post
         if (!req.session.isLoggedIn) {
-            throw new Error('Unauthorized: Must sign in to delete an post');
+            throw new HttpError(403,'Unauthorized: Must sign in to delete an post');
         }
         
         const isAdmin = await clubRole.isClubAdminMiddleware(req.session.email, req.params.name);
         if (!isAdmin) {
-            throw new Error('Unauthorized: Only admins can delete posts');
+            throw new HttpError(403,'Unauthorized: Only admins can delete posts');
         }
         
         // Delete the post
@@ -319,29 +319,20 @@ exports.deletePost = async (req, res) => {
         console.log(`${req.sessionID} - Request Success: ${req.method}  ${req.originalUrl}`);
 
     } catch (err) {
-        if (err.message.includes('Unauthorized')) {
-            res.status(403).json({
-                status: "fail",
-                message: err.message,
-                description: `Unauthorized: ${req.session.email} is not an admin of club ${req.params.name}`,
-            });
-        } else if (err.message.includes('Not Found')) {
-            res.status(404).json({
-                status: "fail",
-                message: err.message,
-                description: `Not Found: Fail to delete post as ${req.params.post} does not exist`,
-            });
-        } else {
-            res.status(500).json({
-                status: "fail",
-                message: err.message,
-                description: `Bad Request: Server Error`,
-            });
-            console.log(`${req.sessionID} - Server Error: ${err}`)
-        }
-        console.log(`${req.sessionID} - Request Failed: ${err.message}`);
+        handleError.returnError(err, req.sessionID, res);
     }
 };
+
+/*
+----
+Core Feature(s): Get Posts for Browsing
+Expected Input Type: Body (JSON)
+Expected Input: Limit (number), Include Joined (boolean)
+Expected Output Structure: JSON object with posts field
+Expected Errors: Throws an error with appropriate message
+Purpose: Retrieves posts for browsing, with optional filtering by limit and inclusion of posts from clubs that the user has joined.
+----
+*/
 
 exports.getPostsBrowse = async (req, res) => {
     try {
@@ -437,12 +428,6 @@ exports.getPostsBrowse = async (req, res) => {
         console.log(`${req.sessionID} - Request Success: ${req.method}  ${req.originalUrl}`);
 
     } catch (err) {
-        res.status(500).json({
-            status: "fail",
-            message: err.message,
-            description: `Bad Request: Server Error`,
-        });
-        console.log(`${req.sessionID} - Server Error: ${err}`)
-        console.log(`${req.sessionID} - Request Failed: ${err.message}`);
+        handleError.returnError(err, req.sessionID, res);
     }
 };

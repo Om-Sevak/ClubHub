@@ -70,7 +70,7 @@ describe('Club Event Routes', () => {
 
     it('should return 403 if user is not logged in', async () => {
       const res = await request(app)
-        .post(`/club/${club.name}/event`)
+        .post(`/event/${club.name}`)
         .send({ title: 'Test Event', description: 'This is a test event', date: new Date(), location: 'Test Location' });
 
       expect(res.status).toBe(403);
@@ -96,7 +96,7 @@ describe('Club Event Routes', () => {
       await ClubEvent.create({ title: 'Test Event', description: 'This is a test event', date: new Date(), location: 'Test Location', club: club._id });
 
       const res = await request(app)
-        .get(`/club/${club.name}/event`);
+        .get(`/event/${club.name}`);
 
       expect(res.status).toBe(200);
       expect(res.body.events.length).toBe(1);
@@ -105,7 +105,7 @@ describe('Club Event Routes', () => {
 
     it('should return 404 if the club does not exist', async () => {
       const res = await request(app)
-        .get('/club/doesnotexist/event');
+        .get('/event/doesnotexist');
 
       expect(res.status).toBe(404);
       expect(res.body.message).toContain('Not Found');
@@ -113,7 +113,7 @@ describe('Club Event Routes', () => {
 
     it('should return an empty array if there are no events', async () => {
       const res = await request(app)
-        .get(`/club/${club.name}/event`);
+        .get(`/event/${club.name}`);
 
       expect(res.status).toBe(200);
       expect(res.body.events.length).toBe(0);
