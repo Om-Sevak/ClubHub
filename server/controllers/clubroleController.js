@@ -8,7 +8,7 @@
 
 const Club = require('../models/clubModel');
 const User = require('../models/userModel');
-const ClubMemberships = require('../modles/clubMembershipsModel');
+const ClubMemberships = require('../models/clubMembershipsModel');
 const HttpError = require('../error/HttpError');
 const handleError = require('../error/handleErrors');
 
