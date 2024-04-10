@@ -1,9 +1,20 @@
+/*********************************************************************************
+	FileName: clubController.js
+	FileVersion: 1.0
+	Core Feature(s): Club Management
+	Purpose: This file contains controller functions for managing clubs, including creation, retrieval, editing, deletion, searching, and browsing. It handles user authentication, input validation, file uploads, and database operations related to clubs and their associated data.
+*********************************************************************************/
+
+
+
 const Club = require("../models/clubModel");
 const User = require("../models/userModel")
 const ClubMembership = require('../models/clubMembershipsModel');
 const ClubPost = require('../models/clubPostModel');
 const ClubEvent = require('../models/clubEventModel');
 const ClubInterest = require('../models/clubInterestsModel');
+const HttpError = require('../error/HttpError');
+const handleError = require('../error/handleErrors');
 const interests = require("./interestController")
 const clubRole = require("./clubroleController");
 const utils = require("../utils/utils");
@@ -15,6 +26,17 @@ const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
 
 const MAX_INTERESTS_PER_CLUB = 5
+
+/*
+----
+Core Feature(s): Club Creation
+Expected Input Type: (body, file)
+Expected Input: Club details including name, description, email, interest, and an optional club logo image
+Expected Output Structure: JSON object with message confirming club creation
+Expected Errors: Unauthorized, Bad Request, Internal Server Error
+Purpose: This function allows a logged-in user to create a new club. It validates user authentication, checks for existing clubs with the same name, validates email format, and ensures at least 5 interests are selected for the club. It also handles club logo image uploads.
+----
+*/
 
 exports.createClub = async(req, res) => {
     try {
@@ -34,23 +56,23 @@ exports.createClub = async(req, res) => {
             try {
 
                 if (!req.session.isLoggedIn) {
-                    throw new Error('Unauthorized: Must sign in to create a club');
+                    throw new HttpError(403,'Unauthorized: Must sign in to create a club');
                 }
         
                 // Validate that a club with the provided name doesn't already exist
                 const club = await Club.findOne({ name: name });
                 if (club) {
-                    throw new Error(`Bad Request: Club called ${name} already exists`);
+                    throw new  HttpError(400,`Bad Request: Club called ${name} already exists`);
                 }
                 // Validate email format
                 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
                 if (!emailRegex.test(email)) {
-                    throw new Error('Bad Request: Invalid email format');
+                    throw new  HttpError(400,'Bad Request: Invalid email format');
                 }
 
                 const interestArray = interest.split(",");
                 if (interestArray.length < MAX_INTERESTS_PER_CLUB){
-                    throw new Error('Bad Request: Please select at least 3 interests');
+                    throw new  HttpError(400,'Bad Request: Please select at least 5 interests');
                 }
         
                 const userEmail = req.session.email
@@ -92,42 +114,24 @@ exports.createClub = async(req, res) => {
                 console.log(`${req.sessionID} - Request Success: ${req.method}  ${req.originalUrl}`);
             }
             catch (err) {
-                if (err.message.includes('Unauthorized')) {
-                    res.status(403).json({
-                        status: "fail",
-                        message: err.message,
-                        description: `Unauthorized: ${req.session.email} is not an account`
-                    });
-                } else if (err.message.includes('Bad Request')) {
-                    res.status(400).json({
-                        status: "fail",
-                        message: err.message,
-                        description: `Bad Request: Failed to create club`
-                    });
-                } else {
-                    res.status(500).json({
-                        status: "fail",
-                        message: err.message,
-                        description: `Bad Request: Server Error`
-                    });
-                    console.log(`${req.sessionID} - Server Error: ${err}`)
-                }
+                handleError.returnError(err, req.sessionID, res);
             }
-
             });
 
     } catch (err) {
-
-        res.status(500).json({
-            status: "fail",
-            message: err.message,
-            description: `Bad Request: Server Error`
-        });
-        console.log(`${req.sessionID} - Server Error: ${err}`)
-        
-        console.log(`${req.sessionID} - Request Failed: ${err.message}`);
+        handleError.returnError(err, req.sessionID, res);
     }
 };
+/*
+----
+Core Feature(s): Club Retrieval
+Expected Input Type: (URL parameters)
+Expected Input: Club name
+Expected Output Structure: JSON object with club details
+Expected Errors: Not Found, Server Error
+Purpose: This function retrieves details of a specific club using its name.
+----
+*/
 
 exports.getClub = async(req, res) => {
     try {
@@ -136,7 +140,7 @@ exports.getClub = async(req, res) => {
         const club = await Club.findOne({ name: req.params.name });
 
         if (!club) {
-            throw new Error('Not Found: Fail to get club as DNE');
+            throw new HttpError(404,'Not Found: Fail to get club as DNE');
         }
         res.status(200).json({
             name: club.name,
@@ -150,23 +154,20 @@ exports.getClub = async(req, res) => {
         console.log(`${req.sessionID} - Request Success: ${req.method}  ${req.originalUrl}`);
 
     } catch (err) {
-        if (err.message.includes('Not Found')) {
-            res.status(404).json({
-                status: "fail",
-                message: err.message,
-                description: `Not Found: Fail to edit club as ${req.params.name} DNE`,
-            });
-        } else {
-            res.status(500).json({
-                status: "fail",
-                message: err.message,
-                description: `Bad Request: Server Error`,
-            });
-            console.log(`${req.sessionID} - Server Error: ${err}`)
-        }
-        console.log(`${req.sessionID} - Request Failed: ${err.message}`);
+        handleError.returnError(err, req.sessionID, res);
     }
 };
+
+/*
+----
+Core Feature(s): Club Editing
+Expected Input Type: (body, file, URL parameters)
+Expected Input: Club name, updated club details including name, description, email, interest, and an optional club logo image
+Expected Output Structure: JSON object with message confirming club modification
+Expected Errors: Unauthorized, Bad Request, Internal Server Error
+Purpose: This function allows an admin user to edit the details of an existing club. It validates user authentication, checks for existing clubs with the same name (if name is changed), ensures at least 5 interests are selected for the club, and handles club logo image uploads.
+----
+*/
 
 exports.editClub = async (req, res) => {
     try {
@@ -177,6 +178,10 @@ exports.editClub = async (req, res) => {
 
             const body = JSON.parse(JSON.stringify(req.body));
             const { name, description, email, interest } = body;
+            let interestsArray = [];
+            if(interest){
+                interestsArray = interest.split(",");
+            }
 
             if (err) {
                 console.error('Error uploading profile picture:', err);
@@ -186,33 +191,33 @@ exports.editClub = async (req, res) => {
                 // Validate email format
                 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
                 if (!emailRegex.test(email)) {
-                    throw new Error('Bad Request: Invalid email format');
+                    throw new HttpError(400,'Bad Request: Invalid email format');
                 }
 
                 if (name !== req.params.name) {
                     const newClub = await Club.findOne({ name: name });
                     if (newClub) {
-                        throw new Error(`Bad Request: club with name ${name} already exists`);
+                        throw new HttpError(400,`Bad Request: club with name ${name} already exists`);
                     }
                 }
 
                 // Checking if club exists first as we need a valid club to get possible role
                 const club = await Club.findOne({ name: req.params.name });
                 if (!club) {
-                    throw new Error('Not Found: Fail to edit club as DNE');
+                    throw new HttpError(404,'Not Found: Fail to edit club as DNE');
                 }
 
                 if (!req.session.isLoggedIn) {
-                    throw new Error('Unauthorized: Must sign in to edit a club');
+                    throw new HttpError(403,'Unauthorized: Must sign in to edit a club');
                 }
 
                 const isAdmin = await clubRole.isClubAdminMiddleware(req.session.email, req.params.name);
                 if (!isAdmin) {
-                    throw new Error('Unauthorized: Only admins can modify the club.');
+                    throw new HttpError(403,'Unauthorized: Only admins can modify the club.');
                 }
 
-                if (interest.length < 3) {
-                    throw new Error('Bad Request: Please select at least 3 interests');
+                if (interestsArray.length < 5) {
+                    throw new HttpError(400,'Bad Request: Please select at least 5 interests');
                 }
 
                  // Handle image upload
@@ -236,8 +241,10 @@ exports.editClub = async (req, res) => {
                 if (!updateStatus.acknowledged) {
                     throw err;
                 }
-
-                const clubInterests = await interests.editClubInterestsMiddleware(interest, name);
+                if(updateStatus.acknowledged){
+                    const editClubInterest = await interests.editClubInterestsMiddleware(interestsArray, req.params.name);
+                }
+                
 
                 res.status(201).json({
                     status: "success",
@@ -250,47 +257,25 @@ exports.editClub = async (req, res) => {
 
 
             } catch (err) {
-                if (err.message.includes('Unauthorized')) {
-                    res.status(403).json({
-                        status: "fail",
-                        message: err.message,
-                        description: `Unauthorized: ${req.session.email} is not and admin of club ${req.params.name}`,
-                    });
-                } else if (err.message.includes('Bad Request')) {
-                    res.status(400).json({
-                        status: "fail",
-                        message: err.message,
-                        description: `Bad Request: Failed to edit club`
-                    });
-                } else if (err.message.includes('Not Found')) {
-                    res.status(404).json({
-                        status: "fail",
-                        message: err.message,
-                        description: `Not Found: Fail to edit club as ${req.params.name} DNE`,
-                    });
-                } else {
-                    res.status(500).json({
-                        status: "fail",
-                        message: err.message,
-                        description: `Bad Request: Server Error`,
-                    });
-                    console.log(`${req.sessionID} - Server Error: ${err}`)
-                }
+                handleError.returnError(err, req.sessionID, res);
             }
 
         });
     } catch (err) {
-
-        res.status(500).json({
-            status: "fail",
-            message: err.message,
-            description: `Bad Request: Server Error`
-        });
-        console.log(`${req.sessionID} - Server Error: ${err}`)
-
-        console.log(`${req.sessionID} - Request Failed: ${err.message}`);
+        handleError.returnError(err, req.sessionID, res);
     }
 };
+
+/*
+----
+Core Feature(s): Club Deletion
+Expected Input Type: (URL parameters)
+Expected Input: Club name
+Expected Output Structure: JSON object with message confirming club deletion
+Expected Errors: Not Found, Unauthorized, Server Error
+Purpose: This function allows an admin user to delete an existing club. It validates user authentication and admin status, deletes associated data (membership, posts, events, interests), and then deletes the club.
+----
+*/
 
 exports.deleteClub = async(req, res) => {
     try {
@@ -298,16 +283,16 @@ exports.deleteClub = async(req, res) => {
         // Checking if club exists first as we need a valid club to get possible role
         const club = await Club.findOne({ name: req.params.name }); 
          if (!club) {
-            throw new Error('Not Found: Fail to delete club as DNE');
+            throw new HttpError(404,'Not Found: Fail to delete club as DNE');
         }
 
         if (!req.session.isLoggedIn) {
-            throw new Error('Unauthorized: Must sign in to delete a club');
+            throw new HttpError(403,'Unauthorized: Must sign in to delete a club');
         }
 
         const isAdmin = await clubRole.isClubAdminMiddleware(req.session.email, req.params.name);
         if (!isAdmin) {
-            throw new Error('Unauthorized: Only admins can delete the club.');
+            throw new  HttpError(403,'Unauthorized: Only admins can delete the club.');
         }
 
         await Promise.all([
@@ -327,29 +312,20 @@ exports.deleteClub = async(req, res) => {
         console.log(`${req.sessionID} - Request Success: ${req.method}  ${req.originalUrl}`);
 
     } catch (err) {
-        if (err.message.includes('Unauthorized')) {
-            res.status(403).json({
-                status: "fail",
-                message: err.message,
-                description: `Unauthorized: ${req.session.email} is not and admin of club ${req.params.name}`,
-            });
-        } else if (err.message.includes('Not Found')) {
-            res.status(404).json({
-                status: "fail",
-                message: err.message,
-                description: `Not Found: Fail to delete club as ${req.params.name} DNE`,
-            });
-        } else {
-            res.status(500).json({
-                status: "fail",
-                message: err.message,
-                description: `Bad Request: Server Error`,
-            });
-            console.log(`${req.sessionID} - Server Error: ${err}`)
-        }
-        console.log(`${req.sessionID} - Request Failed: ${err.message}`);
+        handleError.returnError(err, req.sessionID, res);
     }
 };
+
+/*
+----
+Core Feature(s): Club Search
+Expected Input Type: (URL parameters)
+Expected Input: Search query
+Expected Output Structure: JSON object with array of club names matching the search query
+Expected Errors: Server Error
+Purpose: This function retrieves club names that match a given search query.
+----
+*/
 
 exports.getClubs = async(req, res) => {
     try {
@@ -366,15 +342,20 @@ exports.getClubs = async(req, res) => {
         console.log(`${req.sessionID} - Request Success: ${req.method}  ${req.originalUrl}`);
 
     } catch (err) {
-        res.status(500).json({
-            status: "fail",
-            message: err.message,
-            description: `Bad Request: Server Error`,
-        });
-        console.log(`${req.sessionID} - Server Error: ${err}`)
-        console.log(`${req.sessionID} - Request Failed: ${err.message}`);
+        handleError.returnError(err, req.sessionID, res);
     }
 };
+
+/*
+----
+Core Feature(s): Club Browsing
+Expected Input Type: (body)
+Expected Input: Object with properties like limit (optional) and includeJoined (optional)
+Expected Output Structure: JSON object with array of clubs for browsing
+Expected Errors: Server Error
+Purpose: This function retrieves clubs for browsing, possibly with a limit and considering the user's joined clubs if available. It also calculates the percentage match of recommended clubs based on user interests.
+----
+*/
 
 exports.getClubsBrowse = async (req, res) => {
     try {
@@ -516,12 +497,6 @@ exports.getClubsBrowse = async (req, res) => {
         console.log(`${req.sessionID} - Request Success: ${req.method}  ${req.originalUrl}`);
 
     } catch (err) {
-        res.status(500).json({
-            status: "fail",
-            message: err.message,
-            description: `Bad Request: Server Error`,
-        });
-        console.log(`${req.sessionID} - Server Error: ${err}`)
-        console.log(`${req.sessionID} - Request Failed: ${err.message}`);
+        handleError.returnError(err, req.sessionID, res);
     }
 };

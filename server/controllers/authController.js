@@ -1,8 +1,26 @@
-// authController.js
+/*********************************************************************************
+	FileName: authController.js
+	FileVersion: 1.0
+	Core Feature(s): User Authentication, Registration, Session Management, Password Change
+	Purpose: This file contains functions related to user authentication, registration, session management, and password change in a web application. It handles user login, registration, logout, checking login status, and changing passwords securely using bcrypt for password hashing. Each function handles specific user-related tasks and interacts with the database to perform necessary operations.
+*********************************************************************************/
+
 const User = require('../models/userModel');
+const HttpError = require('../error/HttpError');
+const handleError = require('../error/handleErrors');
 const bcrypt = require('bcryptjs');
 const interestsController = require('./interestController');
 
+/*
+----
+Core Feature(s): User Authentication - Login
+Expected Input Type: (body)
+Expected Input: Email and password
+Expected Output Structure: JSON object with message
+Expected Errors: Unauthorized if invalid credentials, Server Error if database operation fails
+Purpose: To authenticate user login
+----
+*/
 exports.login = async (req, res) => {
     try {
         console.log(`${req.sessionID} - Is attempting login with credentials: ${JSON.stringify(req.body)}`);
@@ -11,13 +29,13 @@ exports.login = async (req, res) => {
         // Find the user by email
         const user = await User.findOne({ email });
         if (!user) {
-            throw new Error('Unauthorized: Invalid email or password' );
+            throw new HttpError(401,'Unauthorized: Invalid email or password' );
         }
 
         // Compare the provided password with the hashed password stored in the database
         const isPasswordValid = await bcrypt.compare(password, user.passwordHash);
         if (!isPasswordValid) {
-            throw new Error('Unauthorized: Invalid email or password' );
+            throw new HttpError(401,'Unauthorized: Invalid email or password' );
         }
         
         // If successful login, add userid to session
@@ -31,23 +49,20 @@ exports.login = async (req, res) => {
         console.log(`${req.sessionID} - Request Success: ${req.method}  ${req.originalUrl}`);
 
     } catch (err) {
-        if (err.message.includes('Unauthorized')) {
-            res.status(401).json({
-                status: "fail",
-                message: err.message,
-                description: `Unauthorized: Failed to login`,
-            });
-        } else {
-            res.status(500).json({
-                status: "fail",
-                message: err.message,
-                description: `Bad Request: Server Error`,
-            });
-            console.log(`${req.sessionID} - Server Error: ${err}`)
-        }
-        console.log(`${req.sessionID} - Request Failed: ${err.message}`);
+        handleError.returnError(err, req.sessionID, res);
     }
 };
+
+/*
+----
+Core Feature(s): User Registration
+Expected Input Type: (body)
+Expected Input: User details including first name, last name, email, password, and interests (optional)
+Expected Output Structure: JSON object with message
+Expected Errors: Bad Request if input data is invalid, Server Error if database operation fails
+Purpose: To register a new user
+----
+*/
 
 exports.register = async (req, res) => {
     try {
@@ -56,25 +71,25 @@ exports.register = async (req, res) => {
         // Validate email format
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (!emailRegex.test(email)) {
-            throw new Error('Bad Request: Invalid email format');
+            throw new HttpError(400,'Bad Request: Invalid email format');
         }
 
         // Check if user already exists
         const existingUser = await User.findOne({ email });
         if (existingUser) {
-            throw new Error('Bad Request: User already exists');
+            throw new HttpError(400,'Bad Request: User already exists');
         }
 
         //validate password, min length 8
         if (password.length < 8) {
-            throw new Error('Bad Request: Password must be at least 8 characters long');
+            throw new HttpError(400,'Bad Request: Password must be at least 8 characters long');
         }
 
         // Hash the password
         const passwordHash = await bcrypt.hash(password, 12);
 
         if (interest && interest.length < 3){
-            throw new Error('Bad Request: Please select at least 3 interests');
+            throw new HttpError(400,'Bad Request: Please select at least 3 interests');
         }
 
         // Create a new user
@@ -93,23 +108,20 @@ exports.register = async (req, res) => {
         console.log(`${req.sessionID} - Request Success: ${req.method}  ${req.originalUrl}`);
         
     } catch (err) {
-        if (err.message.includes('Bad Request')) {
-            res.status(400).json({
-                status: "fail",
-                message: err.message,
-                description: `Bad Request: Failed to Register`,
-            });
-        } else {
-            res.status(500).json({
-                status: "fail",
-                message: err.message,
-                description: `Bad Request: Server Error`,
-            });
-            console.log(`${req.sessionID} - Server Error: ${err}`)
-        }
-        console.log(`${req.sessionID} - Request Failed: ${err.message}`);
+        handleError.returnError(err, req.sessionID, res);
     }
 };
+
+/*
+----
+Core Feature(s): Check Login Status
+Expected Input Type: (none)
+Expected Input: None
+Expected Output Structure: JSON object with login status, user's first name, last name, and email
+Expected Errors: Server Error if database operation fails
+Purpose: To check if user is logged in and retrieve user details if logged in
+----
+*/
 
 exports.isLoggedIn = async(req, res) => {
     try {
@@ -117,43 +129,53 @@ exports.isLoggedIn = async(req, res) => {
         
         const loggedInStatus = req.session.isLoggedIn ? true : false;
 
-        let userName = "";
+        let firstName = "";
+        let lastName = "";
 
         if(loggedInStatus){
             // Get user's name
             const user = await User.findOne({ email: req.session.email });
             if(user){
-                userName = user.firstName;
+                firstName = user.firstName;
+                lastName = user.lastName;
                 //make sure its camel case
-                userName = userName.charAt(0).toUpperCase() + userName.slice(1);
+                firstName = firstName.charAt(0).toUpperCase() + firstName.slice(1);
+                lastName = lastName.charAt(0).toUpperCase() + lastName.slice(1);
             }
         }
 
         res.status(200).json({
             loggedInStatus: loggedInStatus,
-            userName: userName,
+            firstName: firstName,
+            lastName: lastName,
+            email: req.session.email,
             message: "Login Status Found"
         });
         
         console.log(`${req.sessionID} - Request Success: ${req.method}  ${req.originalUrl}`);
 
     } catch (err) {
-        res.status(500).json({
-            status: "fail",
-            message: err.message,
-            description: `Bad Request: Server Error`,
-        });
-        console.log(`${req.sessionID} - Server Error: ${err}`)
-        console.log(`${req.sessionID} - Request Failed: ${err.message}`);
+        handleError.returnError(err, req.sessionID, res);
     }
 };
+
+/*
+----
+Core Feature(s): User Logout
+Expected Input Type: (none)
+Expected Input: None
+Expected Output Structure: JSON object with message
+Expected Errors: Bad Request if not logged in, Server Error if database operation fails
+Purpose: To log out user
+----
+*/
 
 exports.logout = async(req, res) => {
     try {
         console.log(`${req.sessionID} - Request To Check if Logged in on`);
     
         if (!req.session.isLoggedIn) {
-            throw new Error('Bad Request: Must be logged in to log out (fool!)');
+            throw new  HttpError(400,'Bad Request: Must be logged in to log out (fool!)');
         }
 
         req.session.isLoggedIn = false;
@@ -165,20 +187,57 @@ exports.logout = async(req, res) => {
         console.log(`${req.sessionID} - Request Success: ${req.method}  ${req.originalUrl}`);
 
     } catch (err) {
-        if (err.message.includes('Bad Request')) {
-            res.status(400).json({
-                status: "fail",
-                message: err.message,
-                description: `Bad Request: Failed to logout`,
-            });
-        } else {
-            res.status(500).json({
-                status: "fail",
-                message: err.message,
-                description: `Bad Request: Server Error`,
-            });
-            console.log(`${req.sessionID} - Server Error: ${err}`)
+        handleError.returnError(err, req.sessionID, res);
+    }
+};
+
+/*
+----
+Core Feature(s): Change User Password
+Expected Input Type: (body)
+Expected Input: Current password and new password
+Expected Output Structure: JSON object with message
+Expected Errors: Bad Request if not logged in, Unauthorized if current password is incorrect, Server Error if database operation fails
+Purpose: To allow user to change their password
+----
+*/
+exports.changePassword = async(req, res) => {
+    try {
+        console.log(`${req.sessionID} - Request To Change Password`);
+        const { currentPassword, newPassword } = req.body;
+
+        if (!req.session.isLoggedIn) {
+            throw new HttpError(400,'Bad Request: Must be logged in to change password');
         }
-        console.log(`${req.sessionID} - Request Failed: ${err.message}`);
+
+        // Find the user by email
+        const user = await User.findOne({ email: req.session.email });
+        if (!user) {
+            throw new HttpError(404,'Not Found: User not found');
+        }
+
+        // Compare the provided password with the hashed password stored in the database
+        const isPasswordValid = await bcrypt.compare(currentPassword, user.passwordHash);
+        if (!isPasswordValid) {
+            throw new HttpError(400,'Bad Request: Invalid current password');
+        }
+
+        //validate password, min length 8
+        if (newPassword.length < 8) {
+            throw new HttpError(400,'Bad Request: Password must be at least 8 characters long');
+        }
+
+        // Hash the password
+        const passwordHash = await bcrypt.hash(newPassword, 12);
+
+        // Update the user's password
+        user.passwordHash = passwordHash;
+        await user.save();
+
+        res.status(200).json({ message: 'Password changed successfully' });
+        console.log(`${req.sessionID} - Request Success: ${req.method}  ${req.originalUrl}`);
+
+    } catch (err) {
+        handleError.returnError(err, req.sessionID, res);
     }
 };

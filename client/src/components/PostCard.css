@@ -31,7 +31,7 @@
 
 .card-post-name {
     color: black !important;
-    font-size: x-large !important;
+    font-size: 20px !important;
     font-family: 'Trebuchet MS', sans-serif !important;
     font-weight: 600;
     margin-top: 3px;
@@ -43,23 +43,27 @@
 
 .card-post-club-name {
     color: #062b54 !important;
-    font-size: large !important;
+    font-size: medium !important;
     font-family: 'Trebuchet MS', sans-serif !important;
     font-weight: 600;
     vertical-align: top;
     text-align: left;
     padding-top: 10px;
+    overflow: hidden; 
+    white-space: nowrap;  
+    text-overflow: ellipsis; 
+    max-width: 300px;
 }
 
 .card-post-club-date {
     color: #062b54 !important;
-    font-size: x-large !important;
+    font-size: 15px !important;
     font-family: 'Trebuchet MS', sans-serif !important;
     font-weight: 600;
-    margin-right: 10px;
+    margin-left: 10px;
     vertical-align: top;
     font-style: italic;
-    align-self: center;
+    text-align: left;
 }
 
 .card-post-desc {
@@ -74,6 +78,7 @@
     cursor: default;
     margin-left: 20px;
     cursor: pointer;
+    border-radius: 20%;
   }
 
 .card-post-delete-icon {
@@ -84,6 +89,7 @@
     cursor: default;
     margin-left: 20px;
     cursor: pointer;
+    border-radius: 20%;
   }
 
   .card-post-poster-icon {
@@ -93,4 +99,9 @@
     color:#062b54;
     cursor: default;
     cursor: pointer;
+    border-radius: 20%;
   }
+
+  .card-post-edit-icon:hover, .card-post-delete-icon:hover, .card-post-poster-icon:hover {
+    background: linear-gradient(45deg, #F26A4B, #F26052);
+}

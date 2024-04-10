@@ -1,6 +1,28 @@
+/*********************************************************************************
+	FileName: clubroleController.js
+	FileVersion: 1.0
+	Core Feature(s): Club Role Management
+	Purpose: This file contains controller and middleware functions to manage user roles within clubs. It allows users to fetch their roles in clubs, create new roles, and delete existing roles. These functions interact with the database to retrieve user and club information and handle role-related operations accordingly.
+*********************************************************************************/
+
+
 const Club = require('../models/clubModel');
 const User = require('../models/userModel');
 const ClubMemberships = require('../models/clubMembershipsModel');
+const HttpError = require('../error/HttpError');
+const handleError = require('../error/handleErrors');
+
+/*
+----
+
+Core Feature(s): Get Role Middleware
+Expected Input Type: (email, clubName)
+Expected Input: Email of the user requesting the role, name of the club
+Expected Output Structure: Role of the user in the club or null if user or club does not exist
+Expected Errors: Server Error
+Purpose: Middleware function to fetch the role of a user in a club. It retrieves user and club details from the database and returns the user's role in the specified club.
+----
+*/
 
 exports.getRoleMiddleware = async (email,clubName) => {
     try {
@@ -25,6 +47,18 @@ exports.getRoleMiddleware = async (email,clubName) => {
     }
 }
 
+/*
+----
+
+Core Feature(s): Create Admin Role Middleware
+Expected Input Type: (email, clubName)
+Expected Input: Email of the user requesting the role, name of the club
+Expected Output Structure: None
+Expected Errors: Server Error
+Purpose: Middleware function to create an admin role for a user in a club. It checks if the user and club exist, then creates an admin role for the user in the specified club.
+----
+*/
+
 exports.createAdminRoleMiddleware = async (email, clubName) => {
     try {
         // Find the user by email (in the session)
@@ -45,6 +79,18 @@ exports.createAdminRoleMiddleware = async (email, clubName) => {
     }
 }
 
+/*
+----
+
+Core Feature(s): Is Club Admin Middleware
+Expected Input Type: (email, clubName)
+Expected Input: Email of the user requesting the role, name of the club
+Expected Output Structure: Boolean indicating whether the user is an admin in the club
+Expected Errors: Server Error
+Purpose: Middleware function to check if a user is an admin in a club. It utilizes the getRoleMiddleware function and returns true if the user's role in the club is 'admin'.
+----
+*/
+
 exports.isClubAdminMiddleware = async (email,clubName) => {
     try {
         return (await this.getRoleMiddleware(email,clubName) == 'admin');
@@ -55,13 +101,25 @@ exports.isClubAdminMiddleware = async (email,clubName) => {
     }
 }
 
+/*
+----
+
+Core Feature(s): Get Role
+Expected Input Type: (req, res)
+Expected Input: HTTP request containing session email and club name as URL parameters
+Expected Output Structure: JSON object with user's role in the club, or error details
+Expected Errors: Unauthorized, Not Found
+Purpose: Controller function to handle HTTP requests for fetching a user's role in a club. It calls the getRoleMiddleware function, retrieves the user's role, and sends the response accordingly.
+----
+*/
+
 exports.getRole = async (req,res) => {
     try {
         console.log(`${req.sessionID} - ${req.session.email} is requesting role for club ${ req.params.name}`);
         const role = await this.getRoleMiddleware(req.session.email, req.params.name); 
         
         if (!role) {
-            throw new Error(`Not Found: Could not find role`);
+            throw new HttpError(404,`Not Found: Could not find role`);
         }
 
         res.status(200).json({
@@ -74,26 +132,21 @@ exports.getRole = async (req,res) => {
         console.log(`${req.sessionID} - Request Success: ${req.method}  ${req.originalUrl}`);
 
     } catch (err) {
-        if (err.message.includes('Not Found')) {
-            res.status(404).json({
-                status: "fail",
-                message: err.message,
-                description: `Not Found: Could not find role for user ${req.session.email} and club ${req.params.name}`,
-                data: {
-                    role: null
-                }
-            });
-        } else {
-            res.status(500).json({
-                status: "fail",
-                message: err.message,
-                description: `Bad Request: Server Error`,
-            });
-            console.log(`${req.sessionID} - Server Error: ${err}`)
-        }
-        console.log(`${req.sessionID} - Request Failed: ${err.message}`);
+        handleError.returnError(err, req.sessionID, res, {role: null})
     }
 }
+
+/*
+----
+
+Core Feature(s): Create Role
+Expected Input Type: (req, res)
+Expected Input: HTTP request containing session email, club name as URL parameter, and role details in the request body
+Expected Output Structure: Success message indicating the user has joined the club, or error details
+Expected Errors: Unauthorized, Bad Request
+Purpose: Controller function to handle HTTP requests for creating a new role in a club. It verifies user authentication, checks for existing memberships, and creates a new role for the user in the specified club.
+----
+*/
 
 exports.createRole = async (req,res) => {
     try {
@@ -101,7 +154,7 @@ exports.createRole = async (req,res) => {
         const { role } = req.body;
         
         if (!req.session.isLoggedIn) {
-            throw new Error('Unauthorized: Must sign in to join a club');
+            throw new HttpError(403,'Unauthorized: Must sign in to join a club');
         }
 
         const userEmail = req.session.email;
@@ -110,7 +163,7 @@ exports.createRole = async (req,res) => {
 
         // Validating that this user is not already a member of this club
         if (member) {
-            throw new Error(`Bad Request: You are already a member of club ${clubName}.`);
+            throw new HttpError(400,`Bad Request: You are already a member of club ${clubName}.`);
         }
 
         const club = await Club.findOne({ name: clubName })
@@ -120,7 +173,7 @@ exports.createRole = async (req,res) => {
         if (role === "admin") {
             const clubAdmin = await ClubMemberships.findOne({ club: club.id, role: "admin"})
             if (clubAdmin) {
-                throw new Error(`Bad Request: An admin already exists for club ${clubName}. A club can have at most 1 Admin`);
+                throw new HttpError(400,`Bad Request: An admin already exists for club ${clubName}. A club can have at most 1 Admin`);
             }
         }
 
@@ -134,36 +187,29 @@ exports.createRole = async (req,res) => {
         console.log(`${req.sessionID} - Request Success: ${req.method}  ${req.originalUrl}`);
     }
     catch (err) {
-        if (err.message.includes('Unauthorized')) {
-            res.status(403).json({
-                status: "fail",
-                message: err.message,
-                description: `Unauthorized: ${req.session.email} is not an account`
-            });
-        } else if (err.message.includes('Bad Request')) {
-            res.status(400).json({
-                status: "fail",
-                message: err.message,
-                description: `Bad Request: Failed to join the club`
-            });
-        } else {
-            res.status(500).json({
-                status: "fail",
-                message: err.message,
-                description: `Bad Request: Server Error`
-            });
-            console.log(`${req.sessionID} - Server Error: ${err}`)
-        }
-        console.log(`${req.sessionID} - Request Failed: ${err.message}`);
+        handleError.returnError(err, req.sessionID, res)
     }
 }
+
+/*
+----
+
+Core Feature(s): Delete Role
+Expected Input Type: (req, res)
+Expected Input: HTTP request containing session email and club name as URL parameters
+Expected Output Structure: Success message indicating the user has left the club, or error details
+Expected Errors: Unauthorized, Bad Request
+Purpose: Controller function to handle HTTP requests for deleting a role in a club. It verifies user authentication, checks for existing memberships, and deletes the user's role in the specified club.
+----
+*/
+
 
 exports.deleteRole = async(req, res) => {
     try {
         console.log(`${req.sessionID} - ${req.session.email} is requesting to leave club ${ req.params.name}`);
 
         if (!req.session.isLoggedIn) {
-            throw new Error('Unauthorized: Must sign in to delete a club');
+            throw new HttpError(403,'Unauthorized: Must sign in to delete a club');
         }
 
         const userEmail = req.session.email;
@@ -174,13 +220,13 @@ exports.deleteRole = async(req, res) => {
         const member = await this.getRoleMiddleware(userEmail, clubName);
         // Validating that this user is a member of this club
         if (!member) {
-            throw new Error(`Bad Request: You are are not a member of club ${clubName}.`);
+            throw new HttpError(400,`Bad Request: You are are not a member of club ${clubName}.`);
         }
 
         // Validating that this user is not an Admin
         const isAdmin = await this.isClubAdminMiddleware(userEmail, clubName);
         if (isAdmin) {
-            throw new Error('Bad Request: Admin can not leave the club.');
+            throw new HttpError(400,'Bad Request: Admin can not leave the club.');
         }
 
         // Delete the ClubMembership record for this user
@@ -193,26 +239,6 @@ exports.deleteRole = async(req, res) => {
         console.log(`${req.sessionID} - Request Success: ${req.method}  ${req.originalUrl}`);
 
     } catch (err) {
-        if (err.message.includes('Unauthorized')) {
-            res.status(403).json({
-                status: "fail",
-                message: err.message,
-                description: `Unauthorized: Must sign in to leave club`,
-            });
-        } else if (err.message.includes('Bad Request')) {
-            res.status(400).json({
-                status: "fail",
-                message: err.message,
-                description: `Bad Request: Failed to leave the club`
-            });
-        } else {
-            res.status(500).json({
-                status: "fail",
-                message: err.message,
-                description: `Bad Request: Server Error`,
-            });
-            console.log(`${req.sessionID} - Server Error: ${err}`)
-        }
-        console.log(`${req.sessionID} - Request Failed: ${err.message}`);
+        handleError.returnError(err, req.sessionID, res);
     }
 }

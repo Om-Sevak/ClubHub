@@ -1,3 +1,11 @@
+/*********************************************************************************
+    FileName: app.js
+    FileVersion: 1.0
+    Core Feature(s): Express Application Configuration
+    Purpose: This file configures the Express application, sets up routing endpoints, middleware, and session handling.
+*********************************************************************************/
+
+
 // Packages
 const express = require("express");
 const session = require("express-session");
@@ -7,6 +15,8 @@ const cors = require('cors');
 
 // Routing Endpoints
 const clubRouter = require("./routes/clubRoutes");
+const eventRouter = require("./routes/eventRoutes");
+const postRouter = require("./routes/postRoutes");
 const authRouter = require("./routes/authRoutes");
 const clubroleRouter = require("./routes/clubroleRoutes");
 const interestRouter = require("./routes/interestRoutes");
@@ -46,6 +56,10 @@ app.use(cors({
 
 // defining routes
 app.use('/club', clubRouter);
+
+app.use('/event', eventRouter);
+
+app.use('/post', postRouter);
 
 app.use('/login', authRouter);
 

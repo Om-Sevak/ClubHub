@@ -1,3 +1,10 @@
+ /*
+    FileName: singleEventPage.js
+    FileVersion: 1
+    Core Feature(s): Have a page for each club, including calendar and general info 
+    Purpose: (1-3 sentances): show the event in a single page with detailed information
+    */
+
 import React, {useEffect, useState} from 'react';
 import './singleEventPage.css';
 import { useParams } from 'react-router-dom';
@@ -94,7 +101,7 @@ const SingleEventPage = () => {
     }
 
     const handleEdit = async() => {
-        navigate(`/club/${clubName}/edit/${eventId}`);
+        navigate(`/club/${clubName}/event/edit/${eventId}`);
       }
       //TODO
     const handleDelete = async () => {
@@ -136,9 +143,9 @@ const SingleEventPage = () => {
             <Title_Header />
             <main>
                 <About />
-                {isAdmin &&<button onClick={handleEdit}>Edit Event</button>}
-                {isAdmin &&<button onClick={handleDelete}>Delete Event</button>}
-                <button onClick={handleBack}>Back</button>
+                {isAdmin &&<button className='single-event-page-buttons' onClick={handleEdit}>Edit Event</button>}
+                {isAdmin &&<button className='single-event-page-buttons' onClick={handleDelete}>Delete Event</button>}
+                <button className='single-event-page-buttons' onClick={handleBack}>Back</button>
                 {errorMessage && <p className="error-message">{errorMessage}</p>}
             </main>
         </div>

@@ -1,3 +1,10 @@
+/*********************************************************************************
+    FileName: editPostPage.js
+    FileVersion: 1.0
+    Core Feature(s): Edit Post Page UI and Logic
+    Purpose: This file defines the EditPostPage component, which allows users to edit the details of an existing post within a specific club. Users can modify the post title, content, and upload a new image for the post. The component handles form submission, validates input fields, communicates with the server to update the post information, and provides feedback to the user through error messages and a loading spinner while processing the update request. It also allows users to cancel the editing process and navigate back to the previous page.
+*********************************************************************************/
+
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
@@ -45,12 +52,12 @@ const EditPostPage = () => {
         try {
             const formData = new FormData();
             formData.append('title', postTitle);
-            formData.append('contents', postContents);
+            formData.append('content', postContents);
             formData.append('image', postImage);
             const response = await postApi.editPost(clubName, postId, formData);
             
             if(response.status === 201){
-                navigate(`/club/${clubName}`);
+                navigate(-1);
             } else if(response.status === 400){
                 setErrorMessage(response.error);
             }
@@ -65,7 +72,8 @@ const EditPostPage = () => {
         }
     };
 
-    const handleCancel = () => {
+    const handleCancel = async (e) => {
+        e.preventDefault();
         navigate(-1);
     };
 
@@ -75,7 +83,7 @@ const EditPostPage = () => {
             <div className="edit-post-col">
                 <div className="edit-post-container">
                     <h2>Edit Post</h2>
-                    <form onSubmit={handlePostEdit}>
+                    <form>
                         <input
                             type="text"
                             placeholder="Enter the title of the post"
@@ -98,11 +106,11 @@ const EditPostPage = () => {
                             />
                         </label>
                         <br />
-                        <button type="submit">Save</button>
+                        {isLoading && <LoadingSpinner />}
+                        {!isLoading && <button onClick={handlePostEdit}>Save</button>}
+                        {!isLoading && <button onClick={handleCancel}>Cancel</button>}
                     </form>
                      {/* Conditionally render the loading spinner */}
-                     {isLoading && <LoadingSpinner />}
-                      {!isLoading && <button type="submit">Create</button>}
                     {errorMessage && <p className="error-message">{errorMessage}</p>}
                 </div>
             </div>

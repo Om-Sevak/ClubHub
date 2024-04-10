@@ -1,3 +1,10 @@
+/*********************************************************************************
+    FileName: findClubPage.js
+    FileVersion: 1.0
+    Core Feature(s): Find Club Page UI and Logic
+    Purpose: This file defines the FindClubPage component, which allows users to find clubs based on their interests. Users can view their current interests, edit them, and see recommended clubs based on their interests. The component fetches user interests, available interests, and recommended clubs from the server upon initialization. It also handles interest editing through a modal, validates the selection of interests, and communicates with the server to save the updated interests. Additionally, it checks the user's login status and provides appropriate feedback based on whether the user is logged in or not.
+*********************************************************************************/
+
 import React, { useState,  useEffect, useRef } from 'react';
 import Grid from '@mui/material/Grid';
 import Chip from '@mui/material/Chip';
@@ -60,7 +67,7 @@ const FindClubPage = () => {
     try {
       const body = {
         "includeJoined": false,
-        "limit": 10,
+        "limit": 8,
       }
       const { status: reqStatus, data: reqData } = await clubApi.getClubsBrowse(body);
       if (reqStatus === 200) {

@@ -1,3 +1,13 @@
+
+/*********************************************************************************
+  FileName: Header.jsx
+  FileVersion: 1.0
+  Core Feature(s): Navigation, User Authentication, Search
+  Purpose: This component renders the header of the application. It includes navigation links, search functionality, and user authentication options.
+*********************************************************************************/
+
+
+
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus, faHouse, faPeopleGroup, faCalendarDays, faUsersViewfinder, faArrowRightFromBracket } from "@fortawesome/free-solid-svg-icons";
 import { Tooltip } from 'react-tooltip';
@@ -5,6 +15,7 @@ import { useEffect, useState, useRef } from "react";
 import logoSmall from '../assets/logoSmall.jpeg';
 import './Header.css';
 import SearchBar from './SearchBar';
+import UserProfile from './UserProfile';
 import { SearchResultsList } from "./SearchResultList";
 import { useNavigate } from 'react-router-dom';
 import authApi from "../api/auth";
@@ -16,7 +27,9 @@ const Header = () => {
   const [viewResults, setViewResults] = useState(false);
   const [loggedIn, setLoggedIn] = useState(false);
   const [showConfirmation, setShowConfirmation] = useState(false);
-  const [userName, setUserName] = useState("");
+  const [firstName, setfirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [userEmail, setUserEmail] = useState("");
   const navigate = useNavigate();
   const wrapperRef = useRef(null);
   const { showToast } = useToast();
@@ -28,7 +41,9 @@ const Header = () => {
      
         if (reqStatus === 200) {
           setLoggedIn(reqData.loggedInStatus);
-          setUserName(reqData.userName);
+          setfirstName(reqData.firstName);
+          setLastName(reqData.lastName);
+          setUserEmail(reqData.email);
         } else {
           throw new Error("Server Error");
         }
@@ -94,7 +109,7 @@ const Header = () => {
     if (reqStatus === 200) {
       setLoggedIn(false);
       showToast('Logout successful!');
-      navigate(`/`);
+      window.location.href = '/';
     }
     setShowConfirmation(false); 
   };
@@ -163,7 +178,7 @@ const Header = () => {
         {results && results.length > 0 && viewResults && <SearchResultsList results={results} />}
       </div>
       <div className="header-right-section">
-        {loggedIn && <span className="header-welcome-message">Hello, {userName}</span>}
+        <UserProfile loggedIn={loggedIn} firstName= {firstName} lastName = {lastName} userEmail={userEmail} />
         {loggedIn ? 
         <button className="header-logout-button"
               onClick={handleLoginLogoutClick}>

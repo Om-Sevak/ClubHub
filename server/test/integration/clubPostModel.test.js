@@ -1,3 +1,11 @@
+/*********************************************************************************
+    FileName: clubPostModel.test.js
+    FileVersion: 1.0
+    Core Feature(s): Unit Testing
+    Purpose: This file contains integration tests for the ClubPost model and its related routes. It utilizes Jest and Supertest for testing. The tests cover creating, editing, and deleting club posts. Before each test, it connects to the test database and creates a test user. After each test, it deletes the test user and closes the database connection.
+*********************************************************************************/
+
+
 const mongoose = require("mongoose");
 const request = require("supertest");
 const app = require('../../app');
@@ -55,7 +63,7 @@ describe("Testing ClubMembership Mongo Model", () => {
             .send({name: 'testinggg', descirption: 'Test description', email: 'johnny@example.com', interest: "Coding,Sports,Technology,Art,Science"})
             .expect(200);
 
-        const req = await testSession.post('/club/testinggg/post')
+        const req = await testSession.post('/post/testinggg')
             .send({title: "test", content: "test", date: "2022-02-02" })
             .expect(200);
         
@@ -71,7 +79,7 @@ describe("Testing ClubMembership Mongo Model", () => {
         await testSession.post('/login')
           .send({ email: "john4@example.com", password: 'password' });
 
-        const req = await testSession.put(`/club/testinggg/post/${postID}`)
+        const req = await testSession.put(`/post/testinggg/${postID}`)
             .send({title: "testing", description: "test", date: "2022-02-02", location: "test"})
             .expect(201);
         
@@ -86,7 +94,7 @@ describe("Testing ClubMembership Mongo Model", () => {
         await testSession.post('/login')
           .send({ email: "john4@example.com", password: 'password' });
 
-        const req = await testSession.delete(`/club/testinggg/post/${postID}`)
+        const req = await testSession.delete(`/post/testinggg/${postID}`)
             .expect(200);
         
         const post = await ClubPost.findOne({title: "testing"});

@@ -1,3 +1,11 @@
+/*********************************************************************************
+    FileName: clubPage.js
+    FileVersion: 1.0
+    Core Feature(s): Club Page UI and Logic
+    Purpose: This file defines the ClubPage component, which displays information about a specific club, including its description, events, posts, and contact details. It allows users to join or leave the club, create events or posts (if they are admins), and edit or delete the club (if they are admins). The component also handles fetching data from APIs and error handling.
+*********************************************************************************/
+
+
 import React, { useEffect, useState } from 'react';
 import logo from '../assets/logoIMG.jpeg'; // Import your logo image
 import './clubPage.css';

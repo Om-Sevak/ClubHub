@@ -1,3 +1,11 @@
+/*********************************************************************************
+    FileName: authAPI.test.js
+    FileVersion: 1.0
+    Core Feature(s): Unit Testing
+    Purpose: This file contains unit tests for authentication endpoints such as login and register. It utilizes Jest and Supertest for testing. Before each test, it connects to an in-memory MongoDB server. After each test, it disconnects from the server and stops it. The tests cover logging in with correct and incorrect credentials, registering a new user, and handling various error scenarios.
+*********************************************************************************/
+
+
 const request = require("supertest");
 const app = require('../../app');
 const { MongoMemoryServer } = require('mongodb-memory-server');

@@ -1,3 +1,11 @@
+/*********************************************************************************
+    FileName: homePage.js
+    FileVersion: 1.0
+    Core Feature(s): Home Page UI
+    Purpose: This file defines the HomePage component, which represents the landing page of the application. It displays a welcome message, carousels for clubs, events, and posts, and provides users with a glimpse of what they can find on the platform. The component includes various CSS styles for layout and design purposes, utilizes the Header component for consistent navigation, and incorporates FontAwesome icons for visual enhancements.
+*********************************************************************************/
+
+
 import React from 'react';
 import Header from '../components/Header';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"

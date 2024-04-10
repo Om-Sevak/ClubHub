@@ -1,0 +1,58 @@
+.header-welcome-message {
+    margin-top: 20px;
+    margin-right: 10px;
+    font-size: 16px;
+    font-weight: bold;
+    color: #555;
+    padding: 8px 12px;
+    border-radius: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.3s ease;
+    background: transparent;
+    width: auto;
+    text-transform: inherit;
+  }
+
+  .profile-modal {
+    position: fixed;
+    display: inline-block;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #f0f0f0; /* Your background color */
+    border-radius: 10px; /* Rounded border */
+    padding: 20px;
+    width: 25%;
+    min-width: 350px;
+  }
+
+  .user-profile-input{
+    width: 85%!important;
+  }
+
+  .user-profile-button{
+    width: fit-content;
+    display: inline;
+    margin-right: 10px;
+  }
+
+  .user-profile-button-container{
+    justify-content: center;
+  }
+
+  .error-message {
+    color: red;
+    margin-top: 5px;
+    text-align: center;
+}
+
+.change-password-container, .user-profile-information-container {
+  margin-top: 20px;
+  margin-bottom: 20px;
+  border-radius: 15px;
+  background-color: #f5f5f5;
+  border: 1px solid #e0e0e0; 
+  padding: 15px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); 
+}
+

@@ -1,3 +1,10 @@
+/*********************************************************************************
+    FileName: clubModel.test.js
+    FileVersion: 1.0
+    Core Feature(s): Unit Testing
+    Purpose: This file contains integration tests for the Club model and its related routes. It utilizes Jest and Supertest for testing. The tests cover creating, getting, editing, and deleting clubs. Before each test, it connects to the test database and creates a test user. After each test, it deletes the test user and closes the database connection.
+*********************************************************************************/
+
 const mongoose = require("mongoose");
 const request = require("supertest");
 const app = require('../../app');
@@ -72,7 +79,7 @@ describe("Testing Club Mongo Model", () => {
           .send({ email: "john@example.com", password: 'password' });
 
         const editClubRes = await testSession.put('/club/test')
-            .send({name: 'test club', descirption: 'testing editing', email: 'johnny@example.ca', interest: ["Coding","Sports","Business"]})
+            .send({name: 'test club', descirption: 'testing editing', email: 'johnny@example.ca', interest: "Coding,Sports,Business,Technology,Art"})
             .expect(201);
         
         const club = await Club.findOne({name: "test club"});

@@ -1,3 +1,10 @@
+/*********************************************************************************
+    FileName: editClubPage.js
+    FileVersion: 1.0
+    Core Feature(s): Edit Club Page UI and Logic
+    Purpose: This file defines the EditClubPage component, which allows users to edit the details of an existing club. Users can modify the club name, description, email, interests, and upload a new image for the club. The component handles form submission, validates input fields, communicates with the server to update the club information, and provides feedback to the user through error messages and a loading spinner while processing the update request. It also allows users to cancel the editing process and navigate back to the previous page.
+*********************************************************************************/
+
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
@@ -44,10 +51,8 @@ const EditClubPage = () => {
         const fetchClubInterests = async () => {
             try {
               const { status: reqStatus, data: interestData } = await interestsApi.getClubInterests(clubName);
-              console.log(interestData);
               if (reqStatus === 200) {
                 const interests = interestData.interests;
-                console.log(interests);
                 const formattedOptions = interests.map(interest => ({ value: interest, label: interest}));
                 setClubInterest(formattedOptions);
               }
@@ -73,6 +78,13 @@ const EditClubPage = () => {
         clubinterest.forEach(interest => {
           interestNames.push(interest.value)
         });
+
+        if(interestNames.length < 5){
+            setErrorMessage('Please select at least 5 interests');
+            setIsLoading(false);
+            return;
+        }
+
         try {
           const formData = new FormData();
           formData.append('name', clubname);
@@ -96,6 +108,10 @@ const EditClubPage = () => {
           setIsLoading(false);
         }
     };
+
+    const handleCancel = () => {
+      navigate(-1);
+    }
     return (
         <div className="edit-club-page">
           <Header />
@@ -147,7 +163,8 @@ const EditClubPage = () => {
             
                       {/* Conditionally render the loading spinner */}
                       {isLoading && <LoadingSpinner />}
-                      {!isLoading && <button type="submit">Create</button>}
+                      {!isLoading && <button type="submit">Save</button>}
+                      {!isLoading && <button type="button" onClick={handleCancel}>Cancel</button>}
                 </form>
                 {errorMessage && <p className="error-message">{errorMessage}</p>}
             </div>

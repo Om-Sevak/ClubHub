@@ -1,3 +1,10 @@
+/*********************************************************************************
+    FileName: clubMembershipModel.test.js
+    FileVersion: 1.0
+    Core Feature(s): Unit Testing
+    Purpose: This file contains integration tests for the ClubRole model and its related routes. It utilizes Jest and Supertest for testing. The tests cover creating and deleting club roles. Before each test, it connects to the test database and creates a test user and club. After each test, it deletes the test user, club, and club membership, and closes the database connection.
+*********************************************************************************/
+
 const mongoose = require("mongoose");
 const request = require("supertest");
 const app = require('../../app');

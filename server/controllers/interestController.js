@@ -1,8 +1,29 @@
+/*********************************************************************************
+	FileName: interestsController.js
+	FileVersion: 1.0
+	Core Feature(s): Interests Management Middleware
+	Purpose: This file contains middleware functions for managing interests related to clubs and users. It includes functions for creating, editing, and retrieving interests associated with clubs and users. Additionally, it provides functionality for uploading images to Azure Blob Storage.
+*********************************************************************************/
+
+
 const Club = require('../models/clubModel');
 const Interest = require('../models/interestModel');
 const ClubInterest = require('../models/clubInterestsModel');
 const UserInterest = require('../models/userInterestsModel');
 const User = require('../models/userModel');
+const HttpError = require('../error/HttpError');
+const handleError = require('../error/handleErrors');
+
+/*
+----
+Core Feature(s): Create Club Interests Middleware
+Expected Input Type: Body (JSON)
+Expected Input: Interests (array of strings), Club Name (string)
+Expected Output Structure: None
+Expected Errors: Throws an error with appropriate message
+Purpose: This middleware creates club interests by associating interests with a specific club.
+----
+*/
 
 exports.createClubInterestsMiddleware = async (interests, clubName) => {
     try {
@@ -32,6 +53,17 @@ exports.createClubInterestsMiddleware = async (interests, clubName) => {
     }
 }
 
+/*
+----
+Core Feature(s): Get User Interests Middleware
+Expected Input Type: URL (string)
+Expected Input: User Object ID (string)
+Expected Output Structure: Array of strings (interest names)
+Expected Errors: Throws an error with appropriate message
+Purpose: This middleware retrieves the interests of a user based on their user object ID.
+----
+*/
+
 
 exports.getUserInterestsMiddleware = async (userObjectId) => {
     try {
@@ -46,6 +78,18 @@ exports.getUserInterestsMiddleware = async (userObjectId) => {
         return;
     }
 }
+
+/*
+----
+Core Feature(s): Create User Interests Middleware
+Expected Input Type: Body (JSON)
+Expected Input: Interests (array of strings), Email (string)
+Expected Output Structure: None
+Expected Errors: Throws an error with appropriate message
+Purpose: This middleware creates user interests by associating interests with a specific user.
+----
+*/
+
 
 exports.createUserInterestsMiddleware = async (interests, email) => {
     try {
@@ -76,6 +120,16 @@ exports.createUserInterestsMiddleware = async (interests, email) => {
         return;
     }
 }
+/*
+----
+Core Feature(s): Edit Club Interests Middleware
+Expected Input Type: Body (JSON)
+Expected Input: New Interests (array of strings), Club Name (string)
+Expected Output Structure: None
+Expected Errors: Throws an error with appropriate message
+Purpose: This middleware edits club interests by adding new interests and removing existing ones.
+----
+*/
 
 exports.editClubInterestsMiddleware = async (newInterests, clubName) => {
     try {
@@ -118,13 +172,23 @@ exports.editClubInterestsMiddleware = async (newInterests, clubName) => {
                 }
             }
         }
-
-
     } catch (err) {
         console.log(`Server Error: ${err}`)
         return;
     }
 }
+
+/*
+----
+Core Feature(s): Get All Interests
+Expected Input Type: None
+Expected Input: None
+Expected Output Structure: Array of strings (interest names)
+Expected Errors: Throws an error with appropriate message
+Purpose: This function retrieves all available interests.
+----
+*/
+
 
 exports.getAllInterests = async (req,res) => {
     try {
@@ -141,14 +205,21 @@ exports.getAllInterests = async (req,res) => {
         console.log(`${req.sessionID} - Request Success: ${req.method}  ${req.originalUrl}`);
     }
     catch (err) {
-        res.status(500).json({
-            status: "fail",
-            message: err.message,
-            description: `Bad Request: Server Error`
-        });
-        console.log(`${req.sessionID} - Request Failed: ${err.message}`);
+        handleError.returnError(err, req.sessionID, res);
     }
 }
+
+/*
+----
+Core Feature(s): Get Club Interests
+Expected Input Type: URL (string)
+Expected Input: Club Name (string)
+Expected Output Structure: Array of strings (interest names)
+Expected Errors: Throws an error with appropriate message
+Purpose: This function retrieves the interests associated with a specific club.
+----
+*/
+
 
 exports.getClubInterests = async (req,res) => {
     try {
@@ -157,7 +228,7 @@ exports.getClubInterests = async (req,res) => {
         const club = await Club.findOne({ name: req.params.name });
 
         if (!club) {
-            throw new Error('Not Found: Fail to edit club as DNE');
+            throw new HttpError(404,'Not Found: Fail to edit club as DNE');
         }
 
         const interests = await ClubInterest.find({club: club._id});
@@ -172,37 +243,33 @@ exports.getClubInterests = async (req,res) => {
         console.log(`${req.sessionID} - Request Success: ${req.method}  ${req.originalUrl}`);
     }
     catch (err) {
-        if (err.message.includes('Not Found')) {
-            res.status(404).json({
-                status: "fail",
-                message: err.message,
-                description: `Not Found: Fail to edit club as ${req.params.name} DNE`,
-            });
-        }
-        else {
-            res.status(500).json({
-                status: "fail",
-                message: err.message,
-                description: `Bad Request: Server Error`
-            });
-        }
-
-        console.log(`${req.sessionID} - Request Failed: ${err.message}`);
+        handleError.returnError(err, req.sessionID, res);
     }
 }
+
+/*
+----
+Core Feature(s): Get User Interests
+Expected Input Type: None
+Expected Input: None
+Expected Output Structure: Array of strings (interest names)
+Expected Errors: Throws an error with appropriate message
+Purpose: This function retrieves the interests of the current user.
+----
+*/
 
 exports.getUserInterests = async (req,res) => {
     try {
         console.log(`${req.sessionID} - ${req.session.email} is requesting to get user Intrests`);
 
         if (!req.session.email) {
-            throw new Error('Unauthorized: Need to be logged in to get user interests');
+            throw new  HttpError(401,'Unauthorized: Need to be logged in to get user interests');
         }
 
         const user = await User.findOne({ email: req.session.email });
 
         if (!user) {
-            throw new Error('Not Found: Fail to get interest as user DNE');
+            throw new  HttpError(404,'Not Found: Fail to get interest as user DNE');
         }
 
         const interestsNames = await exports.getUserInterestsMiddleware(user._id);
@@ -211,64 +278,53 @@ exports.getUserInterests = async (req,res) => {
         console.log(`${req.sessionID} - Request Success: ${req.method}  ${req.originalUrl}`);
     }
     catch (err) {
-        if (err.message.includes('Not Found')) {
-            res.status(404).json({
-                status: "fail",
-                message: err.message,
-                description: `Not Found: Fail to get interest as ${req.session.email} DNE`,
-            });
-        } else if (err.message.includes('Unauthorized')) {
-            res.status(401).json({
-                status: "fail",
-                message: err.message,
-                description: `Unauthorized: Failed to be logged in`,
-            });
-        }
-        else {
-            res.status(500).json({
-                status: "fail",
-                message: err.message,
-                description: `Bad Request: Server Error`
-            });
-        }
-
-        console.log(`${req.sessionID} - Request Failed: ${err.message}`);
+        handleError.returnError(err, req.sessionID, res);
     }
 }
 
-// Edit user interests
+/*
+----
+Core Feature(s): Edit User Interests
+Expected Input Type: Body (JSON)
+Expected Input: Interests (array of strings)
+Expected Output Structure: None
+Expected Errors: Throws an error with appropriate message
+Purpose: This function allows the current user to edit their interests.
+----
+*/
+
 exports.editUserInterests = async (req,res) => {
     try {
         console.log(`${req.sessionID} - ${req.session.email} is requesting to edit user Intrests`);
 
         if (!req.session.email) {
-            throw new Error('Unauthorized: Need to be logged in to edit user interests');
+            throw new HttpError(401,'Unauthorized: Need to be logged in to edit user interests');
         }
 
         const user = await User.findOne({ email: req.session.email });
 
         if (!user) {
-            throw new Error('Not Found: Fail to edit user as DNE');
+            throw new HttpError(404,'Not Found: Fail to edit user as DNE');
         }
 
         const interests = req.body.interests;
 
         //check if valid length
         if (interests.length < 3) {
-            throw new Error('Invalid Interests: User must have at least 3 interests');
+            throw new  HttpError(400,'Invalid Interests: User must have at least 3 interests');
         }
 
         //Check if interests are valid
         const validInterests = await Interest.find({name: { $in: interests }});
 
         if (validInterests.length !== interests.length) {
-            throw new Error('Invalid Interests: Some interests do not exist');
+            throw new HttpError(400,'Invalid Interests: Some interests do not exist');
         }
 
         //Delete old interests
         const deleteStatus = await UserInterest.deleteMany({ user: user._id });
         if (!deleteStatus.acknowledged) {
-            throw err;
+            throw new HttpError(400,'Bad Request: Failed to delete interests.');
         }
 
         this.createUserInterestsMiddleware(interests, req.session.email);
@@ -277,34 +333,6 @@ exports.editUserInterests = async (req,res) => {
         console.log(`${req.sessionID} - Request Success: ${req.method}  ${req.originalUrl}`);
     }
     catch (err) {
-        if (err.message.includes('Not Found')) {
-            res.status(404).json({
-                status: "fail",
-                message: err.message,
-                description: `Not Found: Fail to edit user as ${req.session.email} DNE`,
-            });
-        }
-        else if (err.message.includes('Invalid Interests')) {
-            res.status(400).json({
-                status: "fail",
-                message: err.message,
-                description: `Bad Request: Some interests do not exist`
-            });
-        } else if (err.message.includes('Unauthorized')) {
-            res.status(401).json({
-                status: "fail",
-                message: err.message,
-                description: `Unauthorized: Failed to be logged in`,
-            });
-        }
-        else {
-            res.status(500).json({
-                status: "fail",
-                message: err.message,
-                description: `Bad Request: Server Error`
-            });
-        }
-
-        console.log(`${req.sessionID} - Request Failed: ${err.message}`);
+        handleError.returnError(err, req.sessionID, res);
     }
 }

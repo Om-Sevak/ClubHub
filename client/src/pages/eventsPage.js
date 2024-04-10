@@ -1,3 +1,11 @@
+ /*
+    FileName: eventsPage.js
+    FileVersion: 1
+    Core Feature(s): Have a page for each club, including calendar and general info 
+        Login as guest/user or admin
+    Purpose: (1-3 sentances): have all the events displayed, with the ability to show only your events
+    */
+
 import React, {useState, useEffect} from 'react';
 import Header from '../components/Header';
 import EventCard from '../components/EventCard';
@@ -90,7 +98,7 @@ const EventsPage = () => {
 
 
   return (
-    <div>
+    <div className='eventsPage'>
       <Header/>
       <h2>Events Page</h2>
       {loggedIn && (

@@ -1,3 +1,11 @@
+/*********************************************************************************
+    FileName: utils.js
+    FileVersion: 1.0
+    Core Feature(s): Utility Functions
+    Purpose: This file contains utility functions related to clubs, including functions to get random elements from a list and to order clubs based on user interests and membership status.
+*********************************************************************************/
+
+
 const ClubMembership = require('../models/clubMembershipsModel');
 const interests = require("../controllers/interestController");
 
