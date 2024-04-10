@@ -1,6 +1,8 @@
 const Club = require('../models/clubModel');
 const User = require('../models/userModel');
 const ClubMemberships = require('../models/clubMembershipsModel');
+const HttpError = require('../error/HttpError');
+const handleError = require('../error/handleErrors');
 
 exports.getRoleMiddleware = async (email,clubName) => {
     try {
@@ -61,7 +63,7 @@ exports.getRole = async (req,res) => {
         const role = await this.getRoleMiddleware(req.session.email, req.params.name); 
         
         if (!role) {
-            throw new Error(`Not Found: Could not find role`);
+            throw new HttpError(404,`Not Found: Could not find role`);
         }
 
         res.status(200).json({
@@ -74,24 +76,7 @@ exports.getRole = async (req,res) => {
         console.log(`${req.sessionID} - Request Success: ${req.method}  ${req.originalUrl}`);
 
     } catch (err) {
-        if (err.message.includes('Not Found')) {
-            res.status(404).json({
-                status: "fail",
-                message: err.message,
-                description: `Not Found: Could not find role for user ${req.session.email} and club ${req.params.name}`,
-                data: {
-                    role: null
-                }
-            });
-        } else {
-            res.status(500).json({
-                status: "fail",
-                message: err.message,
-                description: `Bad Request: Server Error`,
-            });
-            console.log(`${req.sessionID} - Server Error: ${err}`)
-        }
-        console.log(`${req.sessionID} - Request Failed: ${err.message}`);
+        handleError.returnError(err, req.sessionID, res, {role: null})
     }
 }
 
@@ -101,7 +86,7 @@ exports.createRole = async (req,res) => {
         const { role } = req.body;
         
         if (!req.session.isLoggedIn) {
-            throw new Error('Unauthorized: Must sign in to join a club');
+            throw new HttpError(403,'Unauthorized: Must sign in to join a club');
         }
 
         const userEmail = req.session.email;
@@ -110,7 +95,7 @@ exports.createRole = async (req,res) => {
 
         // Validating that this user is not already a member of this club
         if (member) {
-            throw new Error(`Bad Request: You are already a member of club ${clubName}.`);
+            throw new HttpError(400,`Bad Request: You are already a member of club ${clubName}.`);
         }
 
         const club = await Club.findOne({ name: clubName })
@@ -120,7 +105,7 @@ exports.createRole = async (req,res) => {
         if (role === "admin") {
             const clubAdmin = await ClubMemberships.findOne({ club: club.id, role: "admin"})
             if (clubAdmin) {
-                throw new Error(`Bad Request: An admin already exists for club ${clubName}. A club can have at most 1 Admin`);
+                throw new HttpError(400,`Bad Request: An admin already exists for club ${clubName}. A club can have at most 1 Admin`);
             }
         }
 
@@ -134,27 +119,7 @@ exports.createRole = async (req,res) => {
         console.log(`${req.sessionID} - Request Success: ${req.method}  ${req.originalUrl}`);
     }
     catch (err) {
-        if (err.message.includes('Unauthorized')) {
-            res.status(403).json({
-                status: "fail",
-                message: err.message,
-                description: `Unauthorized: ${req.session.email} is not an account`
-            });
-        } else if (err.message.includes('Bad Request')) {
-            res.status(400).json({
-                status: "fail",
-                message: err.message,
-                description: `Bad Request: Failed to join the club`
-            });
-        } else {
-            res.status(500).json({
-                status: "fail",
-                message: err.message,
-                description: `Bad Request: Server Error`
-            });
-            console.log(`${req.sessionID} - Server Error: ${err}`)
-        }
-        console.log(`${req.sessionID} - Request Failed: ${err.message}`);
+        handleError.returnError(err, req.sessionID, res)
     }
 }
 
@@ -163,7 +128,7 @@ exports.deleteRole = async(req, res) => {
         console.log(`${req.sessionID} - ${req.session.email} is requesting to leave club ${ req.params.name}`);
 
         if (!req.session.isLoggedIn) {
-            throw new Error('Unauthorized: Must sign in to delete a club');
+            throw new HttpError(403,'Unauthorized: Must sign in to delete a club');
         }
 
         const userEmail = req.session.email;
@@ -174,13 +139,13 @@ exports.deleteRole = async(req, res) => {
         const member = await this.getRoleMiddleware(userEmail, clubName);
         // Validating that this user is a member of this club
         if (!member) {
-            throw new Error(`Bad Request: You are are not a member of club ${clubName}.`);
+            throw new HttpError(400,`Bad Request: You are are not a member of club ${clubName}.`);
         }
 
         // Validating that this user is not an Admin
         const isAdmin = await this.isClubAdminMiddleware(userEmail, clubName);
         if (isAdmin) {
-            throw new Error('Bad Request: Admin can not leave the club.');
+            throw new HttpError(400,'Bad Request: Admin can not leave the club.');
         }
 
         // Delete the ClubMembership record for this user
@@ -193,26 +158,6 @@ exports.deleteRole = async(req, res) => {
         console.log(`${req.sessionID} - Request Success: ${req.method}  ${req.originalUrl}`);
 
     } catch (err) {
-        if (err.message.includes('Unauthorized')) {
-            res.status(403).json({
-                status: "fail",
-                message: err.message,
-                description: `Unauthorized: Must sign in to leave club`,
-            });
-        } else if (err.message.includes('Bad Request')) {
-            res.status(400).json({
-                status: "fail",
-                message: err.message,
-                description: `Bad Request: Failed to leave the club`
-            });
-        } else {
-            res.status(500).json({
-                status: "fail",
-                message: err.message,
-                description: `Bad Request: Server Error`,
-            });
-            console.log(`${req.sessionID} - Server Error: ${err}`)
-        }
-        console.log(`${req.sessionID} - Request Failed: ${err.message}`);
+        handleError.returnError(err, req.sessionID, res);
     }
 }

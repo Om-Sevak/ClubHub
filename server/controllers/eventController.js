@@ -2,6 +2,8 @@ const Club = require("../models/clubModel");
 const Event = require("../models/clubEventModel");
 const User = require("../models/userModel");
 const ClubMembership = require("../models/clubMembershipsModel");
+const HttpError = require('../error/HttpError');
+const handleError = require('../error/handleErrors');
 const utils = require("../utils/utils");
 const clubRole = require("./clubroleController");
 
@@ -12,16 +14,16 @@ exports.createEvent = async (req, res) => {
 
         const club = await Club.findOne({ name: req.params.name });
         if (!club) {
-            throw new Error('Not Found: Fail to create event as club DNE');
+            throw new HttpError(404,'Not Found: Fail to create event as club DNE');
         }
 
         if (!req.session.isLoggedIn) {
-            throw new Error('Unauthorized: Must sign in to add event');
+            throw new HttpError(403,'Unauthorized: Must sign in to add event');
         }
 
         const isAdmin = await clubRole.isClubAdminMiddleware(req.session.email, req.params.name);
         if (!isAdmin) {
-            throw new Error('Unauthorized: Only admins can add events');
+            throw new HttpError(403,'Unauthorized: Only admins can add events');
         }
 
         const clubObjectId = club._id;
@@ -38,27 +40,7 @@ exports.createEvent = async (req, res) => {
         res.status(200).json({ message: 'Event created successfully' });
         console.log(`${req.sessionID} - Request Success: ${req.method}  ${req.originalUrl}`);
     } catch (err) {
-        if (err.message.includes('Unauthorized')) {
-            res.status(403).json({
-                status: "fail",
-                message: err.message,
-                description: `Unauthorized: ${req.session.email} is not and admin of club ${req.params.name}`,
-            });
-        } else if (err.message.includes('Not Found')) {
-            res.status(404).json({
-                status: 'fail',
-                message: err.message,
-                description: `Club ${req.params.name} does not exist`
-            });
-        } else {
-            res.status(500).json({
-                status: 'fail',
-                message: 'An error occurred while processing your request',
-                description: 'Server Error'
-            });
-            console.error(`${req.sessionID} - Server Error: ${err}`);
-        }
-        console.log(`${req.sessionID} - Request Failed: ${err.message}`);
+        handleError.returnError(err, req.sessionID, res);
     }
 };
 
@@ -69,7 +51,7 @@ exports.getEventsForClub = async (req, res) => {
 
         const club = await Club.findOne({ name: req.params.name });
         if (!club) {
-            throw new Error('Not Found: Fail to get events as club DNE');
+            throw new HttpError(404,'Not Found: Fail to get events as club DNE');
         }
         const clubObjectId = club._id;
         const events = await Event.find({ club: clubObjectId });
@@ -81,21 +63,7 @@ exports.getEventsForClub = async (req, res) => {
 
         console.log(`${req.sessionID} - Request Success: ${req.method}  ${req.originalUrl}`);
     } catch (err) {
-        if (err.message.includes('Not Found')) {
-            res.status(404).json({
-                status: "fail",
-                message: err.message,
-                description: `Not Found: Fail to get events as ${req.params.name} DNE`,
-            });
-        } else {
-            res.status(500).json({
-                status: "fail",
-                message: err.message,
-                description: `Bad Request: Server Error`,
-            });
-            console.log(`${req.sessionID} - Server Error: ${err}`)
-        }
-        console.log(`${req.sessionID} - Request Failed: ${err.message}`);
+        handleError.returnError(err, req.sessionID, res);
     }
 };
 
@@ -106,7 +74,7 @@ exports.getEvent = async (req, res) => {
         const event = await Event.findOne({ _id: req.params.event });
 
         if (!event) {
-            throw new Error('Not Found: Fail to get event as event DNE');
+            throw new HttpError(404,'Not Found: Fail to get event as event DNE');
         }
 
 
@@ -120,21 +88,7 @@ exports.getEvent = async (req, res) => {
 
         console.log(`${req.sessionID} - Request Success: ${req.method}  ${req.originalUrl}`);
     } catch (err) {
-        if (err.message.includes('Not Found')) {
-            res.status(404).json({
-                status: "fail",
-                message: err.message,
-                description: `Not Found: Fail to get event as ${req.params.name} DNE`,
-            });
-        } else {
-            res.status(500).json({
-                status: "fail",
-                message: err.message,
-                description: `Bad Request: Server Error`,
-            });
-            console.log(`${req.sessionID} - Server Error: ${err}`)
-        }
-        console.log(`${req.sessionID} - Request Failed: ${err.message}`);
+        handleError.returnError(err, req.sessionID, res);
     }
 }
 
@@ -146,21 +100,21 @@ exports.editEvent = async (req, res) => {
         // Checking if club exists first as we need a valid club to get possible role
         const event = await Event.findOne({ _id: req.params.event });
         if (!event) {
-            throw new Error('Not Found: Fail to edit event as DNE');
+            throw new HttpError(404,'Not Found: Fail to edit event as DNE');
         }
 
         if (!req.session.isLoggedIn) {
-            throw new Error('Unauthorized: Must sign in to edit a club');
+            throw new HttpError(403,'Unauthorized: Must sign in to edit a club');
         }
 
         const isAdmin = await clubRole.isClubAdminMiddleware(req.session.email, req.params.name);
         if (!isAdmin) {
-            throw new Error('Unauthorized: Only admins can modify the club.');
+            throw new HttpError(403,'Unauthorized: Only admins can modify the club.');
         }
 
         const updateStatus = await Event.updateOne({ _id: req.params.event }, req.body);
         if (!updateStatus.acknowledged) {
-            throw err;
+            throw new HttpError(400,'Bad Request: Failed to edit event.');
         }
 
         res.status(201).json({
@@ -173,33 +127,7 @@ exports.editEvent = async (req, res) => {
         console.log(`${req.sessionID} - Request Success: ${req.method}  ${req.originalUrl}`);
 
     } catch (err) {
-        if (err.message.includes('Unauthorized')) {
-            res.status(403).json({
-                status: "fail",
-                message: err.message,
-                description: `Unauthorized: ${req.session.email} is not and admin of club ${req.params.name}`,
-            });
-        } else if (err.message.includes('Bad Request')) {
-            res.status(400).json({
-                status: "fail",
-                message: err.message,
-                description: `Bad Request: Failed to edit event`
-            });
-        } else if (err.message.includes('Not Found')) {
-            res.status(404).json({
-                status: "fail",
-                message: err.message,
-                description: `Not Found: Fail to edit event as ${req.params.event} DNE`,
-            });
-        } else {
-            res.status(500).json({
-                status: "fail",
-                message: err.message,
-                description: `Bad Request: Server Error`,
-            });
-            console.log(`${req.sessionID} - Server Error: ${err}`)
-        }
-        console.log(`${req.sessionID} - Request Failed: ${err.message}`);
+        handleError.returnError(err, req.sessionID, res);
     }
 };
 
@@ -210,17 +138,17 @@ exports.deleteEvent = async (req, res) => {
         // Find the event by its ID
         const event = await Event.findOne({ _id: req.params.event });
         if (!event) {
-            throw new Error('Not Found: Event does not exist');
+            throw new HttpError(404,'Not Found: Event does not exist');
         }
 
         // Check if the user is authorized to delete the event
         if (!req.session.isLoggedIn) {
-            throw new Error('Unauthorized: Must sign in to delete an event');
+            throw new HttpError(403,'Unauthorized: Must sign in to delete an event');
         }
 
         const isAdmin = await clubRole.isClubAdminMiddleware(req.session.email, req.params.name);
         if (!isAdmin) {
-            throw new Error('Unauthorized: Only admins can delete events');
+            throw new HttpError(403,'Unauthorized: Only admins can delete events');
         }
 
         // Delete the event
@@ -233,27 +161,7 @@ exports.deleteEvent = async (req, res) => {
         console.log(`${req.sessionID} - Request Success: ${req.method}  ${req.originalUrl}`);
 
     } catch (err) {
-        if (err.message.includes('Unauthorized')) {
-            res.status(403).json({
-                status: "fail",
-                message: err.message,
-                description: `Unauthorized: ${req.session.email} is not an admin of club ${req.params.name}`,
-            });
-        } else if (err.message.includes('Not Found')) {
-            res.status(404).json({
-                status: "fail",
-                message: err.message,
-                description: `Not Found: Fail to delete event as ${req.params.event} does not exist`,
-            });
-        } else {
-            res.status(500).json({
-                status: "fail",
-                message: err.message,
-                description: `Bad Request: Server Error`,
-            });
-            console.log(`${req.sessionID} - Server Error: ${err}`)
-        }
-        console.log(`${req.sessionID} - Request Failed: ${err.message}`);
+        handleError.returnError(err, req.sessionID, res);
     }
 };
 
@@ -351,13 +259,7 @@ exports.getEventsBrowse = async (req, res) => {
         console.log(`${req.sessionID} - Request Success: ${req.method}  ${req.originalUrl}`);
 
     } catch (err) {
-        res.status(500).json({
-            status: "fail",
-            message: err.message,
-            description: `Bad Request: Server Error`,
-        });
-        console.log(`${req.sessionID} - Server Error: ${err}`)
-        console.log(`${req.sessionID} - Request Failed: ${err.message}`);
+        handleError.returnError(err, req.sessionID, res);
     }
 };
 
@@ -383,12 +285,7 @@ exports.getAllEvents = async (req, res) => {
   
       console.log(`${req.sessionID} - Request Success: ${req.method}  ${req.originalUrl}`);
     } catch (err) {
-      res.status(500).json({
-        status: "fail",
-        message: err.message,
-        description: `Bad Request: Server Error`,
-      });
-      console.log(`${req.sessionID} - Server Error: ${err}`);
+        handleError.returnError(err, req.sessionID, res);
     }
   };
 
@@ -420,12 +317,6 @@ exports.getEventsForUser = async (req, res) => {
 
         console.log(`${req.sessionID} - Request Success: ${req.method}  ${req.originalUrl}`);
     } catch (err) {
-        console.error(`${req.sessionID} - Request Failed: ${err.message}`);
-
-        res.status(500).json({
-            status: "fail",
-            message: err.message,
-            description: `Bad Request: Server Error`
-        });
+        handleError.returnError(err, req.sessionID, res);
     }
 };

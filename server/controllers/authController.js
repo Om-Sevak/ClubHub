@@ -1,5 +1,7 @@
 // authController.js
 const User = require('../models/userModel');
+const HttpError = require('../error/HttpError');
+const handleError = require('../error/handleErrors');
 const bcrypt = require('bcryptjs');
 const interestsController = require('./interestController');
 
@@ -11,13 +13,13 @@ exports.login = async (req, res) => {
         // Find the user by email
         const user = await User.findOne({ email });
         if (!user) {
-            throw new Error('Unauthorized: Invalid email or password' );
+            throw new HttpError(401,'Unauthorized: Invalid email or password' );
         }
 
         // Compare the provided password with the hashed password stored in the database
         const isPasswordValid = await bcrypt.compare(password, user.passwordHash);
         if (!isPasswordValid) {
-            throw new Error('Unauthorized: Invalid email or password' );
+            throw new HttpError(401,'Unauthorized: Invalid email or password' );
         }
         
         // If successful login, add userid to session
@@ -31,21 +33,7 @@ exports.login = async (req, res) => {
         console.log(`${req.sessionID} - Request Success: ${req.method}  ${req.originalUrl}`);
 
     } catch (err) {
-        if (err.message.includes('Unauthorized')) {
-            res.status(401).json({
-                status: "fail",
-                message: err.message,
-                description: `Unauthorized: Failed to login`,
-            });
-        } else {
-            res.status(500).json({
-                status: "fail",
-                message: err.message,
-                description: `Bad Request: Server Error`,
-            });
-            console.log(`${req.sessionID} - Server Error: ${err}`)
-        }
-        console.log(`${req.sessionID} - Request Failed: ${err.message}`);
+        handleError.returnError(err, req.sessionID, res);
     }
 };
 
@@ -56,25 +44,25 @@ exports.register = async (req, res) => {
         // Validate email format
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (!emailRegex.test(email)) {
-            throw new Error('Bad Request: Invalid email format');
+            throw new HttpError(400,'Bad Request: Invalid email format');
         }
 
         // Check if user already exists
         const existingUser = await User.findOne({ email });
         if (existingUser) {
-            throw new Error('Bad Request: User already exists');
+            throw new HttpError(400,'Bad Request: User already exists');
         }
 
         //validate password, min length 8
         if (password.length < 8) {
-            throw new Error('Bad Request: Password must be at least 8 characters long');
+            throw new HttpError(400,'Bad Request: Password must be at least 8 characters long');
         }
 
         // Hash the password
         const passwordHash = await bcrypt.hash(password, 12);
 
         if (interest && interest.length < 3){
-            throw new Error('Bad Request: Please select at least 3 interests');
+            throw new HttpError(400,'Bad Request: Please select at least 3 interests');
         }
 
         // Create a new user
@@ -93,21 +81,7 @@ exports.register = async (req, res) => {
         console.log(`${req.sessionID} - Request Success: ${req.method}  ${req.originalUrl}`);
         
     } catch (err) {
-        if (err.message.includes('Bad Request')) {
-            res.status(400).json({
-                status: "fail",
-                message: err.message,
-                description: `Bad Request: Failed to Register`,
-            });
-        } else {
-            res.status(500).json({
-                status: "fail",
-                message: err.message,
-                description: `Bad Request: Server Error`,
-            });
-            console.log(`${req.sessionID} - Server Error: ${err}`)
-        }
-        console.log(`${req.sessionID} - Request Failed: ${err.message}`);
+        handleError.returnError(err, req.sessionID, res);
     }
 };
 
@@ -143,13 +117,7 @@ exports.isLoggedIn = async(req, res) => {
         console.log(`${req.sessionID} - Request Success: ${req.method}  ${req.originalUrl}`);
 
     } catch (err) {
-        res.status(500).json({
-            status: "fail",
-            message: err.message,
-            description: `Bad Request: Server Error`,
-        });
-        console.log(`${req.sessionID} - Server Error: ${err}`)
-        console.log(`${req.sessionID} - Request Failed: ${err.message}`);
+        handleError.returnError(err, req.sessionID, res);
     }
 };
 
@@ -158,7 +126,7 @@ exports.logout = async(req, res) => {
         console.log(`${req.sessionID} - Request To Check if Logged in on`);
     
         if (!req.session.isLoggedIn) {
-            throw new Error('Bad Request: Must be logged in to log out (fool!)');
+            throw new  HttpError(400,'Bad Request: Must be logged in to log out (fool!)');
         }
 
         req.session.isLoggedIn = false;
@@ -170,21 +138,7 @@ exports.logout = async(req, res) => {
         console.log(`${req.sessionID} - Request Success: ${req.method}  ${req.originalUrl}`);
 
     } catch (err) {
-        if (err.message.includes('Bad Request')) {
-            res.status(400).json({
-                status: "fail",
-                message: err.message,
-                description: `Bad Request: Failed to logout`,
-            });
-        } else {
-            res.status(500).json({
-                status: "fail",
-                message: err.message,
-                description: `Bad Request: Server Error`,
-            });
-            console.log(`${req.sessionID} - Server Error: ${err}`)
-        }
-        console.log(`${req.sessionID} - Request Failed: ${err.message}`);
+        handleError.returnError(err, req.sessionID, res);
     }
 };
 
@@ -194,24 +148,24 @@ exports.changePassword = async(req, res) => {
         const { currentPassword, newPassword } = req.body;
 
         if (!req.session.isLoggedIn) {
-            throw new Error('Bad Request: Must be logged in to change password');
+            throw new HttpError(400,'Bad Request: Must be logged in to change password');
         }
 
         // Find the user by email
         const user = await User.findOne({ email: req.session.email });
         if (!user) {
-            throw new Error('Bad Request: User not found');
+            throw new HttpError(404,'Not Found: User not found');
         }
 
         // Compare the provided password with the hashed password stored in the database
         const isPasswordValid = await bcrypt.compare(currentPassword, user.passwordHash);
         if (!isPasswordValid) {
-            throw new Error('Bad Request: Invalid current password');
+            throw new HttpError(400,'Bad Request: Invalid current password');
         }
 
         //validate password, min length 8
         if (newPassword.length < 8) {
-            throw new Error('Bad Request: Password must be at least 8 characters long');
+            throw new HttpError(400,'Bad Request: Password must be at least 8 characters long');
         }
 
         // Hash the password
@@ -225,20 +179,6 @@ exports.changePassword = async(req, res) => {
         console.log(`${req.sessionID} - Request Success: ${req.method}  ${req.originalUrl}`);
 
     } catch (err) {
-        if (err.message.includes('Bad Request')) {
-            res.status(400).json({
-                status: "fail",
-                message: err.message,
-                description: `Bad Request: Failed to change password`,
-            });
-        } else {
-            res.status(500).json({
-                status: "fail",
-                message: err.message,
-                description: `Bad Request: Server Error`,
-            });
-            console.log(`${req.sessionID} - Server Error: ${err}`)
-        }
-        console.log(`${req.sessionID} - Request Failed: ${err.message}`);
+        handleError.returnError(err, req.sessionID, res);
     }
 };

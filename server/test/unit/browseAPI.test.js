@@ -125,7 +125,7 @@ describe('Homepage Functions', () => {
     describe('Clubs Browse', () => {
         test('Not logged in: Should return clubs with no isJoined or Percents',async () => {
             const res = await request(app)
-            .post(`/club/clubs/browse`)
+            .post(`/club/browse`)
             .send({ includeJoined: true});
 
             const generalClubsToBrowse = res.body.clubs;
@@ -142,7 +142,7 @@ describe('Homepage Functions', () => {
 
         test('Should return correct number of Clubs',async () => {
             const res = await request(app)
-            .post(`/club/clubs/browse`)
+            .post(`/club/browse`)
             .send({ limit: 3, includeJoined: true});
 
             expect(res.body.clubs.length).toBe(3);
@@ -162,7 +162,7 @@ describe('Homepage Functions', () => {
 
             test('Should Return 200, and all 5 Clubs',async () => {
                 const res = await testSession
-                    .post(`/club/clubs/browse`)
+                    .post(`/club/browse`)
                     .send({ includeJoined: true});
 
                 clubsToBrowse = res.body.clubs;
@@ -205,7 +205,7 @@ describe('Homepage Functions', () => {
     describe('Events Browse', () => {
         test('Not logged in: Should return events with no isJoined or Percents',async () => {
             const res = await request(app)
-            .post(`/club/events/browse`)
+            .post(`/event/browse`)
             .send({ includeJoined: true});
 
             const generalEventsToBrowse = res.body.events;
@@ -220,7 +220,7 @@ describe('Homepage Functions', () => {
 
         test('Should return correct number of Events',async () => {
             const res = await request(app)
-            .post(`/club/events/browse`)
+            .post(`/event/browse`)
             .send({ limit: 3, includeJoined: true});
 
             expect(res.body.events.length).toBe(3);
@@ -231,7 +231,7 @@ describe('Homepage Functions', () => {
     describe('Posts Browse', () => {
         test('Not logged in: Should return posts with no isJoined or Percents',async () => {
             const res = await request(app)
-            .post(`/club/posts/browse`)
+            .post(`/post/browse`)
             .send({ includeJoined: true});
 
             const generalPostsToBrowse = res.body.posts;
@@ -248,7 +248,7 @@ describe('Homepage Functions', () => {
 
         test('Should return correct number of Posts',async () => {
             const res = await request(app)
-            .post(`/club/posts/browse`)
+            .post(`/post/browse`)
             .send({ limit: 3, includeJoined: true});
 
             expect(res.body.posts.length).toBe(3);
@@ -271,11 +271,11 @@ describe('Homepage Functions', () => {
 
         test('Should Return 200, and all 7 Events/Posts',async () => {
             const resEvents = await testSession
-                .post(`/club/events/browse`)
+                .post(`/event/browse`)
                 .send({ includeJoined: true});
 
             const resPosts = await testSession
-                .post(`/club/posts/browse`)
+                .post(`/post/browse`)
                 .send({ includeJoined: true});
 
             eventsToBrowse = resEvents.body.events;
