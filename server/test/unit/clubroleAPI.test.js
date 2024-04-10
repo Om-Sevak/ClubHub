@@ -1,3 +1,10 @@
+/*********************************************************************************
+    FileName: clubroleAPI.test.js
+    FileVersion: 1.0
+    Core Feature(s): Unit Testing
+    Purpose: This file contains unit tests for club role-related routes of the webpage. It tests functionalities such as assigning roles to users in clubs, deleting roles, and retrieving the role of a user in a club. The tests cover scenarios like successful role assignment and deletion, failure cases due to unauthorized access, invalid inputs, and role conflicts.
+*********************************************************************************/
+
 const request = require('supertest');
 const app = require('../../app');
 const Club = require('../../models/clubModel');

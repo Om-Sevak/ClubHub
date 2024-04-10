@@ -1,3 +1,11 @@
+/*********************************************************************************
+    FileName: userModel.test.js
+    FileVersion: 1.0
+    Core Feature(s): Unit Testing
+    Purpose: This file contains integration tests for the UserModel and its related routes. It utilizes Jest and Supertest for testing. The tests cover creating a new user and logging in with the created user. Before each test, it connects to the test database. After each test, it deletes the test user and closes the database connection.
+*********************************************************************************/
+
+
 const mongoose = require("mongoose");
 const request = require("supertest");
 const app = require('../../app');

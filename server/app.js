@@ -1,3 +1,11 @@
+/*********************************************************************************
+    FileName: app.js
+    FileVersion: 1.0
+    Core Feature(s): Express Application Configuration
+    Purpose: This file configures the Express application, sets up routing endpoints, middleware, and session handling.
+*********************************************************************************/
+
+
 // Packages
 const express = require("express");
 const session = require("express-session");

@@ -1,3 +1,10 @@
+/*********************************************************************************
+    FileName: server.js
+    FileVersion: 1.0
+    Core Feature(s): Server Initialization
+    Purpose: This file initializes the server by connecting to the MongoDB database and starting the Express application.
+*********************************************************************************/
+
 const app = require("./app");
 const mongoose = require("mongoose");
 const dotenv = require('dotenv');

@@ -1,3 +1,11 @@
+/*********************************************************************************
+    FileName: browseAPI.test.js
+    FileVersion: 1.0
+    Core Feature(s): Unit Testing
+    Purpose: This file contains unit tests for homepage functions such as browsing clubs, events, and posts. It utilizes Jest and Supertest for testing. Before each test, it connects to an in-memory MongoDB server. After each test, it disconnects from the server and stops it. The tests cover various scenarios such as returning correct numbers of items, ordering of items, and randomness of item selection.
+*********************************************************************************/
+
+
 const request = require("supertest");
 var session = require('supertest-session');
 const app = require('../../app');

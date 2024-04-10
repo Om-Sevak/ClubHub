@@ -1,3 +1,11 @@
+/*********************************************************************************
+    FileName: clubAPI.test.js
+    FileVersion: 1.0
+    Core Feature(s): Unit Testing
+    Purpose: This file contains unit tests for club-related endpoints of the webpage. It tests functionalities such as creating a new club, getting club details, and editing club information. The tests cover scenarios like successful club creation, failure cases due to missing or invalid inputs, unauthorized access, and incorrect permissions.
+*********************************************************************************/
+
+
 const request = require("supertest");
 var session = require('supertest-session');
 const app = require('../../app');
